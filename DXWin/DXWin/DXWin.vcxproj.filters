@@ -55,4 +55,7 @@
       <Filter>リソース ファイル</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.hlsl" />
+  </ItemGroup>
 </Project>
