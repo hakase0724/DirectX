@@ -33,7 +33,6 @@ ID3D11VertexShader* mVertexShader;
 ID3D11PixelShader* mPixelShader;
 ID3D11Buffer* mConstantBuffer;
 ID3D11Buffer* mVertexBuffer;
-float mPosZ = 0.0f;
 
 HRESULT InitDX11(HWND hwnd)
 {
@@ -82,6 +81,7 @@ HRESULT InitDX11(HWND hwnd)
 
 	mDeviceContext->OMSetRenderTargets(1,&mRenderTargetView,NULL);
 
+	//ビューポート設定
 	D3D11_VIEWPORT view;
 	view.Width = (FLOAT)width;
 	view.Height = (FLOAT)height;
@@ -126,9 +126,12 @@ HRESULT InitDX11(HWND hwnd)
 	mDevice->CreateBuffer(&cb, NULL, &mConstantBuffer);
 
 	//頂点データとバッファ生成
-	VERTEX vertex[] = { XMFLOAT3(0.1f,0.0f,0.0f) };
+	VERTEX vertex[] = {
+		XMFLOAT3(-0.2f, 0.5f, 0.0f),
+		XMFLOAT3(0.2f, 0.5f, 0.0f),
+	};
 	D3D11_BUFFER_DESC bd;
-	bd.ByteWidth = sizeof(VERTEX) * 1;
+	bd.ByteWidth = sizeof(VERTEX) * 2;
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
@@ -136,14 +139,14 @@ HRESULT InitDX11(HWND hwnd)
 	bd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA data;
 	data.pSysMem = vertex;
-	mDevice->CreateBuffer(&bd, NULL, &mVertexBuffer);
+	mDevice->CreateBuffer(&bd, &data, &mVertexBuffer);
 
 	//パイプライン構築
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
-	mDeviceContext->IAGetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
+	mDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
 	mDeviceContext->IASetInputLayout(mVertexLayout);
-	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 	mDeviceContext->VSSetShader(mVertexShader, NULL, 0);
 	mDeviceContext->PSSetShader(mPixelShader, NULL, 0);
 	mDeviceContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
@@ -153,24 +156,28 @@ HRESULT InitDX11(HWND hwnd)
 
 void RenderDX11()
 {
-	float color[4] = { 0.1f,0.1f,0.1f,0.1f };
+	//塗りつぶし色の設定と画面クリア
+	float color[4] = { 0.0f,0.0f,0.0f,1.0f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
-	
+
+	//パラメータ計算
 	XMVECTOR eye_pos = XMVectorSet(0.0f,0.0f,-2.0f,1.0f);
 	XMVECTOR eye_lookup = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	XMVECTOR eye_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 	XMMATRIX view = XMMatrixLookAtLH(eye_pos, eye_lookup, eye_up);
 	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,100.0f);
-	XMMATRIX world = XMMatrixRotationZ(mPosZ);
-	mPosZ += 0.001f;
+	XMMATRIX world = XMMatrixRotationZ(0);
 
+	//データを渡す
 	D3D11_MAPPED_SUBRESOURCE data;
 	CONSTANT_BUFFER buffer;
 	buffer.mWVP = XMMatrixTranspose(world * view * proj);
 	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	memcpy_s(data.pData, data.RowPitch, (void*)(&buffer), sizeof(buffer));
 	mDeviceContext->Unmap(mConstantBuffer, 0);
-	mDeviceContext->Draw(1, 0);
+
+	//描画
+	mDeviceContext->Draw(2, 0);
 	mSwapChain->Present(0, 0);
 }
 
