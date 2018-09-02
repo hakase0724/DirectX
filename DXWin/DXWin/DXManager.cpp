@@ -1,7 +1,23 @@
 #include "stdafx.h"
 #include "DXManager.h"
 #include <d3d11.h>
+#include <d3dcompiler.h>
+#include <DirectXMath.h>
+
 #pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+
+using namespace DirectX;
+
+struct VERTEX
+{
+	XMFLOAT3 mV;
+};
+
+struct CONSTANT_BUFFER
+{
+	XMMATRIX mWVP;
+};
 
 //初期化済みか
 bool mIsInit = false;
@@ -12,6 +28,11 @@ ID3D11Device* mDevice = NULL;
 ID3D11DeviceContext* mDeviceContext = NULL;
 IDXGISwapChain* mSwapChain = NULL;
 ID3D11RenderTargetView* mRenderTargetView = NULL;
+ID3D11InputLayout* mVertexLayout;
+ID3D11VertexShader* mVertexShader;
+ID3D11PixelShader* mPixelShader;
+ID3D11Buffer* mConstantBuffer;
+ID3D11Buffer* mVertexBuffer;
 
 HRESULT InitDX11(HWND hwnd)
 {
@@ -59,6 +80,8 @@ HRESULT InitDX11(HWND hwnd)
 	if (FAILED(hr)) return hr;
 
 	mDeviceContext->OMSetRenderTargets(1,&mRenderTargetView,NULL);
+
+	//ビューポート設定
 	D3D11_VIEWPORT view;
 	view.Width = (FLOAT)width;
 	view.Height = (FLOAT)height;
@@ -67,14 +90,94 @@ HRESULT InitDX11(HWND hwnd)
 	view.TopLeftX = 0.0f;
 	view.TopLeftY = 0.0f;
 	mDeviceContext->RSSetViewports(1, &view);
+
+	//シェーダの設定
+	ID3DBlob* compileVS = NULL;
+	ID3DBlob* compilePS = NULL;
+	
+	if (FAILED(D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &compilePS, NULL))) return S_FALSE;
+	if (FAILED(D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &compileVS, NULL))) return S_FALSE;
+	mDevice->CreateVertexShader(compileVS->GetBufferPointer(), compileVS->GetBufferSize(), NULL, &mVertexShader);
+	mDevice->CreatePixelShader(compilePS->GetBufferPointer(), compilePS->GetBufferSize(), NULL, &mPixelShader);
+	
+	//頂点レイアウト設定
+	D3D11_INPUT_ELEMENT_DESC layout[] = 
+	{
+		"POSITION",
+		0,
+		DXGI_FORMAT_R32G32B32_FLOAT,
+		0,
+		0,
+		D3D11_INPUT_PER_VERTEX_DATA,
+		0
+	};
+	mDevice->CreateInputLayout(layout, 1, compileVS->GetBufferPointer(), compileVS->GetBufferSize(), &mVertexLayout);
+	compileVS->Release();
+	compilePS->Release();
+
+	//定数バッファ生成
+	D3D11_BUFFER_DESC cb;
+	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
+	cb.Usage = D3D11_USAGE_DYNAMIC;
+	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cb.MiscFlags = 0;
+	cb.StructureByteStride = 0;
+	mDevice->CreateBuffer(&cb, NULL, &mConstantBuffer);
+
+	//頂点データとバッファ生成
+	VERTEX vertex[] = {
+		XMFLOAT3(-0.2f, 0.5f, 0.0f),
+		XMFLOAT3(0.2f, 0.5f, 0.0f),
+	};
+	D3D11_BUFFER_DESC bd;
+	bd.ByteWidth = sizeof(VERTEX) * 2;
+	bd.Usage = D3D11_USAGE_DEFAULT;
+	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+	bd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA data;
+	data.pSysMem = vertex;
+	mDevice->CreateBuffer(&bd, &data, &mVertexBuffer);
+
+	//パイプライン構築
+	UINT stride = sizeof(VERTEX);
+	UINT offset = 0;
+	mDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
+	mDeviceContext->IASetInputLayout(mVertexLayout);
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+	mDeviceContext->VSSetShader(mVertexShader, NULL, 0);
+	mDeviceContext->PSSetShader(mPixelShader, NULL, 0);
+	mDeviceContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
 	mIsInit = true;
 	return S_OK;
 }
 
 void RenderDX11()
 {
-	float color[4] = { 0.0f,0.0f,0.0f,0.0f };
+	//塗りつぶし色の設定と画面クリア
+	float color[4] = { 0.0f,0.0f,0.0f,1.0f };
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
+
+	//パラメータ計算
+	XMVECTOR eye_pos = XMVectorSet(0.0f,0.0f,-2.0f,1.0f);
+	XMVECTOR eye_lookup = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	XMVECTOR eye_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+	XMMATRIX view = XMMatrixLookAtLH(eye_pos, eye_lookup, eye_up);
+	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,100.0f);
+	XMMATRIX world = XMMatrixRotationZ(0);
+
+	//データを渡す
+	D3D11_MAPPED_SUBRESOURCE data;
+	CONSTANT_BUFFER buffer;
+	buffer.mWVP = XMMatrixTranspose(world * view * proj);
+	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	memcpy_s(data.pData, data.RowPitch, (void*)(&buffer), sizeof(buffer));
+	mDeviceContext->Unmap(mConstantBuffer, 0);
+
+	//描画
+	mDeviceContext->Draw(2, 0);
 	mSwapChain->Present(0, 0);
 }
 
