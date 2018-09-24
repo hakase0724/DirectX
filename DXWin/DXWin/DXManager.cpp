@@ -129,9 +129,10 @@ HRESULT InitDX11(HWND hwnd)
 	VERTEX vertex[] = {
 		XMFLOAT3(-0.2f, 0.5f, 0.0f),
 		XMFLOAT3(0.2f, 0.5f, 0.0f),
+		XMFLOAT3(0.2f, 0.5f, 0.0f)
 	};
 	D3D11_BUFFER_DESC bd;
-	bd.ByteWidth = sizeof(VERTEX) * 2;
+	bd.ByteWidth = sizeof(VERTEX) * (sizeof(vertex) / sizeof(vertex[0]));
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
