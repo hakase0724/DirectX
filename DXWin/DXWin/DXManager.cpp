@@ -11,7 +11,8 @@ using namespace DirectX;
 
 struct VERTEX
 {
-	XMFLOAT3 mV;
+	XMFLOAT3 V;
+	XMFLOAT4 C;
 };
 
 struct CONSTANT_BUFFER
@@ -19,6 +20,8 @@ struct CONSTANT_BUFFER
 	XMMATRIX mWVP;
 };
 
+//カメラをY軸中心に回すための変数　ポリゴンが全部出てて問題ないか確認するためカメラを回した
+float y = 0.0f;
 //初期化済みか
 bool mIsInit = false;
 //描画する頂点数
@@ -47,6 +50,8 @@ ID3D11PixelShader* mPixelShader;
 ID3D11Buffer* mConstantBuffer;
 //頂点シェーダー用のバッファ
 ID3D11Buffer* mVertexBuffer;
+//インデックス要のバッファ
+ID3D11Buffer* mIndexBuffer;
 //ラスタライザステージのラスタライザステートへアクセス　面とか出すときラスタ形式で出しているから必要らしい
 ID3D11RasterizerState* mRasterizerState;
 
@@ -70,8 +75,9 @@ HRESULT InitDX11(HWND hwnd)
 	//スワップチェイン設定
 	DXGI_SWAP_CHAIN_DESC sd;
 	//渡したもの全てを0クリアする
+	//クリアした後中身を入れずにアクセスするとエラーになることが多いため要注意らしい
 	ZeroMemory(&sd,sizeof(sd));
-	//バッファー数
+	//バッファ数
 	sd.BufferCount = 1;
 	//解像度幅
 	sd.BufferDesc.Width = width;
@@ -83,7 +89,7 @@ HRESULT InitDX11(HWND hwnd)
 	sd.BufferDesc.RefreshRate.Denominator = 1;
 	//表示フォーマット　4要素符号無し32ビット
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	//バックバッファーのサーフェス使用法CPUアクセスオプションを設定する　出力で使うようにする
+	//バックバッファのサーフェス使用法CPUアクセスオプションを設定する　出力で使うようにする
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	//出力するウィンドウのハンドル
 	sd.OutputWindow = mHwnd;
@@ -98,7 +104,7 @@ HRESULT InitDX11(HWND hwnd)
 	hr = D3D11CreateDeviceAndSwapChain
 	(NULL,mDriverType,NULL,flags,&fLevel,1,D3D11_SDK_VERSION,&sd,&mSwapChain,&mDevice,&mLevel,&mDeviceContext);
 	if (FAILED(hr)) return hr;
-	//バックバッファーの確保　裏面描画とかで使ってそう
+	//バックバッファの確保　裏面描画とかで使ってそう
 	ID3D11Texture2D* back_buff = NULL;
 	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&back_buff);
 	if (FAILED(hr)) return hr;
@@ -106,8 +112,7 @@ HRESULT InitDX11(HWND hwnd)
 	hr = mDevice->CreateRenderTargetView(back_buff,NULL,&mRenderTargetView);
 	back_buff->Release();
 	if (FAILED(hr)) return hr;
-	//レンダーターゲットを設定する
-	mDeviceContext->OMSetRenderTargets(1,&mRenderTargetView,NULL);
+	
 
 	//ビューポート設定
 	D3D11_VIEWPORT view;
@@ -117,7 +122,7 @@ HRESULT InitDX11(HWND hwnd)
 	view.MaxDepth = 1.0f;
 	view.TopLeftX = 0.0f;
 	view.TopLeftY = 0.0f;
-	mDeviceContext->RSSetViewports(1, &view);
+	
 
 	//シェーダの設定
 	ID3DBlob* compileVS = NULL;
@@ -133,16 +138,27 @@ HRESULT InitDX11(HWND hwnd)
 	//頂点レイアウト設定
 	D3D11_INPUT_ELEMENT_DESC layout[] = 
 	{
-		"POSITION",
-		0,
-		DXGI_FORMAT_R32G32B32_FLOAT,
-		0,
-		0,
-		D3D11_INPUT_PER_VERTEX_DATA,
-		0
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+		{
+			"COLOR",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			0,
+			12,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		}
 	};
 	//入力レイアウトを生成する
-	mDevice->CreateInputLayout(layout, 1, compileVS->GetBufferPointer(), compileVS->GetBufferSize(), &mVertexLayout);
+	mDevice->CreateInputLayout(layout, 2, compileVS->GetBufferPointer(), compileVS->GetBufferSize(), &mVertexLayout);
 	compileVS->Release();
 	compilePS->Release();
 
@@ -154,24 +170,29 @@ HRESULT InitDX11(HWND hwnd)
 	//GPUから読み込みのみCPUからは書き込みのみができるようになる　1フレーム内にCPUから複数回更新が想定される場合に設定する
 	cb.Usage = D3D11_USAGE_DYNAMIC;
 	//パイプラインにどのようにバインドするか
-	//定数バッファーとしてバインド
+	//定数バッファとしてバインド
 	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	//CPUアクセスフラグ
 	//書き込みができる
 	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	//今まで設定したフラグ以外のもの
 	cb.MiscFlags = 0;
-	//構造体が構造体バッファーを表す時のサイズ(バイト単位)
+	//構造体が構造体バッファを表す時のサイズ(バイト単位)
 	cb.StructureByteStride = 0;
-	//バッファーを作る　NULLのところにデータを入れるとその値で初期化してくれる
+	//バッファを作る　NULLのところにデータを入れるとその値で初期化してくれる
 	mDevice->CreateBuffer(&cb, NULL, &mConstantBuffer);
 
 	//頂点データとバッファ生成
 	VERTEX vertex[] = 
 	{
-		XMFLOAT3(-0.2f, 0.5f, 0.0f),
-		XMFLOAT3(0.2f, 0.5f, 0.0f),
-		XMFLOAT3(-0.0f, 0.3f, 0.0f)
+		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),  XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, 0.5f),   XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, -0.5f, -0.5f),  XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),   XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, 0.5f),    XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(0.5f, 0.5f, -0.5f),   XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
+		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),  XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 	};
 	//頂点数計算
 	//配列の要素数を求めるために配列全体のサイズを先頭要素のサイズで割る
@@ -180,7 +201,7 @@ HRESULT InitDX11(HWND hwnd)
 	bd.ByteWidth = sizeof(VERTEX) * mDrawNum;
 	//GPUから読み書きができる
 	bd.Usage = D3D11_USAGE_DEFAULT;
-	//頂点バッファーとしてバインド
+	//頂点バッファとしてバインド
 	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	//用意された定数を設定しないと勝手に最適化されるらしい
 	bd.CPUAccessFlags = 0;
@@ -191,12 +212,46 @@ HRESULT InitDX11(HWND hwnd)
 	data.pSysMem = vertex;
 	mDevice->CreateBuffer(&bd, &data, &mVertexBuffer);
 
+	//ポリゴンのインデックス情報
+	int index[] =
+	{
+		0, 2, 1,
+		0, 3, 2,
+
+		0, 5, 4,
+		0, 1, 5,
+
+		1, 6, 5,
+		1, 2, 6,
+
+		2, 7, 6,
+		2, 3, 7,
+
+		0, 4, 7,
+		0, 7, 3,
+
+		4, 5, 7,
+		5, 6, 7,
+
+	};
+	mDrawNum = sizeof(index) / sizeof(index[0]);
+	D3D11_BUFFER_DESC bd_index;
+	bd_index.ByteWidth = sizeof(int) * mDrawNum;
+	bd_index.Usage = D3D11_USAGE_DEFAULT;
+	bd_index.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bd_index.CPUAccessFlags = 0;
+	bd_index.MiscFlags = 0;
+	bd_index.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA data_index;
+	data_index.pSysMem = index;
+	mDevice->CreateBuffer(&bd_index, &data_index, &mIndexBuffer);
+
 	//ラスタライザ設定
-	D3D11_RASTERIZER_DESC rd;
+	D3D11_RASTERIZER_DESC rd = {};
 	//塗りつぶし設定　SOLIDは塗りつぶし
 	rd.FillMode = D3D11_FILL_SOLID;
-	//描画面設定　今は両面描画
-	rd.CullMode = D3D11_CULL_NONE;
+	//描画面設定　今は前面描画
+	rd.CullMode = D3D11_CULL_FRONT;
 	//表面設定　反時計回りすると表と認識　FALSEだと逆転する
 	rd.FrontCounterClockwise = TRUE;
 	mDevice->CreateRasterizerState(&rd, &mRasterizerState);
@@ -204,18 +259,26 @@ HRESULT InitDX11(HWND hwnd)
 	//パイプライン構築
 	UINT stride = sizeof(VERTEX);
 	UINT offset = 0;
-	//頂点バッファーを設定
+	//頂点バッファを設定
 	mDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
+	//インデックスバッファーの設定
+	mDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, offset);
 	//入力レイアウト設定
 	mDeviceContext->IASetInputLayout(mVertexLayout);
 	//頂点情報の解釈の仕方を設定
-	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//頂点シェーダーを設定
 	mDeviceContext->VSSetShader(mVertexShader, NULL, 0);
 	//ピクセルシェーダーを設定
 	mDeviceContext->PSSetShader(mPixelShader, NULL, 0);
-	//定数バッファーを設定
+	//ラスタライズステートの設定
+	mDeviceContext->RSSetState(mRasterizerState);
+	//定数バッファを設定
 	mDeviceContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
+	//レンダーターゲットを設定する
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, NULL);
+	//ビューポートの設定
+	mDeviceContext->RSSetViewports(1, &view);
 	mIsInit = true;
 	return S_OK;
 }
@@ -227,23 +290,27 @@ void RenderDX11()
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
 
 	//カメラパラメータ計算
-	XMVECTOR eye_pos = XMVectorSet(0.0f,0.0f,-2.0f,1.0f);
+	XMVECTOR eye_pos = XMVectorSet(0.0f,1.0f,-2.3f,1.0f);
 	XMVECTOR eye_lookup = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	XMVECTOR eye_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
 	XMMATRIX view = XMMatrixLookAtLH(eye_pos, eye_lookup, eye_up);
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,100.0f);
-	XMMATRIX world = XMMatrixRotationZ(0);
+	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,110.0f);
+	XMMATRIX world = XMMatrixRotationY(y);
+	y += 0.001f;
 
 	//データを渡す
 	D3D11_MAPPED_SUBRESOURCE data;
 	CONSTANT_BUFFER buffer;
 	buffer.mWVP = XMMatrixTranspose(world * view * proj);
+	//描画停止
 	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
+	//データ更新
 	memcpy_s(data.pData, data.RowPitch, (void*)(&buffer), sizeof(buffer));
+	//描画再開
 	mDeviceContext->Unmap(mConstantBuffer, 0);
-
 	//描画
-	mDeviceContext->Draw(mDrawNum, 0);
+	mDeviceContext->DrawIndexed(mDrawNum, 0,0);
+	//裏面描画したものを表に展開する
 	mSwapChain->Present(0, 0);
 }
 
@@ -265,6 +332,7 @@ void ExitDX11()
 	if (mPixelShader) mPixelShader->Release();
 	if (mConstantBuffer) mConstantBuffer->Release();
 	if (mRasterizerState) mRasterizerState->Release();
+	if (mIndexBuffer) mIndexBuffer->Release();
 	if (mDevice) mDevice->Release();
 	mIsInit = false;
 }
