@@ -147,6 +147,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dinputex.h" />
+    <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="Resource.h" />
@@ -154,6 +156,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="stdafx.cpp">

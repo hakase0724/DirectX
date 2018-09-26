@@ -3,12 +3,21 @@ cbuffer global
 	matrix gWVP;
 };
 
-float4 VS(float4 pos:POSITION):SV_POSITION
+struct VS_OUTPUT
 {
-    return mul(pos, gWVP);
+    float4 pos : SV_POSITION;
+    float4 color : COLOR;
 };
 
-float4 PS() : SV_Target
+VS_OUTPUT VS(float4 pos:POSITION,float4 color:COLOR)
 {
-    return float4(1, 1, 1, 1);
+    VS_OUTPUT output;
+    output.pos = mul(pos, gWVP);
+    output.color = color;
+    return output;
+};
+
+float4 PS(VS_OUTPUT input) : SV_Target
+{
+    return input.color;
 };
