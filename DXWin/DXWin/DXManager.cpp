@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "DXManager.h"
+#include "DXInput.h"
+#include "dinput.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -20,10 +22,11 @@ struct CONSTANT_BUFFER
 	XMMATRIX mWVP;
 };
 
-//カメラをY軸中心に回すための変数　ポリゴンが全部出てて問題ないか確認するためカメラを回した
+//背景塗りつぶし色
+const float mColor[4] = { 0.0f,0.0f,0.0f,1.0f};
+//カメラを回すための変数　
+float x = 0.0f;
 float y = 0.0f;
-//初期化済みか
-bool mIsInit = false;
 //描画する頂点数
 int mDrawNum = 0;
 //ウィンドルのハンドル
@@ -55,10 +58,9 @@ ID3D11Buffer* mIndexBuffer;
 //ラスタライザステージのラスタライザステートへアクセス　面とか出すときラスタ形式で出しているから必要らしい
 ID3D11RasterizerState* mRasterizerState;
 
+//初期化処理
 HRESULT InitDX11(HWND hwnd)
 {
-	//初期化してたら処理しない
-	if (mIsInit) return S_FALSE;
 	mHwnd = hwnd;
 	HRESULT hr = S_OK;
 	RECT rc;
@@ -103,16 +105,33 @@ HRESULT InitDX11(HWND hwnd)
 	//DirectXのデバイスを作る
 	hr = D3D11CreateDeviceAndSwapChain
 	(NULL,mDriverType,NULL,flags,&fLevel,1,D3D11_SDK_VERSION,&sd,&mSwapChain,&mDevice,&mLevel,&mDeviceContext);
-	if (FAILED(hr)) return hr;
+	if (FAILED(hr)) return S_FALSE;
+
 	//バックバッファの確保　裏面描画とかで使ってそう
 	ID3D11Texture2D* back_buff = NULL;
 	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&back_buff);
-	if (FAILED(hr)) return hr;
+	if (FAILED(hr)) 
+	{
+		ExitDX11();
+		return S_FALSE;
+	}
+
 	//レンダーターゲットビュー生成
 	hr = mDevice->CreateRenderTargetView(back_buff,NULL,&mRenderTargetView);
 	back_buff->Release();
-	if (FAILED(hr)) return hr;
-	
+	if (FAILED(hr))
+	{
+		ExitDX11();
+		return S_FALSE;
+	}
+
+	//入力初期化
+	hr = InitDirectInput(hwnd);
+	if (FAILED(hr))
+	{
+		ExitDX11();
+		return S_FALSE;
+	}
 
 	//ビューポート設定
 	D3D11_VIEWPORT view;
@@ -121,16 +140,25 @@ HRESULT InitDX11(HWND hwnd)
 	view.MinDepth = 0.0f;
 	view.MaxDepth = 1.0f;
 	view.TopLeftX = 0.0f;
-	view.TopLeftY = 0.0f;
-	
+	view.TopLeftY = 0.0f;	
 
 	//シェーダの設定
 	ID3DBlob* compileVS = NULL;
 	ID3DBlob* compilePS = NULL;
 	//シェーダーのコンパイル
 	//失敗したら終了する
-	if (FAILED(D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &compilePS, NULL))) return S_FALSE;
-	if (FAILED(D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &compileVS, NULL))) return S_FALSE;
+	hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &compilePS, NULL);
+	if (FAILED(hr))
+	{
+		ExitDX11();
+		return S_FALSE;
+	}
+	hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &compileVS, NULL);
+	if (FAILED(hr))
+	{
+		ExitDX11();
+		return S_FALSE;
+	}
 	//デバイスにコンパイルしたシェーダーをあてがう
 	mDevice->CreateVertexShader(compileVS->GetBufferPointer(), compileVS->GetBufferSize(), NULL, &mVertexShader);
 	mDevice->CreatePixelShader(compilePS->GetBufferPointer(), compilePS->GetBufferSize(), NULL, &mPixelShader);
@@ -279,29 +307,44 @@ HRESULT InitDX11(HWND hwnd)
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, NULL);
 	//ビューポートの設定
 	mDeviceContext->RSSetViewports(1, &view);
-	mIsInit = true;
 	return S_OK;
 }
 
-void RenderDX11()
+//描画処理
+BOOL RenderDX11()
 {
-	//塗りつぶし色の設定と画面クリア
-	float color[4] = { 0.0f,0.0f,0.0f,1.0f };
-	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
+	//背景塗りつぶし
+	mDeviceContext->ClearRenderTargetView(mRenderTargetView, mColor);
+
+	//入力取得
+	SetInputState();
+	if (GetInputState(DIK_UP)) x += 0.001f;
+	if (GetInputState(DIK_DOWN)) x -= 0.001f;
+	if (GetInputState(DIK_RIGHT)) y -= 0.001f;
+	if (GetInputState(DIK_LEFT)) y += 0.001f;
+	if (GetInputState(DIK_ESCAPE)) return FALSE;
 
 	//カメラパラメータ計算
+	//カメラ位置
 	XMVECTOR eye_pos = XMVectorSet(0.0f,1.0f,-2.3f,1.0f);
+	//カメラ上方向
 	XMVECTOR eye_lookup = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	//カメラの焦点
 	XMVECTOR eye_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
+	//カメラの位置、上方向、および焦点を使用して、左手座標系のビュー行列を作成
 	XMMATRIX view = XMMatrixLookAtLH(eye_pos, eye_lookup, eye_up);
+	//視野に基づいて、左手座標系のパースペクティブ射影行列を作成
 	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,110.0f);
-	XMMATRIX world = XMMatrixRotationY(y);
-	y += 0.001f;
+	//x軸回転
+	XMMATRIX worldX = XMMatrixRotationX(x);
+	//y軸回転
+	XMMATRIX worldY = XMMatrixRotationY(y);
 
 	//データを渡す
 	D3D11_MAPPED_SUBRESOURCE data;
 	CONSTANT_BUFFER buffer;
-	buffer.mWVP = XMMatrixTranspose(world * view * proj);
+	//転置行列を計算 要はカメラの場所や視界を計算するってことだと思う
+	buffer.mWVP = XMMatrixTranspose(worldX * worldY * view * proj);
 	//描画停止
 	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	//データ更新
@@ -312,13 +355,14 @@ void RenderDX11()
 	mDeviceContext->DrawIndexed(mDrawNum, 0,0);
 	//裏面描画したものを表に展開する
 	mSwapChain->Present(0, 0);
+	return TRUE;
 }
 
+//終了処理
 void ExitDX11()
 {
-	//初期化してなかったら処理しない
-	if (!mIsInit) return;
 	//メモリを確保してあるものを全て開放する
+	ExitDirectInput();
 	if (mDeviceContext)
 	{
 		mDeviceContext->ClearState();
@@ -334,5 +378,4 @@ void ExitDX11()
 	if (mRasterizerState) mRasterizerState->Release();
 	if (mIndexBuffer) mIndexBuffer->Release();
 	if (mDevice) mDevice->Release();
-	mIsInit = false;
 }
