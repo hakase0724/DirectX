@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "DXManager.h"
-#include "DXInput.h"
 #include "dinput.h"
-#include <d3d11.h>
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
@@ -10,6 +8,8 @@
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
+using namespace MyDirectX;
+using namespace Microsoft::WRL;
 
 struct VERTEX
 {
@@ -22,45 +22,19 @@ struct CONSTANT_BUFFER
 	XMMATRIX mWVP;
 };
 
-//背景塗りつぶし色
-const float mColor[4] = { 0.0f,0.0f,0.0f,1.0f};
-//カメラを回すための変数　
-float x = 0.0f;
-float y = 0.0f;
-//描画する頂点数
-int mDrawNum = 0;
-//ウィンドルのハンドル
-HWND mHwnd = NULL;
-//ドライバーの種類オプション　NULLはデバッグ用らしい
-D3D_DRIVER_TYPE mDriverType = D3D_DRIVER_TYPE_NULL;
-//DirectXの機能サポートレベルを設定する　今回はDirectX11の勉強だから11を設定した
-D3D_FEATURE_LEVEL mLevel = D3D_FEATURE_LEVEL_11_0;
-//DirectXの仮想ドライバー　多分こいつが一番大事なもの
-ID3D11Device* mDevice = NULL;
-//レンダリングについて色々設定できるものらしい
-ID3D11DeviceContext* mDeviceContext = NULL;
-//描画処理に必要な情報が入るバッファーらしい
-IDXGISwapChain* mSwapChain = NULL;
-//レンダリング時に使えるサブリソース識別
-ID3D11RenderTargetView* mRenderTargetView = NULL;
-//入力アセンブラステージの入力データにアクセス　入力してなんかするときに使いそう
-ID3D11InputLayout* mVertexLayout;
-//頂点シェーダー管理
-ID3D11VertexShader* mVertexShader;
-//ピクセルシェーダー管理
-ID3D11PixelShader* mPixelShader;
-//データバッファ　シェーダーとのデータのやり取りに使っている
-ID3D11Buffer* mConstantBuffer;
-//頂点シェーダー用のバッファ
-ID3D11Buffer* mVertexBuffer;
-//インデックス要のバッファ
-ID3D11Buffer* mIndexBuffer;
-//ラスタライザステージのラスタライザステートへアクセス　面とか出すときラスタ形式で出しているから必要らしい
-ID3D11RasterizerState* mRasterizerState;
+DXManager::DXManager(){}
 
-//初期化処理
-HRESULT InitDX11(HWND hwnd)
+HRESULT DXManager::InitDX11(HWND hwnd)
 {
+	//カメラを生成し初期設定
+	mDXCamera = std::unique_ptr<DXCamera>(new DXCamera());
+	mDXCamera->SetEyeParamWithRatio
+	(
+		XMVectorSet(0.0f, 1.0f, -2.3f, 1.0f),
+		XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
+		XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f),
+		cWidth / cHeight
+	);
 	mHwnd = hwnd;
 	HRESULT hr = S_OK;
 	RECT rc;
@@ -108,8 +82,9 @@ HRESULT InitDX11(HWND hwnd)
 	if (FAILED(hr)) return S_FALSE;
 
 	//バックバッファの確保　裏面描画とかで使ってそう
-	ID3D11Texture2D* back_buff = NULL;
-	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&back_buff);
+	std::unique_ptr<ID3D11Texture2D> back_buff;
+	auto pBack_Buff = back_buff.get();;
+	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBack_Buff);
 	if (FAILED(hr)) 
 	{
 		ExitDX11();
@@ -117,8 +92,8 @@ HRESULT InitDX11(HWND hwnd)
 	}
 
 	//レンダーターゲットビュー生成
-	hr = mDevice->CreateRenderTargetView(back_buff,NULL,&mRenderTargetView);
-	back_buff->Release();
+	hr = mDevice->CreateRenderTargetView(pBack_Buff,NULL,&mRenderTargetView);
+	
 	if (FAILED(hr))
 	{
 		ExitDX11();
@@ -126,7 +101,8 @@ HRESULT InitDX11(HWND hwnd)
 	}
 
 	//入力初期化
-	hr = InitDirectInput(hwnd);
+	mDXInput = std::unique_ptr<DXInput>(new DXInput());
+	hr = mDXInput->InitDirectInput(hwnd);
 	if (FAILED(hr))
 	{
 		ExitDX11();
@@ -222,9 +198,8 @@ HRESULT InitDX11(HWND hwnd)
 		{ XMFLOAT3(0.5f, 0.5f, -0.5f),   XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
 		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),  XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
 	};
-	//頂点数計算
-	//配列の要素数を求めるために配列全体のサイズを先頭要素のサイズで割る
-	mDrawNum = sizeof(vertex) / sizeof(vertex[0]);
+	
+	mDrawNum = ARRAYSIZE(vertex);
 	D3D11_BUFFER_DESC bd;
 	bd.ByteWidth = sizeof(VERTEX) * mDrawNum;
 	//GPUから読み書きができる
@@ -262,7 +237,7 @@ HRESULT InitDX11(HWND hwnd)
 		5, 6, 7,
 
 	};
-	mDrawNum = sizeof(index) / sizeof(index[0]);
+	mDrawNum = ARRAYSIZE(index);
 	D3D11_BUFFER_DESC bd_index;
 	bd_index.ByteWidth = sizeof(int) * mDrawNum;
 	bd_index.Usage = D3D11_USAGE_DEFAULT;
@@ -292,15 +267,15 @@ HRESULT InitDX11(HWND hwnd)
 	//インデックスバッファーの設定
 	mDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, offset);
 	//入力レイアウト設定
-	mDeviceContext->IASetInputLayout(mVertexLayout);
+	mDeviceContext->IASetInputLayout(mVertexLayout.Get());
 	//頂点情報の解釈の仕方を設定
 	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	//頂点シェーダーを設定
-	mDeviceContext->VSSetShader(mVertexShader, NULL, 0);
+	mDeviceContext->VSSetShader(mVertexShader.Get(), NULL, 0);
 	//ピクセルシェーダーを設定
-	mDeviceContext->PSSetShader(mPixelShader, NULL, 0);
+	mDeviceContext->PSSetShader(mPixelShader.Get(), NULL, 0);
 	//ラスタライズステートの設定
-	mDeviceContext->RSSetState(mRasterizerState);
+	mDeviceContext->RSSetState(mRasterizerState.Get());
 	//定数バッファを設定
 	mDeviceContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
 	//レンダーターゲットを設定する
@@ -309,42 +284,25 @@ HRESULT InitDX11(HWND hwnd)
 	mDeviceContext->RSSetViewports(1, &view);
 	return S_OK;
 }
-
-//描画処理
-BOOL RenderDX11()
+BOOL MyDirectX::DXManager::UpdateDX11()
+{
+	//入力取得
+	mDXInput->SetInputState();
+	if (mDXInput->GetInputState(DIK_UP)) xRote += 0.001f;
+	if (mDXInput->GetInputState(DIK_DOWN)) xRote -= 0.001f;
+	if (mDXInput->GetInputState(DIK_RIGHT)) yRote -= 0.001f;
+	if (mDXInput->GetInputState(DIK_LEFT)) yRote += 0.001f;
+	if (mDXInput->GetInputState(DIK_ESCAPE)) return FALSE;
+	else return TRUE;
+}
+void DXManager::RenderDX11()
 {
 	//背景塗りつぶし
 	mDeviceContext->ClearRenderTargetView(mRenderTargetView, mColor);
-
-	//入力取得
-	SetInputState();
-	if (GetInputState(DIK_UP)) x += 0.001f;
-	if (GetInputState(DIK_DOWN)) x -= 0.001f;
-	if (GetInputState(DIK_RIGHT)) y -= 0.001f;
-	if (GetInputState(DIK_LEFT)) y += 0.001f;
-	if (GetInputState(DIK_ESCAPE)) return FALSE;
-
-	//カメラパラメータ計算
-	//カメラ位置
-	XMVECTOR eye_pos = XMVectorSet(0.0f,1.0f,-2.3f,1.0f);
-	//カメラ上方向
-	XMVECTOR eye_lookup = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-	//カメラの焦点
-	XMVECTOR eye_up = XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f);
-	//カメラの位置、上方向、および焦点を使用して、左手座標系のビュー行列を作成
-	XMMATRIX view = XMMatrixLookAtLH(eye_pos, eye_lookup, eye_up);
-	//視野に基づいて、左手座標系のパースペクティブ射影行列を作成
-	XMMATRIX proj = XMMatrixPerspectiveFovLH(XM_PIDIV4, cWidth / cHeight,0.1f,110.0f);
-	//x軸回転
-	XMMATRIX worldX = XMMatrixRotationX(x);
-	//y軸回転
-	XMMATRIX worldY = XMMatrixRotationY(y);
-
 	//データを渡す
 	D3D11_MAPPED_SUBRESOURCE data;
 	CONSTANT_BUFFER buffer;
-	//転置行列を計算 要はカメラの場所や視界を計算するってことだと思う
-	buffer.mWVP = XMMatrixTranspose(worldX * worldY * view * proj);
+	buffer.mWVP = mDXCamera->GetDXCameraParam(xRote, yRote);
 	//描画停止
 	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
 	//データ更新
@@ -352,30 +310,28 @@ BOOL RenderDX11()
 	//描画再開
 	mDeviceContext->Unmap(mConstantBuffer, 0);
 	//描画
-	mDeviceContext->DrawIndexed(mDrawNum, 0,0);
+	mDeviceContext->DrawIndexed(mDrawNum, 0, 0);
 	//裏面描画したものを表に展開する
 	mSwapChain->Present(0, 0);
-	return TRUE;
 }
-
-//終了処理
-void ExitDX11()
+void DXManager::ExitDX11()
 {
 	//メモリを確保してあるものを全て開放する
-	ExitDirectInput();
+	mDXInput->ExitDirectInput();
 	if (mDeviceContext)
 	{
 		mDeviceContext->ClearState();
-		mDeviceContext->Release();
+		mDeviceContext.Reset();
 	}
 	if (mRenderTargetView) mRenderTargetView->Release();
-	if (mSwapChain) mSwapChain->Release();
-	if (mVertexLayout) mVertexLayout->Release();
+	if (mSwapChain) mSwapChain.Reset();
+	if (mVertexLayout) mVertexLayout.Reset();
 	if (mVertexBuffer) mVertexBuffer->Release();
-	if (mVertexShader) mVertexShader->Release();
-	if (mPixelShader) mPixelShader->Release();
+	if (mVertexShader) mVertexShader.Reset();
+	if (mPixelShader) mPixelShader.Reset();
 	if (mConstantBuffer) mConstantBuffer->Release();
-	if (mRasterizerState) mRasterizerState->Release();
+	if (mRasterizerState) mRasterizerState.Reset();
 	if (mIndexBuffer) mIndexBuffer->Release();
-	if (mDevice) mDevice->Release();
+	if (mDevice) mDevice.Reset();
 }
+
