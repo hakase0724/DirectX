@@ -1,6 +1,6 @@
 cbuffer global
 {
-	matrix gWVP;
+    float4x4 gWVP;
 };
 
 struct VS_OUTPUT
@@ -9,11 +9,17 @@ struct VS_OUTPUT
     float4 color : COLOR;
 };
 
-VS_OUTPUT VS(float4 pos:POSITION,float4 color:COLOR)
+struct VS_INPUT
+{
+    float4 pos : POSITION;
+    float4 color : COLOR;
+};
+
+VS_OUTPUT VS(VS_INPUT input)
 {
     VS_OUTPUT output;
-    output.pos = mul(pos, gWVP);
-    output.color = color;
+    output.pos = mul(input.pos, gWVP);
+    output.color = input.color;
     return output;
 };
 

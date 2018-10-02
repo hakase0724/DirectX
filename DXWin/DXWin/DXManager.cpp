@@ -11,30 +11,19 @@ using namespace DirectX;
 using namespace MyDirectX;
 using namespace Microsoft::WRL;
 
-struct VERTEX
+DXManager::DXManager(HWND hwnd)
 {
-	XMFLOAT3 V;
-	XMFLOAT4 C;
-};
+	InitDX11(hwnd);
+}
 
-struct CONSTANT_BUFFER
+MyDirectX::DXManager::~DXManager()
 {
-	XMMATRIX mWVP;
-};
+	ExitDX11();
+}
 
-DXManager::DXManager(){}
-
+//初期化
 HRESULT DXManager::InitDX11(HWND hwnd)
 {
-	//カメラを生成し初期設定
-	mDXCamera = std::unique_ptr<DXCamera>(new DXCamera());
-	mDXCamera->SetEyeParamWithRatio
-	(
-		XMVectorSet(0.0f, 1.0f, -2.3f, 1.0f),
-		XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
-		XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f),
-		cWidth / cHeight
-	);
 	mHwnd = hwnd;
 	HRESULT hr = S_OK;
 	RECT rc;
@@ -47,7 +36,8 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 #endif
 	D3D_FEATURE_LEVEL fLevel = D3D_FEATURE_LEVEL_11_0;
 	mDriverType = D3D_DRIVER_TYPE_HARDWARE;
-
+	//VSyncを有効にする
+	mIsVsyncEnable = TRUE;
 	//スワップチェイン設定
 	DXGI_SWAP_CHAIN_DESC sd;
 	//渡したもの全てを0クリアする
@@ -91,6 +81,47 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 		return S_FALSE;
 	}
 
+	//深度バッファで使うテクスチャ生成
+	D3D11_TEXTURE2D_DESC depthDesc;
+	ZeroMemory(&depthDesc, sizeof(depthDesc));
+	depthDesc.Width = width;
+	depthDesc.Height = height;
+	depthDesc.MipLevels = 1;
+	depthDesc.ArraySize = 1;
+	depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	depthDesc.SampleDesc.Count = 1;
+	depthDesc.SampleDesc.Quality = 0;
+	depthDesc.Usage = D3D11_USAGE_DEFAULT;
+	depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	depthDesc.CPUAccessFlags = 0;
+	depthDesc.MiscFlags = 0;
+
+	ID3D11Texture2D* depthStencil = 0;
+	hr = mDevice->CreateTexture2D(&depthDesc, NULL, &depthStencil);
+
+	//深度バッファのビュー情報生成
+	D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilView;
+	ZeroMemory(&depthStencilView, sizeof(depthStencilView));
+	depthStencilView.Format = depthDesc.Format;
+	depthStencilView.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	depthStencilView.Texture2D.MipSlice = 0;
+	depthStencilView.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	hr = mDevice->CreateDepthStencilView(depthStencil, &depthStencilView, &mDepthStencilView);
+	if (depthStencil)
+	{
+		depthStencil->Release();
+		depthStencil = 0;
+	}
+
+	//深度バッファの状態生成
+	D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+	ZeroMemory(&depthStencilDesc, (sizeof(depthStencilDesc)));
+	depthStencilDesc.DepthEnable = TRUE;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	depthStencilDesc.StencilEnable = FALSE;
+	hr = mDevice->CreateDepthStencilState(&depthStencilDesc,&mDepthStencilState);
+
 	//レンダーターゲットビュー生成
 	hr = mDevice->CreateRenderTargetView(pBack_Buff,NULL,&mRenderTargetView);
 	
@@ -100,238 +131,56 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 		return S_FALSE;
 	}
 
-	//入力初期化
-	mDXInput = std::unique_ptr<DXInput>(new DXInput());
-	hr = mDXInput->InitDirectInput(hwnd);
-	if (FAILED(hr))
-	{
-		ExitDX11();
-		return S_FALSE;
-	}
-
 	//ビューポート設定
-	D3D11_VIEWPORT view;
-	view.Width = (FLOAT)width;
-	view.Height = (FLOAT)height;
-	view.MinDepth = 0.0f;
-	view.MaxDepth = 1.0f;
-	view.TopLeftX = 0.0f;
-	view.TopLeftY = 0.0f;	
-
-	//シェーダの設定
-	ID3DBlob* compileVS = NULL;
-	ID3DBlob* compilePS = NULL;
-	//シェーダーのコンパイル
-	//失敗したら終了する
-	hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "PS", "ps_5_0", 0, 0, &compilePS, NULL);
-	if (FAILED(hr))
-	{
-		ExitDX11();
-		return S_FALSE;
-	}
-	hr = D3DCompileFromFile(L"shader.hlsl", nullptr, nullptr, "VS", "vs_5_0", 0, 0, &compileVS, NULL);
-	if (FAILED(hr))
-	{
-		ExitDX11();
-		return S_FALSE;
-	}
-	//デバイスにコンパイルしたシェーダーをあてがう
-	mDevice->CreateVertexShader(compileVS->GetBufferPointer(), compileVS->GetBufferSize(), NULL, &mVertexShader);
-	mDevice->CreatePixelShader(compilePS->GetBufferPointer(), compilePS->GetBufferSize(), NULL, &mPixelShader);
-	
-	//頂点レイアウト設定
-	D3D11_INPUT_ELEMENT_DESC layout[] = 
-	{
-		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			0,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"COLOR",
-			0,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			0,
-			12,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		}
-	};
-	//入力レイアウトを生成する
-	mDevice->CreateInputLayout(layout, 2, compileVS->GetBufferPointer(), compileVS->GetBufferSize(), &mVertexLayout);
-	compileVS->Release();
-	compilePS->Release();
-
-	//定数バッファ生成
-	D3D11_BUFFER_DESC cb;
-	//バッファサイズ
-	cb.ByteWidth = sizeof(CONSTANT_BUFFER);
-	//想定する読み書き方法　
-	//GPUから読み込みのみCPUからは書き込みのみができるようになる　1フレーム内にCPUから複数回更新が想定される場合に設定する
-	cb.Usage = D3D11_USAGE_DYNAMIC;
-	//パイプラインにどのようにバインドするか
-	//定数バッファとしてバインド
-	cb.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	//CPUアクセスフラグ
-	//書き込みができる
-	cb.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	//今まで設定したフラグ以外のもの
-	cb.MiscFlags = 0;
-	//構造体が構造体バッファを表す時のサイズ(バイト単位)
-	cb.StructureByteStride = 0;
-	//バッファを作る　NULLのところにデータを入れるとその値で初期化してくれる
-	mDevice->CreateBuffer(&cb, NULL, &mConstantBuffer);
-
-	//頂点データとバッファ生成
-	VERTEX vertex[] = 
-	{
-		{ XMFLOAT3(-0.5f, -0.5f, 0.5f),  XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, 0.5f),   XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, -0.5f, -0.5f),  XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, 0.5f),   XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, 0.5f),    XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.5f, 0.5f, -0.5f),   XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-0.5f, 0.5f, -0.5f),  XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-	};
-	
-	mDrawNum = ARRAYSIZE(vertex);
-	D3D11_BUFFER_DESC bd;
-	bd.ByteWidth = sizeof(VERTEX) * mDrawNum;
-	//GPUから読み書きができる
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	//頂点バッファとしてバインド
-	bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	//用意された定数を設定しないと勝手に最適化されるらしい
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-	bd.StructureByteStride = 0;
-	//サブリソースの初期化ポインター
-	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = vertex;
-	mDevice->CreateBuffer(&bd, &data, &mVertexBuffer);
-
-	//ポリゴンのインデックス情報
-	int index[] =
-	{
-		0, 2, 1,
-		0, 3, 2,
-
-		0, 5, 4,
-		0, 1, 5,
-
-		1, 6, 5,
-		1, 2, 6,
-
-		2, 7, 6,
-		2, 3, 7,
-
-		0, 4, 7,
-		0, 7, 3,
-
-		4, 5, 7,
-		5, 6, 7,
-
-	};
-	mDrawNum = ARRAYSIZE(index);
-	D3D11_BUFFER_DESC bd_index;
-	bd_index.ByteWidth = sizeof(int) * mDrawNum;
-	bd_index.Usage = D3D11_USAGE_DEFAULT;
-	bd_index.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd_index.CPUAccessFlags = 0;
-	bd_index.MiscFlags = 0;
-	bd_index.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA data_index;
-	data_index.pSysMem = index;
-	mDevice->CreateBuffer(&bd_index, &data_index, &mIndexBuffer);
-
-	//ラスタライザ設定
-	D3D11_RASTERIZER_DESC rd = {};
-	//塗りつぶし設定　SOLIDは塗りつぶし
-	rd.FillMode = D3D11_FILL_SOLID;
-	//描画面設定　今は前面描画
-	rd.CullMode = D3D11_CULL_FRONT;
-	//表面設定　反時計回りすると表と認識　FALSEだと逆転する
-	rd.FrontCounterClockwise = TRUE;
-	mDevice->CreateRasterizerState(&rd, &mRasterizerState);
-
-	//パイプライン構築
-	UINT stride = sizeof(VERTEX);
-	UINT offset = 0;
-	//頂点バッファを設定
-	mDeviceContext->IASetVertexBuffers(0, 1, &mVertexBuffer, &stride, &offset);
-	//インデックスバッファーの設定
-	mDeviceContext->IASetIndexBuffer(mIndexBuffer, DXGI_FORMAT_R32_UINT, offset);
-	//入力レイアウト設定
-	mDeviceContext->IASetInputLayout(mVertexLayout.Get());
-	//頂点情報の解釈の仕方を設定
-	mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	//頂点シェーダーを設定
-	mDeviceContext->VSSetShader(mVertexShader.Get(), NULL, 0);
-	//ピクセルシェーダーを設定
-	mDeviceContext->PSSetShader(mPixelShader.Get(), NULL, 0);
-	//ラスタライズステートの設定
-	mDeviceContext->RSSetState(mRasterizerState.Get());
-	//定数バッファを設定
-	mDeviceContext->VSSetConstantBuffers(0, 1, &mConstantBuffer);
-	//レンダーターゲットを設定する
-	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, NULL);
-	//ビューポートの設定
-	mDeviceContext->RSSetViewports(1, &view);
+	mView.Width = (FLOAT)width;
+	mView.Height = (FLOAT)height;
+	mView.MinDepth = 0.0f;
+	mView.MaxDepth = 1.0f;
+	mView.TopLeftX = 0.0f;
+	mView.TopLeftY = 0.0f;
+	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
+	mDeviceContext->RSSetViewports(1, &mView);
 	return S_OK;
 }
-BOOL MyDirectX::DXManager::UpdateDX11()
-{
-	//入力取得
-	mDXInput->SetInputState();
-	if (mDXInput->GetInputState(DIK_UP)) xRote += 0.001f;
-	if (mDXInput->GetInputState(DIK_DOWN)) xRote -= 0.001f;
-	if (mDXInput->GetInputState(DIK_RIGHT)) yRote -= 0.001f;
-	if (mDXInput->GetInputState(DIK_LEFT)) yRote += 0.001f;
-	if (mDXInput->GetInputState(DIK_ESCAPE)) return FALSE;
-	else return TRUE;
-}
-void DXManager::RenderDX11()
-{
-	//背景塗りつぶし
-	mDeviceContext->ClearRenderTargetView(mRenderTargetView, mColor);
-	//データを渡す
-	D3D11_MAPPED_SUBRESOURCE data;
-	CONSTANT_BUFFER buffer;
-	buffer.mWVP = mDXCamera->GetDXCameraParam(xRote, yRote);
-	//描画停止
-	mDeviceContext->Map(mConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &data);
-	//データ更新
-	memcpy_s(data.pData, data.RowPitch, (void*)(&buffer), sizeof(buffer));
-	//描画再開
-	mDeviceContext->Unmap(mConstantBuffer, 0);
-	//描画
-	mDeviceContext->DrawIndexed(mDrawNum, 0, 0);
-	//裏面描画したものを表に展開する
-	mSwapChain->Present(0, 0);
-}
+//終了
 void DXManager::ExitDX11()
 {
 	//メモリを確保してあるものを全て開放する
-	mDXInput->ExitDirectInput();
 	if (mDeviceContext)
 	{
 		mDeviceContext->ClearState();
-		mDeviceContext.Reset();
+		mDeviceContext->Release();
 	}
-	if (mRenderTargetView) mRenderTargetView->Release();
-	if (mSwapChain) mSwapChain.Reset();
-	if (mVertexLayout) mVertexLayout.Reset();
-	if (mVertexBuffer) mVertexBuffer->Release();
-	if (mVertexShader) mVertexShader.Reset();
-	if (mPixelShader) mPixelShader.Reset();
-	if (mConstantBuffer) mConstantBuffer->Release();
-	if (mRasterizerState) mRasterizerState.Reset();
-	if (mIndexBuffer) mIndexBuffer->Release();
-	if (mDevice) mDevice.Reset();
+	if (mSwapChain) mSwapChain->Release();
+	if (mDepthStencilView)mDepthStencilView->Release();
+	if (mDevice) mDevice->Release();
+}
+//描画開始前のバッファクリア
+void MyDirectX::DXManager::BeginScene(float r, float g, float b, float a)
+{
+	float color[] = {r,g,b,a};
+	//画面クリア
+	mDeviceContext->ClearRenderTargetView(mRenderTargetView, color);
+	//深度バッファクリア
+	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+}
+//描画処理が終了した後の画面をユーザーに見せる
+void MyDirectX::DXManager::EndScene()
+{
+	if(mIsVsyncEnable)
+	{
+		//VSync有
+		mSwapChain->Present(1, 0);
+	}
+	else
+	{
+		//VSync無
+		mSwapChain->Present(0, 0);
+	}
+}
+//VSyncの有無を切り替える
+void MyDirectX::DXManager::SetVsyncEnable(bool isEnable)
+{
+	mIsVsyncEnable = isEnable;
 }
 

@@ -150,6 +150,7 @@
     <ClInclude Include="dinputex.h" />
     <ClInclude Include="DXCamera.h" />
     <ClInclude Include="DXCube.h" />
+    <ClInclude Include="DXGameObjectManager.h" />
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXWin.h" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="DXCamera.cpp" />
     <ClCompile Include="DXCube.cpp" />
+    <ClCompile Include="DXGameObjectManager.cpp" />
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXWin.cpp" />

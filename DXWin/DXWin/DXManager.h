@@ -3,20 +3,41 @@
 #include <memory>
 #include "DXInput.h"
 #include "DXCamera.h"
+#include <DirectXMath.h>
 #include <wrl/client.h>
 
 namespace MyDirectX
 {
+	//画面解像度
+	const float cWidth = 1280;
+	const float cHeight = 960;
+	//頂点情報を保持する構造体
+	struct VERTEX
+	{
+		DirectX::XMFLOAT3 V;
+		DirectX::XMFLOAT4 C;
+	};
+	//シェーダに情報を送る定数バッファ構造体
+	struct CONSTANT_BUFFER
+	{
+		DirectX::XMFLOAT4X4 gWVP;
+	};
+
 	class DXManager
 	{
 	public:
-		DXManager();
+		DXManager(HWND hwnd);
+		~DXManager();
+		//初期化
 		HRESULT InitDX11(HWND hwnd);
-		BOOL UpdateDX11();
-		void RenderDX11();
+		//終了
 		void ExitDX11();
-		const float cWidth = 1280;
-		const float cHeight = 960;
+		//描画開始前のバッファクリア
+		void BeginScene(float r,float g, float b,float a);
+		//描画処理が終了した後の画面をユーザーに見せる
+		void EndScene();
+		//VSyncの有無を切り替える
+		void SetVsyncEnable(bool isEnable);
 		//ウィンドルのハンドル
 		HWND GetHwnd() const { return mHwnd; }
 		//ドライバーの種類オプション　NULLはデバッグ用らしい
@@ -24,36 +45,20 @@ namespace MyDirectX
 		//DirectXの機能サポートレベルを設定する　今回はDirectX11の勉強だから11を設定した
 		D3D_FEATURE_LEVEL GetLevel() const { return mLevel; }
 		//DirectXの仮想ドライバー　多分こいつが一番大事なもの
-		ID3D11Device* GetDevice() const { return mDevice.Get(); }
+		ID3D11Device* GetDevice() const { return mDevice; }
 		//レンダリングについて色々設定できるものらしい
-		ID3D11DeviceContext* GetDeviceContext() const { return mDeviceContext.Get(); }
+		ID3D11DeviceContext* GetDeviceContext() const { return mDeviceContext; }
 		//描画処理に必要な情報が入るバッファーらしい
-		IDXGISwapChain* GetSwapChain() const { return mSwapChain.Get(); }
+		IDXGISwapChain* GetSwapChain() const { return mSwapChain; }
 		//レンダリング時に使えるサブリソース識別
-		ID3D11RenderTargetView* GetRenderTargetView() const { return mRenderTargetView; }
-		//入力アセンブラステージの入力データにアクセス　入力してなんかするときに使いそう
-		ID3D11InputLayout* GetVertexLayout() const { return mVertexLayout.Get(); }
-		//頂点シェーダー管理
-		ID3D11VertexShader* GetVertexShader() const { return mVertexShader.Get(); }
-		//ピクセルシェーダー管理
-		ID3D11PixelShader* GetPixelShader() const { return mPixelShader.Get(); }
-		//データバッファ　シェーダーとのデータのやり取りに使っている
-		ID3D11Buffer* GetConstantBuffer() const { return mConstantBuffer; }
-		//頂点シェーダー用のバッファ
-		ID3D11Buffer* GetVertexBuffer() const { return mVertexBuffer; }
-		//インデックス要のバッファ
-		ID3D11Buffer* GetIndexBuffer() const { return mIndexBuffer; }
-		//ラスタライザステージのラスタライザステートへアクセス　面とか出すときラスタ形式で出しているから必要らしい
-		ID3D11RasterizerState* GetRasterizerState() const { return mRasterizerState.Get(); }
-		//入力管理
-		DXInput* GetDXInput() const { return mDXInput.get(); }
-		//カメラ
-		DXCamera* GetDXCamera() const{ return mDXCamera.get(); }
+		ID3D11RenderTargetView* GetRenderTargetView() const { return mRenderTargetView; }		
+		//ビューポート設定
+		D3D11_VIEWPORT GetView() const { return mView; }	
+		//深度バッファのビュー情報
+		ID3D11DepthStencilView* GetDepthStencilView() const { return mDepthStencilView; }
+		//深度バッファの状態
+		ID3D11DepthStencilState* GetDepthStencilState() const { return mDepthStencilState; }
 	private:
-		const float mColor[4] = { 0.0f,0.0f,0.0f,1.0f };
-		float xRote;
-		float yRote;
-		int mDrawNum;
 		//ウィンドルのハンドル
 		HWND mHwnd;
 		//ドライバーの種類オプション　NULLはデバッグ用らしい
@@ -61,32 +66,22 @@ namespace MyDirectX
 		//DirectXの機能サポートレベルを設定する　今回はDirectX11の勉強だから11を設定した
 		D3D_FEATURE_LEVEL mLevel;
 		//DirectXの仮想ドライバー　多分こいつが一番大事なもの
-		Microsoft::WRL::ComPtr<ID3D11Device> mDevice;
+		ID3D11Device* mDevice;
 		//レンダリングについて色々設定できるものらしい
-		Microsoft::WRL::ComPtr<ID3D11DeviceContext> mDeviceContext;
+		ID3D11DeviceContext* mDeviceContext;
 		//描画処理に必要な情報が入るバッファーらしい
-		Microsoft::WRL::ComPtr<IDXGISwapChain> mSwapChain;
+		IDXGISwapChain* mSwapChain;
 		//レンダリング時に使えるサブリソース識別
 		ID3D11RenderTargetView* mRenderTargetView;
-		//入力アセンブラステージの入力データにアクセス　入力してなんかするときに使いそう
-		Microsoft::WRL::ComPtr<ID3D11InputLayout> mVertexLayout;
-		//頂点シェーダー管理
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> mVertexShader;
-		//ピクセルシェーダー管理
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> mPixelShader;
-		//データバッファ　シェーダーとのデータのやり取りに使っている
-		ID3D11Buffer* mConstantBuffer;
-		//頂点シェーダー用のバッファ
-		ID3D11Buffer* mVertexBuffer;
-		//インデックス要のバッファ
-		ID3D11Buffer* mIndexBuffer;
-		//ラスタライザステージのラスタライザステートへアクセス　面とか出すときラスタ形式で出しているから必要らしい
-		Microsoft::WRL::ComPtr<ID3D11RasterizerState> mRasterizerState;
-		//入力管理
-		std::unique_ptr<DXInput> mDXInput;
-		//カメラ
-		std::unique_ptr<DXCamera> mDXCamera;
-
+		//深度バッファのビュー情報
+		ID3D11DepthStencilView* mDepthStencilView;
+		//深度バッファの状態
+		ID3D11DepthStencilState* mDepthStencilState;
+		//ビューポート設定
+		D3D11_VIEWPORT mView;
+		//VSyncの有無　
+		BOOL mIsVsyncEnable;
+		
 	};
 }
 

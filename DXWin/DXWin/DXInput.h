@@ -6,6 +6,8 @@ namespace MyDirectX
 	class DXInput
 	{
 	public:
+		DXInput(HWND hwnd);
+		~DXInput();
 		HRESULT InitDirectInput(HWND hwnd);
 		void SetInputState();
 		BOOL GetInputState(int key);

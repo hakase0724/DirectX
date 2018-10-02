@@ -12,6 +12,16 @@
 
 using namespace MyDirectX;
 
+MyDirectX::DXInput::DXInput(HWND hwnd)
+{
+	InitDirectInput(hwnd);
+}
+
+MyDirectX::DXInput::~DXInput()
+{
+	ExitDirectInput();
+}
+
 HRESULT DXInput::InitDirectInput(HWND hwnd)
 {
 	HINSTANCE hinst = (HINSTANCE)GetWindowLong(hwnd, GWL_HINSTANCE);
