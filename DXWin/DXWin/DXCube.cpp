@@ -2,36 +2,30 @@
 #include "DXCube.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
+#include "PrimitiveVertexInfo.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
 
 using namespace DirectX;
 using namespace MyDirectX;
 
-DXCube::DXCube()
+DXCube::DXCube(DXManager * dxManager,DXInput* input, DXCamera* camera)
 {
 	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	mDXManager = dxManager;
+	mDXInput = input;
+	mDXCamera = camera;
 }
 
-MyDirectX::DXCube::DXCube(DXManager * dxManager)
-{
-	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	Init(dxManager);
-}
 
-DXCube::DXCube(TRANSFORM *transform)
+DXCube::DXCube(TRANSFORM * transform, DXManager * dxManager, DXInput* input, DXCamera* camera)
 {
 	mTransform = *transform;
-}
-
-MyDirectX::DXCube::DXCube(TRANSFORM * transform, DXManager * dxManager)
-{
-	mTransform = *transform;
-	Init(dxManager);
+	mDXManager = dxManager;
+	mDXInput = input;
+	mDXCamera = camera;
 }
 
 DXCube::~DXCube()
@@ -39,17 +33,18 @@ DXCube::~DXCube()
 	Exit();
 }
 
-void DXCube::SetTransform(TRANSFORM transform)
+void DXCube::SetTransform(TRANSFORM * transform)
 {
-	mTransform = transform;
+	mTransform = *transform;
 }
 
 //初期化
-HRESULT DXCube::Init(DXManager* dxManager)
-{
+bool DXCube::Init(TRANSFORM* transform, DXManager* dxManager, DXInput* input, DXCamera* camera)
+{	
+	mTransform = *transform;
 	mDXManager = dxManager;
-	xRote = 0.0f;
-	yRote = 0.0f;
+	mDXInput = input;
+	mDXCamera = camera;
 	if (FAILED(CreateShader())) return S_FALSE;
 	if (FAILED(CreateConstantBuffer())) return S_FALSE;
 	if (FAILED(CreateVertex())) return S_FALSE;
@@ -57,10 +52,9 @@ HRESULT DXCube::Init(DXManager* dxManager)
 	return S_OK;
 }
 //毎フレーム行う処理
-BOOL DXCube::Update(DXInput* input, DXCamera* camera)
+void DXCube::Update()
 {
-	XMStoreFloat4x4(&cBuffer.gWVP, camera->GetDXCameraParam(mTransform));
-	return TRUE;
+	XMStoreFloat4x4(&cBuffer.gWVP, mDXCamera->GetDXCameraParam(mTransform));
 }
 //描画処理
 void DXCube::Render()
@@ -175,21 +169,8 @@ HRESULT DXCube::CreateConstantBuffer()
 //頂点データ作成
 HRESULT DXCube::CreateVertex()
 {
-	//頂点データとバッファ生成
-	VERTEX vertex[] =
-	{
-		{ XMFLOAT3(-0.3f, -0.3f, 0.3f),  XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.3f, -0.3f, 0.3f),   XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(0.3f, -0.3f, -0.3f),  XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.3f, -0.3f, -0.3f), XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f) },
-		{ XMFLOAT3(-0.3f, 0.3f, 0.3f),   XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.3f, 0.3f, 0.3f),    XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(0.3f, 0.3f, -0.3f),   XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f) },
-		{ XMFLOAT3(-0.3f, 0.3f, -0.3f),  XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f) },
-	};
-	
 	D3D11_BUFFER_DESC bd;
-	bd.ByteWidth = sizeof(VERTEX) * ARRAYSIZE(vertex);
+	bd.ByteWidth = sizeof(VERTEX) * ARRAYSIZE(CubeVertex);
 	//GPUから読み書きができる
 	bd.Usage = D3D11_USAGE_DEFAULT;
 	//頂点バッファとしてバインド
@@ -200,7 +181,7 @@ HRESULT DXCube::CreateVertex()
 	bd.StructureByteStride = 0;
 	//サブリソースの初期化ポインター
 	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = vertex;
+	data.pSysMem = CubeVertex;
 	HRESULT hr = mDXManager->GetDevice()->CreateBuffer(&bd, &data, &mVertexBuffer);
 	if (FAILED(hr)) return S_FALSE;
 	else return S_OK;
@@ -208,29 +189,7 @@ HRESULT DXCube::CreateVertex()
 //インデックス作成
 HRESULT DXCube::CreateIndex()
 {
-	//ポリゴンのインデックス情報
-	int index[] =
-	{
-		0, 2, 1,
-		0, 3, 2,
-
-		0, 5, 4,
-		0, 1, 5,
-
-		1, 6, 5,
-		1, 2, 6,
-
-		2, 7, 6,
-		2, 3, 7,
-
-		0, 4, 7,
-		0, 7, 3,
-
-		4, 5, 7,
-		5, 6, 7,
-
-	};
-	mDrawNum = ARRAYSIZE(index);
+	mDrawNum = ARRAYSIZE(CubeIndex);
 	D3D11_BUFFER_DESC bd_index;
 	bd_index.ByteWidth = sizeof(int) * mDrawNum;
 	bd_index.Usage = D3D11_USAGE_DEFAULT;
@@ -239,7 +198,7 @@ HRESULT DXCube::CreateIndex()
 	bd_index.MiscFlags = 0;
 	bd_index.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA data_index;
-	data_index.pSysMem = index;
+	data_index.pSysMem = CubeIndex;
 	HRESULT hr = mDXManager->GetDevice()->CreateBuffer(&bd_index, &data_index, &mIndexBuffer);
 	if (FAILED(hr)) return S_FALSE;
 	else return S_OK;
@@ -257,5 +216,5 @@ HRESULT DXCube::CreateRasterizeState()
 	rd.FrontCounterClockwise = TRUE;
 	mDXManager->GetDevice()->CreateRasterizerState(&rd, &mRasterizerState);
 
-	return E_NOTIMPL;
+	return S_OK;
 }

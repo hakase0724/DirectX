@@ -6,6 +6,7 @@
 #include <DirectXMath.h>
 #include <wrl/client.h>
 
+
 namespace MyDirectX
 {
 	//‰æ–Ê‰ð‘œ“x
@@ -23,6 +24,18 @@ namespace MyDirectX
 		DirectX::XMFLOAT4X4 gWVP;
 	};
 
+	struct VERTEX2 {
+		DirectX::XMFLOAT3 V;
+		DirectX::XMFLOAT3 N;
+	};
+
+	struct CONSTANT_BUFFER2 {
+		DirectX::XMMATRIX mW;
+		DirectX::XMMATRIX mWVP;
+		DirectX::XMVECTOR vLightPos;
+		DirectX::XMVECTOR vEyePos;
+		DirectX::XMVECTOR vColor;
+	};
 	class DXManager
 	{
 	public:

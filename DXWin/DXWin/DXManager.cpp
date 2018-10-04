@@ -16,7 +16,7 @@ DXManager::DXManager(HWND hwnd)
 	InitDX11(hwnd);
 }
 
-MyDirectX::DXManager::~DXManager()
+DXManager::~DXManager()
 {
 	ExitDX11();
 }
@@ -151,12 +151,14 @@ void DXManager::ExitDX11()
 		mDeviceContext->ClearState();
 		mDeviceContext->Release();
 	}
+	if (mRenderTargetView)mRenderTargetView->Release();
 	if (mSwapChain) mSwapChain->Release();
 	if (mDepthStencilView)mDepthStencilView->Release();
+	if (mDepthStencilState)mDepthStencilState->Release();
 	if (mDevice) mDevice->Release();
 }
 //描画開始前のバッファクリア
-void MyDirectX::DXManager::BeginScene(float r, float g, float b, float a)
+void DXManager::BeginScene(float r, float g, float b, float a)
 {
 	float color[] = {r,g,b,a};
 	//画面クリア
@@ -165,7 +167,7 @@ void MyDirectX::DXManager::BeginScene(float r, float g, float b, float a)
 	mDeviceContext->ClearDepthStencilView(mDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 //描画処理が終了した後の画面をユーザーに見せる
-void MyDirectX::DXManager::EndScene()
+void DXManager::EndScene()
 {
 	if(mIsVsyncEnable)
 	{
@@ -179,7 +181,7 @@ void MyDirectX::DXManager::EndScene()
 	}
 }
 //VSyncの有無を切り替える
-void MyDirectX::DXManager::SetVsyncEnable(bool isEnable)
+void DXManager::SetVsyncEnable(bool isEnable)
 {
 	mIsVsyncEnable = isEnable;
 }
