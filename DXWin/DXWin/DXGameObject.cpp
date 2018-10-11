@@ -32,8 +32,7 @@ void DXGameObject::SetTransform(TRANSFORM * transform)
 template<typename T>
 void DXGameObject::AddComponent()
 {
-	mComponentList.push_back(std::make_unique<T>());
-	mComponentList.back()->Init(mTransform,mDXManager,mDXInput,mDXCamera);
+	
 }
 
 HRESULT DXGameObject::Init(DXManager * dxManager, DXInput* input, DXCamera* camera)
@@ -46,18 +45,12 @@ HRESULT DXGameObject::Init(DXManager * dxManager, DXInput* input, DXCamera* came
 
 void DXGameObject::Update()
 {
-	for(int i = 0;i < mComponentList.size();i++)
-	{
-		mComponentList[i]->Update();
-	}
+	
 }
 
 void DXGameObject::Render()
 {
-	for (int i = 0; i < mComponentList.size(); i++)
-	{
-		mComponentList[i]->Render();
-	}
+	
 }
 
 void DXGameObject::Exit()

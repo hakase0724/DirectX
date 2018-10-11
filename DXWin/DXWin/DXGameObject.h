@@ -4,7 +4,7 @@
 #include <vector>  
 #include <DirectXMath.h>
 #include "DXManager.h"
-#include "IComponent.h"
+#include "DXFactory.h"
 
 
 namespace MyDirectX
@@ -37,6 +37,7 @@ namespace MyDirectX
 		DXManager* mDXManager;
 		DXInput* mDXInput;
 		DXCamera* mDXCamera;
+		std::unique_ptr<DXFactory> mDXFactory;
 		//入力アセンブラステージの入力データにアクセス　入力してなんかするときに使いそう
 		ID3D11InputLayout* mVertexLayout;
 		//頂点シェーダー管理
@@ -51,7 +52,6 @@ namespace MyDirectX
 		ID3D11Buffer* mIndexBuffer;
 		//ラスタライズステート
 		ID3D11RasterizerState* mRasterizerState;
-		std::vector<std::unique_ptr<IComponent>> mComponentList;
 	};
 	
 }

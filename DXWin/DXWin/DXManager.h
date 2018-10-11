@@ -36,6 +36,15 @@ namespace MyDirectX
 		DirectX::XMVECTOR vEyePos;
 		DirectX::XMVECTOR vColor;
 	};
+	struct CONSTANT_BUFFER3
+	{
+		DirectX::XMFLOAT4X4 gWVP;
+		DirectX::XMMATRIX mW;
+		DirectX::XMMATRIX mWVP;
+		DirectX::XMVECTOR vLightPos;
+		DirectX::XMVECTOR vEyePos;
+		DirectX::XMVECTOR vColor;
+	};
 	class DXManager
 	{
 	public:
@@ -71,6 +80,8 @@ namespace MyDirectX
 		ID3D11DepthStencilView* GetDepthStencilView() const { return mDepthStencilView; }
 		//深度バッファの状態
 		ID3D11DepthStencilState* GetDepthStencilState() const { return mDepthStencilState; }
+		DXInput* GetDXInput() const { return mDXInput.get(); }
+		DXCamera* GetDXCamera() const { return mDXCamera.get(); }
 	private:
 		//ウィンドルのハンドル
 		HWND mHwnd;
@@ -94,6 +105,8 @@ namespace MyDirectX
 		D3D11_VIEWPORT mView;
 		//VSyncの有無　
 		BOOL mIsVsyncEnable;
+		std::unique_ptr<DXInput> mDXInput;
+		std::unique_ptr<DXCamera> mDXCamera;
 		
 	};
 }

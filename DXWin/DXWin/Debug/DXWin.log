@@ -1,19 +1,14 @@
 ﻿  DXCube.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  DXGameObject.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.cpp(49): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.cpp(57): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
   DXGameObjectManager.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(30): warning C4316: 'MyDirectX::CameraParam': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(31): warning C4316: 'MyDirectX::DXCamera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(77): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(91): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
-  DXSphere.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.15.26726\include\memory(2538): warning C4316: 'MyDirectX::DXCube': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(24): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<MyDirectX::DXCube,std::default_delete<_Ty>> std::make_unique<MyDirectX::DXCube,MyDirectX::DXManager*,0>(MyDirectX::DXManager *&&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=MyDirectX::DXCube
+          ]
   DXWin.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
   コードを生成中...
-DXGameObjectManager.obj : error LNK2019: 未解決の外部シンボル "public: void __thiscall MyDirectX::DXGameObject::AddComponent<class MyDirectX::DXCube>(void)" (??$AddComponent@VDXCube@MyDirectX@@@DXGameObject@MyDirectX@@QAEXXZ) が関数 "private: void __thiscall MyDirectX::DXGameObjectManager::CreateGameObject(void)" (?CreateGameObject@DXGameObjectManager@MyDirectX@@AAEXXZ) で参照されました。
-C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe : fatal error LNK1120: 1 件の未解決の外部参照
+  DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe

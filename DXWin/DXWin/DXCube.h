@@ -2,43 +2,37 @@
 #include <d3d11.h>
 #include <memory>
 #include "DXManager.h"
-#include <wrl/client.h>
-#include <vector>  
 #include <DirectXMath.h>
-#include "DXGameObject.h"
-#include "IComponent.h"
+#include "CubeMesh.h"
+#include "NormalShader.h"
+#include "DXFactory.h"
 namespace MyDirectX
 {
-	class DXCube:public IComponent
+	class DXCube
 	{
 	public:
 		DXCube(){};
-		DXCube(DXManager *dxManager, DXInput* input, DXCamera* camera);
-		DXCube(TRANSFORM *transform, DXManager *dxManager, DXInput* input, DXCamera* camera);
+		DXCube(DXManager *dxManager);
+		DXCube(TRANSFORM *transform, DXManager *dxManager);
 		~DXCube();
 		//自身のtransform情報を公開
 		TRANSFORM GetTransform() const { return mTransform; }
 		//自身のtransform情報を更新
-		virtual void SetTransform(TRANSFORM *transform);
-		virtual bool Init(TRANSFORM* transform, DXManager* dxManager, DXInput* input, DXCamera* camera) override;
-		virtual void Update() override;
-		virtual void Render() override;
-		virtual void Exit() override;
+		void SetTransform(TRANSFORM *transform);
+		bool Init();
+		void Update();
+		void Render();
+		void Exit();
 	private:
-		//シェーダを生成
-		HRESULT CreateShader();
-		//定数バッファを生成
-		HRESULT CreateConstantBuffer();
-		//頂点情報と頂点バッファ生成
-		HRESULT CreateVertex();
-		//頂点インデックスとインデックスバッファ生成
-		HRESULT CreateIndex();
-		//ラスタライズステート生成
-		HRESULT CreateRasterizeState();
 		//データ更新用バッファ
-		CONSTANT_BUFFER cBuffer;
+		CONSTANT_BUFFER3 cBuffer;
+		//描画数
 		int mDrawNum;
-
+		//キューブ描画に必要なパラメータ
+		std::unique_ptr<DXFactory> mFactory;
+		std::unique_ptr<CubeMesh> mMesh;
+		std::unique_ptr<NormalShader> mShader;
+		//自身が保持するデータ
 		TRANSFORM mTransform;
 		DXManager* mDXManager;
 		DXInput* mDXInput;

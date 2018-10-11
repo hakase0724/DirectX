@@ -31,6 +31,16 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	UINT width = rc.right - rc.left;
 	UINT height = rc.bottom - rc.top;
 	UINT flags = 0;
+	mDXInput = std::make_unique<DXInput>(hwnd);
+	//ÉJÉÅÉâÇê∂ê¨
+	auto cParam = new CameraParam
+	(
+		DirectX::XMVectorSet(0.0f, 0.0f, -3.5f, 1.0f),
+		DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
+		DirectX::XMVectorSet(0.0f, 1.0f, 0.0f, 1.0f),
+		cWidth / cHeight
+	);
+	mDXCamera = std::make_unique<DXCamera>(cParam);
 #ifdef _DEBUG
 	flags = D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -140,6 +150,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	mView.TopLeftY = 0.0f;
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 	mDeviceContext->RSSetViewports(1, &mView);
+	delete cParam;
 	return S_OK;
 }
 //èIóπ
