@@ -15,12 +15,18 @@ struct VS_OUTPUT
     float4 EyePos : TEXCOORD2;
 };
  
-VS_OUTPUT VS(float4 Pos : POSITION, float4 Normal : NORMAL)
+struct VS_INPUT
 {
-     
+    float4 pos : POSITION;
+    float4 Normal : NORMAL; 
+};
+
+
+VS_OUTPUT VS(VS_INPUT input)
+{    
     VS_OUTPUT output;
-    output.VerPos = mul(Pos, gWVP);
-    output.Normal = mul(Normal, gW);
+    output.VerPos = mul(input.pos, gWVP);
+    output.Normal = mul(input.Normal, gW);
     output.LightPos = gLightPos;
     output.EyePos = gEyePos;
      

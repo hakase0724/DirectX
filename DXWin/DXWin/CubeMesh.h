@@ -7,7 +7,7 @@ namespace MyDirectX
 	public:
 		CubeMesh();
 		~CubeMesh();
-		virtual UINT GetSize() override;
+		virtual UINT GetSize() override { return sizeof(VERTEX_DATA); }
 	};
 }
 

@@ -3,6 +3,3 @@
 
 using namespace MyDirectX;
 
-MeshInfo::MeshInfo()
-{
-}

@@ -12,7 +12,7 @@ namespace MyDirectX
 	{
 	public:
 		DXFactory();
-		~DXFactory();
+		~DXFactory() {};
 		void CreateMesh(
 			MeshInfo* info,
 			ID3D11Device* device,

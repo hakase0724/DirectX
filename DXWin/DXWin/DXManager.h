@@ -5,6 +5,8 @@
 #include "DXCamera.h"
 #include <DirectXMath.h>
 #include <wrl/client.h>
+#include "DXFactory.h"
+#include "MyStructs.h"
 
 
 namespace MyDirectX
@@ -12,39 +14,6 @@ namespace MyDirectX
 	//画面解像度
 	const float cWidth = 1280;
 	const float cHeight = 960;
-	//頂点情報を保持する構造体
-	struct VERTEX
-	{
-		DirectX::XMFLOAT3 V;
-		DirectX::XMFLOAT4 C;
-	};
-	//シェーダに情報を送る定数バッファ構造体
-	struct CONSTANT_BUFFER
-	{
-		DirectX::XMFLOAT4X4 gWVP;
-	};
-
-	struct VERTEX2 {
-		DirectX::XMFLOAT3 V;
-		DirectX::XMFLOAT3 N;
-	};
-
-	struct CONSTANT_BUFFER2 {
-		DirectX::XMMATRIX mW;
-		DirectX::XMMATRIX mWVP;
-		DirectX::XMVECTOR vLightPos;
-		DirectX::XMVECTOR vEyePos;
-		DirectX::XMVECTOR vColor;
-	};
-	struct CONSTANT_BUFFER3
-	{
-		DirectX::XMFLOAT4X4 gWVP;
-		DirectX::XMMATRIX mW;
-		DirectX::XMMATRIX mWVP;
-		DirectX::XMVECTOR vLightPos;
-		DirectX::XMVECTOR vEyePos;
-		DirectX::XMVECTOR vColor;
-	};
 	class DXManager
 	{
 	public:
@@ -80,8 +49,10 @@ namespace MyDirectX
 		ID3D11DepthStencilView* GetDepthStencilView() const { return mDepthStencilView; }
 		//深度バッファの状態
 		ID3D11DepthStencilState* GetDepthStencilState() const { return mDepthStencilState; }
+		//保持している機能のポインタを返す
 		DXInput* GetDXInput() const { return mDXInput.get(); }
 		DXCamera* GetDXCamera() const { return mDXCamera.get(); }
+		DXFactory* GetDXFactory() const { return mDXFactory.get(); }
 	private:
 		//ウィンドルのハンドル
 		HWND mHwnd;
@@ -105,8 +76,10 @@ namespace MyDirectX
 		D3D11_VIEWPORT mView;
 		//VSyncの有無　
 		BOOL mIsVsyncEnable;
+		//保持している機能
 		std::unique_ptr<DXInput> mDXInput;
 		std::unique_ptr<DXCamera> mDXCamera;
+		std::unique_ptr<DXFactory> mDXFactory;
 		
 	};
 }

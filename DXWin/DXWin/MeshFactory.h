@@ -7,8 +7,8 @@ namespace MyDirectX
 	class MeshFactory
 	{
 	public:
-		MeshFactory();
-		~MeshFactory();
+		MeshFactory() {};
+		~MeshFactory() {};
 		void Create(
 			MeshInfo* info,
 			ID3D11Device* device,

@@ -6,15 +6,6 @@
 #pragma comment(lib, "d3dcompiler.lib")
 using namespace MyDirectX;
 
-ShaderFactory::ShaderFactory()
-{
-}
-
-
-ShaderFactory::~ShaderFactory()
-{
-}
-
 void ShaderFactory::Create(ShaderInfo * info, 
 	ID3D11Device * device, 
 	ID3D11VertexShader ** vertex, 
@@ -67,7 +58,7 @@ void ShaderFactory::CreateConstantBuffer(ShaderInfo * info, ID3D11Device * devic
 	//定数バッファ生成
 	D3D11_BUFFER_DESC cb;
 	//バッファサイズ
-	cb.ByteWidth = sizeof(CONSTANT_BUFFER3);
+	cb.ByteWidth = info->GetSize();
 	//想定する読み書き方法　
 	cb.Usage = D3D11_USAGE_DEFAULT;
 	//パイプラインにどのようにバインドするか

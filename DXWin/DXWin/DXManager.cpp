@@ -41,6 +41,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 		cWidth / cHeight
 	);
 	mDXCamera = std::make_unique<DXCamera>(cParam);
+	mDXFactory = std::make_unique<DXFactory>();
 #ifdef _DEBUG
 	flags = D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -81,7 +82,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	(NULL,mDriverType,NULL,flags,&fLevel,1,D3D11_SDK_VERSION,&sd,&mSwapChain,&mDevice,&mLevel,&mDeviceContext);
 	if (FAILED(hr)) return S_FALSE;
 
-	//バックバッファの確保　裏面描画とかで使ってそう
+	//バックバッファの確保
 	std::unique_ptr<ID3D11Texture2D> back_buff;
 	auto pBack_Buff = back_buff.get();;
 	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBack_Buff);

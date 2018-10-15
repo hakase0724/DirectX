@@ -6,17 +6,21 @@ using namespace DirectX;
 
 CubeMesh::CubeMesh()
 {
+	//一辺の長さ
+	float oneSide = 1.5f;
+	//長さの半分を頂点座標にすれば一辺の長さが同じ四角形ができる
+	float oneSideHarf = oneSide / 2.0f;
 	//キューブの頂点情報
 	VERTEX_DATA CubeVertex[] =
 	{
-		{ DirectX::XMFLOAT3(-0.3f, -0.3f, 0.3f),  DirectX::XMFLOAT4(0.0f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(-0.3f, -0.3f, 0.3f)},
-		{ DirectX::XMFLOAT3(0.3f, -0.3f, 0.3f),   DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.3f, -0.3f, 0.3f)},
-		{ DirectX::XMFLOAT3(0.3f, -0.3f, -0.3f),  DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(0.3f, -0.3f, -0.3f)},
-		{ DirectX::XMFLOAT3(-0.3f, -0.3f, -0.3f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT3(-0.3f, -0.3f, -0.3f)},
-		{ DirectX::XMFLOAT3(-0.3f, 0.3f, 0.3f),   DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-0.3f, 0.3f, 0.3f)},
-		{ DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f),    DirectX::XMFLOAT4(1.0f, 0.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.3f, 0.3f, 0.3f)},
-		{ DirectX::XMFLOAT3(0.3f, 0.3f, -0.3f),   DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(0.3f, 0.3f, -0.3f)},
-		{ DirectX::XMFLOAT3(-0.3f, 0.3f, -0.3f),  DirectX::XMFLOAT4(0.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT3(-0.3f, 0.3f, -0.3f)},
+		{ DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, oneSideHarf),  DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, oneSideHarf)},
+		{ DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, oneSideHarf),   DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, oneSideHarf)},
+		{ DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, -oneSideHarf),  DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, -oneSideHarf)},
+		{ DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, -oneSideHarf), DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, -oneSideHarf)},
+		{ DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, oneSideHarf),   DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, oneSideHarf)},
+		{ DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, oneSideHarf),    DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, oneSideHarf)},
+		{ DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, -oneSideHarf),   DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, -oneSideHarf)},
+		{ DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, -oneSideHarf),  DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, -oneSideHarf)},
 	};
 	vertexNum = ARRAYSIZE(CubeVertex);
 	vertics = new VERTEX_DATA[vertexNum];
@@ -58,9 +62,4 @@ CubeMesh::~CubeMesh()
 {
 	delete vertics;
 	delete indexes;
-}
-
-UINT MyDirectX::CubeMesh::GetSize()
-{
-	return sizeof(VERTEX_DATA);
 }

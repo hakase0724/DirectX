@@ -3,14 +3,6 @@
 
 using namespace MyDirectX;
 
-MeshFactory::MeshFactory()
-{
-}
-
-MeshFactory::~MeshFactory()
-{
-}
-
 void MeshFactory::Create(MeshInfo * info, ID3D11Device * device, ID3D11Buffer ** vertexBuffer, ID3D11Buffer ** indexBuffer)
 {
 	CreateVertex(info, device, vertexBuffer);

@@ -28,9 +28,10 @@ namespace MyDirectX
 	class ShaderInfo
 	{
 	public:
-		ShaderInfo();
-		~ShaderInfo();
+		ShaderInfo() {};
+		~ShaderInfo() {};
 		SHADER_DATA* shader;
+		virtual UINT GetSize() = 0;
 	};
 }
 

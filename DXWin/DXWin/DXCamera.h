@@ -69,8 +69,8 @@ namespace MyDirectX
 	class DXCamera
 	{
 	public:
-		DXCamera(CameraParam *param);
-		~DXCamera();
+		DXCamera(CameraParam *param) { mParam = *param; }
+		~DXCamera() {};
 		DirectX::XMMATRIX GetDXCameraParam(TRANSFORM transform);
 		CameraParam GetCameraParam() const { return mParam;}
 		DirectX::XMMATRIX GetWorld(TRANSFORM transform);

@@ -6,8 +6,8 @@ namespace MyDirectX
 	class ShaderFactory
 	{
 	public:
-		ShaderFactory();
-		~ShaderFactory();
+		ShaderFactory() {};
+		~ShaderFactory() {};
 		void Create(ShaderInfo * info,
 			ID3D11Device * device,
 			ID3D11VertexShader ** vertex,

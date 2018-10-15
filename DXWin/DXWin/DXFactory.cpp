@@ -9,10 +9,6 @@ DXFactory::DXFactory()
 	mShaderFactory = std::make_unique<ShaderFactory>();
 }
 
-DXFactory::~DXFactory()
-{
-}
-
 void DXFactory::CreateMesh(MeshInfo * info, ID3D11Device * device, ID3D11Buffer ** vertexBuffer, ID3D11Buffer ** indexBuffer)
 {
 	mMeshFactory->Create(info, device, vertexBuffer, indexBuffer);

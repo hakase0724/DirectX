@@ -4,18 +4,22 @@
 using namespace DirectX;
 using namespace MyDirectX;
 
-DXGameObject::DXGameObject(DXManager * dxManager, DXInput* input, DXCamera* camera)
+DXGameObject::DXGameObject(DXManager * dxManager)
 {
 	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	Init(dxManager,input,camera);
+	mDXManager = dxManager;
+	mDXInput = mDXManager->GetDXInput();
+	mDXCamera = mDXManager->GetDXCamera();
 }
 
-DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager, DXInput* input, DXCamera* camera)
+DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
 {
 	mTransform = *transform;
-	Init(dxManager, input, camera);
+	mDXManager = dxManager;
+	mDXInput = mDXManager->GetDXInput();
+	mDXCamera = mDXManager->GetDXCamera();
 }
 
 
@@ -24,35 +28,42 @@ DXGameObject::~DXGameObject()
 	Exit();
 }
 
-void DXGameObject::SetTransform(TRANSFORM * transform)
-{
-	mTransform = *transform;
-}
-
-template<typename T>
-void DXGameObject::AddComponent()
-{
-	
-}
-
-HRESULT DXGameObject::Init(DXManager * dxManager, DXInput* input, DXCamera* camera)
+//自身の初期化
+HRESULT DXGameObject::Init(DXManager * dxManager)
 {
 	mDXManager = dxManager;
-	mDXInput = input;
-	mDXCamera = camera;
+	mDXInput = mDXManager->GetDXInput();
+	mDXCamera = mDXManager->GetDXCamera();
 	return S_OK;
 }
 
+//持っているコンポーネントの更新処理を行う
 void DXGameObject::Update()
 {
-	
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->Update();
+	}
 }
 
+//持っているコンポーネントの描画処理を行う
 void DXGameObject::Render()
 {
-	
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->Render();
+	}
 }
 
+//持っているコンポーネントの解放処理を行う
 void DXGameObject::Exit()
 {
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->Exit();
+		delete pItr;
+	}
 }

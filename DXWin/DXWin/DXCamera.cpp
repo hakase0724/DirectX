@@ -3,12 +3,6 @@
 
 using namespace DirectX;
 using namespace MyDirectX;
-DXCamera::DXCamera(CameraParam *param)
-{
-	mParam = *param;
-}
-
-DXCamera::~DXCamera(){}
 
 XMMATRIX DXCamera::GetDXCameraParam(TRANSFORM transform)
 {
@@ -30,7 +24,7 @@ XMMATRIX DXCamera::GetDXCameraParam(TRANSFORM transform)
 	return XMMatrixTranspose(scale * worldX * worldY * worldZ * move * view * proj);
 }
 
-DirectX::XMMATRIX MyDirectX::DXCamera::GetWorld(TRANSFORM transform)
+XMMATRIX MyDirectX::DXCamera::GetWorld(TRANSFORM transform)
 {
 	//x軸中心回転
 	XMMATRIX worldX = XMMatrixRotationX(transform.Rotation.y);
@@ -45,20 +39,21 @@ DirectX::XMMATRIX MyDirectX::DXCamera::GetWorld(TRANSFORM transform)
 	return XMMatrixTranspose(scale * worldX * worldY * worldZ * move);
 }
 
-void DXCamera::SetEyeParamWithRatio(DirectX::XMVECTOR pos, DirectX::XMVECTOR lookup, DirectX::XMVECTOR up, float ratio)
+//画面比率とカメラのパラメータを設定する
+void DXCamera::SetEyeParamWithRatio(XMVECTOR pos, XMVECTOR lookup, XMVECTOR up, float ratio)
 {
 	mParam.mPos = pos;
 	mParam.mLookup = lookup;
 	mParam.mUp = up;
 	mParam.mRatio = ratio;
 }
-
+//カメラを回す
 void DXCamera::SetRotation(float x, float y)
 {
 	mParam.mXRote = x;
 	mParam.mYRote = y;
 }
-
+//カメラの位置を動かす
 void DXCamera::SetPos(float x, float y, float z)
 {
 	mParam.mPos += XMVectorSet(x, y, z,0.0f);

@@ -12,12 +12,12 @@
 
 using namespace MyDirectX;
 
-MyDirectX::DXInput::DXInput(HWND hwnd)
+DXInput::DXInput(HWND hwnd)
 {
 	InitDirectInput(hwnd);
 }
 
-MyDirectX::DXInput::~DXInput()
+DXInput::~DXInput()
 {
 	ExitDirectInput();
 }
