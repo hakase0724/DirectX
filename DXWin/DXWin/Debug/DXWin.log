@@ -1,4 +1,50 @@
-﻿  DXInput.cpp
+﻿  Collider.cpp
+  CubeMesh.cpp
+  DXCamera.cpp
+  DXCube.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DXFactory.cpp
+  DXGameObject.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DXGameObjectManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.h(66): warning C4316: 'MyDirectX::DXSphere': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(22): note: コンパイル対象の関数 テンプレート インスタンス化 'T *MyDirectX::DXGameObject::AddComponent<MyDirectX::DXSphere>(void)' のリファレンスを確認してください
+          with
+          [
+              T=MyDirectX::DXSphere
+          ]
+c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.h(66): warning C4316: 'MyDirectX::DXCube': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(29): note: コンパイル対象の関数 テンプレート インスタンス化 'T *MyDirectX::DXGameObject::AddComponent<MyDirectX::DXCube>(void)' のリファレンスを確認してください
+          with
+          [
+              T=MyDirectX::DXCube
+          ]
+  DXInput.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DXManager.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+c:\users\hakas\source\repos\directx\dxwin\dxwin\dxmanager.cpp(42): warning C4316: 'MyDirectX::CameraParam': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.15.26726\include\memory(2538): warning C4316: 'MyDirectX::DXCamera': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
+  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxmanager.cpp(43): note: コンパイル対象の関数 テンプレート インスタンス化 'std::unique_ptr<MyDirectX::DXCamera,std::default_delete<_Ty>> std::make_unique<MyDirectX::DXCamera,MyDirectX::CameraParam*&,0>(MyDirectX::CameraParam *&)' のリファレンスを確認してください
+          with
+          [
+              _Ty=MyDirectX::DXCamera
+          ]
+  DXSphere.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  DXWin.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  LightingShader.cpp
+  MeshFactory.cpp
+  MeshInfo.cpp
+  Mover.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  NormalShader.cpp
+  ShaderFactory.cpp
+  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  ShaderInfo.cpp
+  SphereMesh.cpp
+  コードを生成中...
   LINK : 前回のインクリメンタル リンクで C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe が見つからなかったか、ビルドされませんでした。フル リンクを行います。
   DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe
