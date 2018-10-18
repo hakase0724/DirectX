@@ -13,6 +13,8 @@ namespace MyDirectX
 		virtual void Awake() = 0;
 		virtual void Start() = 0;
 		virtual void Update() = 0;
+		virtual void LateUpdate() = 0;
+		virtual void FixedUpdate() = 0;
 		virtual void Render() = 0;
 		virtual void Exit() = 0;
 		virtual ~IComponent() = 0 {};
@@ -31,6 +33,8 @@ namespace MyDirectX
 		virtual void Start() {};
 		//XVˆ—
 		virtual void Update() {};
+		virtual void LateUpdate() {};
+		virtual void FixedUpdate() {};
 		//•`‰æˆ—
 		virtual void Render() {};
 		//‰ğ•úˆ—

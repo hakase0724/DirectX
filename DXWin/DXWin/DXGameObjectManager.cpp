@@ -17,17 +17,21 @@ void DXGameObjectManager::CreateResources(HWND hwnd)
 
 void DXGameObjectManager::CreateGameObject()
 {
-	//動けるスフィア生成
-	auto sphere = Instantiate();
-	sphere->AddComponent<DXSphere>();
-	sphere->AddComponent<Mover>();
-	//初期位置が違うキューブ生成
-	auto cube = Instantiate();
-	auto transform = cube->GetTransform();
-	transform.Position = XMFLOAT3(1.0f, 0.0f, 0.0f);
-	cube->SetTransform(&transform);
-	cube->AddComponent<DXCube>();
-	cube->AddComponent<Mover>();
+	auto test = Create<DXSquare>();
+	test->AddComponent<Mover>();
+	test->AddComponent<SquareCollider2D>();
+
+	auto test2 = Create<DXSquare>();
+	auto transfrom = test2->GetTransform();
+	transfrom.Position = XMFLOAT3(-2.0f, 0.0f, 0.0f);
+	test2->SetTransform(&transfrom);
+	test2->AddComponent<SquareCollider2D>();
+
+	auto test3 = Create<DXSquare>();
+	auto transfrom2 = test3->GetTransform();
+	transfrom2.Position = XMFLOAT3(2.0f, 0.0f, 0.0f);
+	test3->SetTransform(&transfrom2);
+	test3->AddComponent<SquareCollider2D>();
 }
 
 //ゲームオブジェクトを作り配列に格納、作ったゲームオブジェクトのポインタを返す
@@ -35,6 +39,27 @@ DXGameObject * DXGameObjectManager::Instantiate()
 {
 	mGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get()));
 	return mGameObjectsList.back().get();
+}
+
+DXGameObject * DXGameObjectManager::CreateCube()
+{
+	auto cube = Instantiate();
+	cube->AddComponent<DXCube>();
+	return cube;
+}
+
+DXGameObject * DXGameObjectManager::CreateSphere()
+{
+	auto sphere = Instantiate();
+	sphere->AddComponent<DXSphere>();
+	return sphere;
+}
+
+DXGameObject * DXGameObjectManager::CreateSquare()
+{
+	auto square = Instantiate();
+	square->AddComponent<DXSquare>();
+	return square;
 }
 
 BOOL DXGameObjectManager::Update()
@@ -46,9 +71,24 @@ BOOL DXGameObjectManager::Update()
 	{
 		itr->get()->Update();
 	}
-	if (mDXManager->GetDXInput()->GetInputState(DIK_ESCAPE))
-		return FALSE;
+	if (mDXManager->GetDXInput()->GetInputState(DIK_ESCAPE))return FALSE;
 	return TRUE;
+}
+
+void DXGameObjectManager::LateUpdate()
+{
+	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
+	{
+		itr->get()->LateUpdate();
+	}
+}
+
+void DXGameObjectManager::FixedUpdate()
+{
+	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
+	{
+		itr->get()->FixedUpdate();
+	}
 }
 
 void DXGameObjectManager::Render()

@@ -17,9 +17,10 @@ SphereMesh::SphereMesh()
 		for (int u = 0; u < u_max; u++) {
 			double theta = XMConvertToRadians(180.0f * v / v_max);
 			double phi = XMConvertToRadians(360.0f * u / u_max);
-			double x = sin(theta) * cos(phi);
-			double y = cos(theta);
-			double z = sin(theta) * sin(phi);
+			//’¼Œa‚ª1‚É‚È‚é‚æ‚¤‚É0.5‚ð‚©‚¯‚Ä‚¢‚é(sin‚âcos‚Í1‚ªo‚Ä‚«‚Ä‚»‚¤‚·‚é‚Æ’¼Œa‚ª2‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚©‚ç)
+			double x = sin(theta) * cos(phi) * 0.5f;
+			double y = cos(theta) * 0.5f;
+			double z = sin(theta) * sin(phi) * 0.5f;
 			vertics[u_max * v + u].V = { (float)x, (float)y, (float)z };
 			vertics[u_max * v + u].N = { (float)x, (float)y, (float)z };
 		}

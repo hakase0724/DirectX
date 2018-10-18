@@ -13,7 +13,7 @@ namespace MyDirectX
 {
 	//‰æ–Ê‰ð‘œ“x
 	const float cWidth = 1280;
-	const float cHeight = 960;
+	const float cHeight = 720;
 	class DXManager
 	{
 	public:

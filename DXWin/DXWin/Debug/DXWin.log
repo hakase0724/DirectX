@@ -1,22 +1,3 @@
-﻿  DXCube.cpp
+﻿  DXGameObjectManager.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  DXGameObjectManager.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.h(66): warning C4316: 'MyDirectX::DXSphere': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(22): note: コンパイル対象の関数 テンプレート インスタンス化 'T *MyDirectX::DXGameObject::AddComponent<MyDirectX::DXSphere>(void)' のリファレンスを確認してください
-          with
-          [
-              T=MyDirectX::DXSphere
-          ]
-c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobject.h(66): warning C4316: 'MyDirectX::DXCube': ヒープで割り当てられたオブジェクトが 16 にアラインメントされていない可能性があります
-  c:\users\hakas\source\repos\directx\dxwin\dxwin\dxgameobjectmanager.cpp(29): note: コンパイル対象の関数 テンプレート インスタンス化 'T *MyDirectX::DXGameObject::AddComponent<MyDirectX::DXCube>(void)' のリファレンスを確認してください
-          with
-          [
-              T=MyDirectX::DXCube
-          ]
-  DXSphere.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  DXWin.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  コードを生成中...
   DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe

@@ -1,9 +1,16 @@
 #pragma once
 #include "Primitive3D.h"
-class Collider
+#include "IComponent.h"
+
+namespace MyDirectX
 {
-public:
-	Collider();
-	~Collider();
-};
+	class Collider:public Component
+	{
+	public:
+		Collider() {};
+		~Collider() {};
+	};
+}
+
+
 

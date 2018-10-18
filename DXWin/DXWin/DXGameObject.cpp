@@ -47,6 +47,24 @@ void DXGameObject::Update()
 	}
 }
 
+void DXGameObject::LateUpdate()
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->LateUpdate();
+	}
+}
+
+void DXGameObject::FixedUpdate()
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->FixedUpdate();
+	}
+}
+
 //持っているコンポーネントの描画処理を行う
 void DXGameObject::Render()
 {

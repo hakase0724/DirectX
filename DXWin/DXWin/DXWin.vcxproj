@@ -148,7 +148,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Collider.h" />
+    <ClInclude Include="Collider2D.h" />
+    <ClInclude Include="Colliders.h" />
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="dinputex.h" />
     <ClInclude Include="DXCamera.h" />
@@ -159,25 +162,35 @@
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXSphere.h" />
+    <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="LightingShader.h" />
     <ClInclude Include="MeshAndShader.h" />
     <ClInclude Include="MeshFactory.h" />
     <ClInclude Include="MeshInfo.h" />
+    <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Mover.h" />
     <ClInclude Include="MyStructs.h" />
     <ClInclude Include="NormalShader.h" />
+    <ClInclude Include="Primitive2D.h" />
     <ClInclude Include="Primitive3D.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Roller.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
+    <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SphereMesh.h" />
+    <ClInclude Include="SquareCollider2D.h" />
+    <ClInclude Include="SquareCollider2DMesh.h" />
+    <ClInclude Include="SquareMesh.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Collider.cpp" />
+    <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="DXCamera.cpp" />
     <ClCompile Include="DXCube.cpp" />
@@ -187,15 +200,22 @@
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXSphere.cpp" />
+    <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="LightingShader.cpp" />
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="MeshInfo.cpp" />
+    <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="NormalShader.cpp" />
+    <ClCompile Include="Roller.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
+    <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
+    <ClCompile Include="SquareCollider2D.cpp" />
+    <ClCompile Include="SquareCollider2DMesh.cpp" />
+    <ClCompile Include="SquareMesh.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

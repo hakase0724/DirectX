@@ -40,6 +40,8 @@ namespace MyDirectX
 		virtual HRESULT Init(DXManager* dxManager);
 		//自身の情報更新
 		virtual void Update();
+		virtual void LateUpdate();
+		virtual void FixedUpdate();
 		//自身の描画
 		virtual void Render();
 		//自身の解放

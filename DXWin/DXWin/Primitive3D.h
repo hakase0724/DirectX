@@ -178,7 +178,7 @@ struct Capsule {
 	~Capsule() {}
 };
 
-// AABB
+// AABB Box‚Ì‚±‚Æ
 struct AABB {
 	Point p;	// ’†S“_
 	Float3 hl;	// Še²‚Ì•Ó‚Ì’·‚³‚Ì”¼•ª
