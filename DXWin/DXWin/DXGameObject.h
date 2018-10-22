@@ -51,6 +51,8 @@ namespace MyDirectX
 		virtual void OnCollisionExit(Collisioninfo* info);
 		std::string GetName() { return mName; }
 		void SetName(std::string name) { mName = name; }
+		UINT GetID() { return mId; }
+		void SetID(UINT id) { mId = id; }
 	protected:
 		//自身の座標回転スケール
 		TRANSFORM mTransform;
@@ -63,6 +65,7 @@ namespace MyDirectX
 		//自身が持つコンポーネントのリスト
 		std::vector<Component*> mComponentsList;
 		std::string mName;
+		UINT mId;
 	};
 
 	template<typename T>

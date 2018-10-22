@@ -20,12 +20,12 @@ namespace MyDirectX
 		virtual void Render() override;
 		virtual void LateUpdate() override;
 		virtual void Exit() override;
-		virtual bool isCollision(Collider2D* otherCollider) override;
+		virtual bool IsCollision(Collider2D* otherCollider) override;
 	private:
 		float oneSide;
 		Point2D mPos;
 		Point2D CalcPos();
-		bool isSquareCollision(SquareCollider2D* otherSquareCollider);
+		bool IsSquareCollision(SquareCollider2D* otherSquareCollider);
 	};
 }
 

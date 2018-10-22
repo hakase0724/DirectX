@@ -9,6 +9,7 @@ namespace MyDirectX
 	struct Collisioninfo
 	{
 		std::string name;
+		UINT id;
 		Collisioninfo() {};
 	};
 
@@ -28,6 +29,7 @@ namespace MyDirectX
 		virtual void OnCollisionStay(Collisioninfo* info) = 0;
 		virtual void OnCollisionExit(Collisioninfo* info) = 0;
 		virtual std::string GetName() = 0;
+		virtual UINT GetID() = 0;
 		virtual ~IComponent() = 0 {};
 	};
 
@@ -54,9 +56,11 @@ namespace MyDirectX
 		virtual void OnCollisionStay(Collisioninfo* info) {};
 		virtual void OnCollisionExit(Collisioninfo* info) {};
 		virtual std::string GetName() { return mName; }
+		virtual UINT GetID() { return mId; }
 		virtual ~Component() {};
 	protected:
 		DXGameObject* mGameObject;
 		std::string mName;
+		UINT mId;
 	};
 }

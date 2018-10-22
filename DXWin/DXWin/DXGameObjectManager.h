@@ -34,11 +34,10 @@ namespace MyDirectX
 		void CreateResources(HWND hwnd);
 		void CreateGameObject();
 		void StoreCollider2D();
+		UINT mGameObjectCounter;
 		std::unique_ptr<DXManager> mDXManager;
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
 		std::vector<Collider2D*> mCollider2DList;
-		SquareCollider2D* testCollider1;
-		SquareCollider2D* testCollider2;
 	};
 	
 	template<typename T>

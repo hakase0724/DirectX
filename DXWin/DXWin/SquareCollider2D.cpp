@@ -8,6 +8,7 @@ using namespace MyDirectX;
 void SquareCollider2D::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
+	mId = gameObject->GetID();
 	mPos = CalcPos();
 	oneSide = 1.0f;
 	mName = mGameObject->GetName();
@@ -26,35 +27,39 @@ void SquareCollider2D::Exit()
 {
 }
 
-bool SquareCollider2D::isCollision(Collider2D* otherCollider)
+bool SquareCollider2D::IsCollision(Collider2D* otherCollider)
 {
 	auto square = dynamic_cast<SquareCollider2D*>(otherCollider);
 	if (square == NULL) return false;
+	info.name = otherCollider->GetName();
+	info.id = otherCollider->GetID();
 	std::string otherName = otherCollider->GetName();
-	bool isCollisionResult = isSquareCollision(square);
+	bool isCollisionResult = IsSquareCollision(square);
+	auto found = std::find(mCollisionList.begin(), mCollisionList.end(), info.id);
 	if(isCollisionResult)
-	{
-		//“–‚½‚è‘±‚¯‚Ä‚¢‚é
-		if(isCollided)
+	{		
+		if (found != mCollisionList.end()) 
 		{
 			mGameObject->OnCollisionStay(&info);
 		}
 		//“–‚½‚èŽn‚ß‚½
 		else
 		{
+			mCollisionList.push_back(info.id);
 			mGameObject->OnCollisionEnter(&info);
 		}
 	}
 	else
 	{
 		//“–‚½‚èI‚í‚Á‚½
-		if (isCollided)
+		if (found != mCollisionList.end())
 		{
+			auto remove = std::remove_if(mCollisionList.begin(), mCollisionList.end(), [&](UINT id)->bool {return id == info.id; });
+			mCollisionList.erase(remove, mCollisionList.end());
 			mGameObject->OnCollisionExit(&info);
 		}
 	}
-	isCollided = isCollisionResult;
-	return isCollided;
+	return isCollisionResult;
 
 }
 
@@ -64,7 +69,7 @@ Point2D SquareCollider2D::CalcPos()
 	return Point2D(pos.x,pos.y);
 }
 
-bool SquareCollider2D::isSquareCollision(SquareCollider2D* otherSquareCollider)
+bool SquareCollider2D::IsSquareCollision(SquareCollider2D* otherSquareCollider)
 {
 	Point2D* points[] = 
 	{

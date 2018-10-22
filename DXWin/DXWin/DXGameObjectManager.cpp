@@ -39,12 +39,12 @@ void DXGameObjectManager::CreateGameObject()
 	test2->SetTransform(&transfrom);
 	test2->AddComponent<SquareCollider2D>();
 
-	/*auto test3 = Create<DXSquare>();
+	auto test3 = Create<DXSquare>();
 	test3->SetName("NotMoveObject2");
 	auto transfrom2 = test3->GetTransform();
-	transfrom2.Position = XMFLOAT3(0.0f, 1.5f, 0.0f);
+	transfrom2.Position = XMFLOAT3(-1.0f, 1.5f, 0.0f);
 	test3->SetTransform(&transfrom2);
-	test3->AddComponent<SquareCollider2D>();*/
+	test3->AddComponent<SquareCollider2D>();
 }
 
 void DXGameObjectManager::StoreCollider2D()
@@ -60,6 +60,8 @@ void DXGameObjectManager::StoreCollider2D()
 DXGameObject * DXGameObjectManager::Instantiate()
 {
 	mGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get()));
+	mGameObjectCounter++;
+	mGameObjectsList.back().get()->SetID(mGameObjectCounter);
 	return mGameObjectsList.back().get();
 }
 //ƒLƒ…[ƒu¶¬
@@ -109,7 +111,7 @@ void DXGameObjectManager::LateUpdate()
 		for(auto col2:mCollider2DList)
 		{
 			if (col == col2) continue;
-			col->isCollision(col2);
+			col->IsCollision(col2);
 		}
 	}
 }
