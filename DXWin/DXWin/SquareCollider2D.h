@@ -11,10 +11,10 @@ namespace MyDirectX
 	public:
 		SquareCollider2D() {};
 		~SquareCollider2D() {};
-		Point2D* RightTop() const { return &Point2D(mPos.x + oneSide / 2,mPos.y + oneSide / 2); }
-		Point2D* LeftTop() const { return &Point2D(mPos.x - oneSide / 2, mPos.y + oneSide / 2); }
-		Point2D* RightBottom() const { return &Point2D(mPos.x + oneSide / 2, mPos.y - oneSide / 2); }
-		Point2D* LeftBottom() const { return &Point2D(mPos.x - oneSide / 2, mPos.y - oneSide / 2); }
+		Point2D* RightTop() const { return new Point2D(mPos.x + oneSide / 2,mPos.y + oneSide / 2); }
+		Point2D* LeftTop() const { return new Point2D(mPos.x - oneSide / 2, mPos.y + oneSide / 2); }
+		Point2D* RightBottom() const { return new Point2D(mPos.x + oneSide / 2, mPos.y - oneSide / 2); }
+		Point2D* LeftBottom() const { return new Point2D(mPos.x - oneSide / 2, mPos.y - oneSide / 2); }
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Update() override {};
 		virtual void Render() override;

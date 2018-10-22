@@ -14,13 +14,17 @@ namespace MyDirectX
 		MeshRenderer() {};
 		~MeshRenderer();
 		//パイプラインの解釈の仕方を変更する
-		void SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology);
+		void SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { mTopology = topology; }
+		void SetColor(float r, float g, float b, float a);
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Awake() override {};
 		virtual void Start() override {};
 		virtual void Update() override {};
 		virtual void Render() override;
 		virtual void Exit() override;
+		virtual void OnCollisionEnter(Collisioninfo* info) override;
+		virtual void OnCollisionStay(Collisioninfo* info) override;
+		virtual void OnCollisionExit(Collisioninfo* info) override;
 		//メッシュを作る
 		template <typename T>
 		void CreateMesh();
@@ -32,6 +36,15 @@ namespace MyDirectX
 		CONSTANT_BUFFER cBuffer;
 		//描画数
 		int mDrawNum;
+		//描画色
+		//赤
+		float r;
+		//緑
+		float g;
+		//青
+		float b;
+		//透明度
+		float a;
 		//自身が保持するデータ
 		DXManager* mDXManager;
 		DXCamera* mDXCamera;
@@ -53,6 +66,7 @@ namespace MyDirectX
 		//パイプラインの解釈の仕方
 		D3D11_PRIMITIVE_TOPOLOGY mTopology;
 	};
+
 	template<typename T>
 	inline void MeshRenderer::CreateMesh()
 	{

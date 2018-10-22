@@ -23,6 +23,11 @@ namespace MyDirectX
 		virtual void Render()override {};
 		//‰ğ•úˆ—
 		virtual void Exit()override {};
+	protected:
+		//Õ“Ëî•ñ
+		Collisioninfo info;
+		//1ƒtƒŒ[ƒ€‘O‚ÉÕ“Ë‚µ‚Ä‚¢‚½‚©
+		bool isCollided = false;
 	};
 
 }

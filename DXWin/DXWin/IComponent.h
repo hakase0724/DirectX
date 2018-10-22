@@ -1,9 +1,16 @@
 #pragma once
+#include<string>
 
 
 namespace MyDirectX
 {
 	class DXGameObject;
+
+	struct Collisioninfo
+	{
+		std::string name;
+		Collisioninfo() {};
+	};
 
 	//コンポーネントのインターフェイス
 	class IComponent
@@ -17,6 +24,10 @@ namespace MyDirectX
 		virtual void FixedUpdate() = 0;
 		virtual void Render() = 0;
 		virtual void Exit() = 0;
+		virtual void OnCollisionEnter(Collisioninfo* info) = 0;
+		virtual void OnCollisionStay(Collisioninfo* info) = 0;
+		virtual void OnCollisionExit(Collisioninfo* info) = 0;
+		virtual std::string GetName() = 0;
 		virtual ~IComponent() = 0 {};
 	};
 
@@ -39,8 +50,13 @@ namespace MyDirectX
 		virtual void Render() {};
 		//解放処理
 		virtual void Exit() {};
+		virtual void OnCollisionEnter(Collisioninfo* info) {};
+		virtual void OnCollisionStay(Collisioninfo* info) {};
+		virtual void OnCollisionExit(Collisioninfo* info) {};
+		virtual std::string GetName() { return mName; }
 		virtual ~Component() {};
 	protected:
 		DXGameObject* mGameObject;
+		std::string mName;
 	};
 }

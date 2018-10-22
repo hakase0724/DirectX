@@ -12,6 +12,7 @@ DXGameObject::DXGameObject(DXManager * dxManager)
 	mDXManager = dxManager;
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
+	mName = "GameObject";
 }
 
 DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
@@ -20,6 +21,7 @@ DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
 	mDXManager = dxManager;
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
+	mName = "GameObject";
 }
 
 
@@ -83,5 +85,32 @@ void DXGameObject::Exit()
 		auto pItr = *itr;
 		pItr->Exit();
 		delete pItr;
+	}
+}
+
+void DXGameObject::OnCollisionEnter(Collisioninfo* info)
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->OnCollisionEnter(info);
+	}
+}
+
+void DXGameObject::OnCollisionStay(Collisioninfo* info)
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->OnCollisionStay(info);
+	}
+}
+
+void DXGameObject::OnCollisionExit(Collisioninfo* info)
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->OnCollisionExit(info);
 	}
 }

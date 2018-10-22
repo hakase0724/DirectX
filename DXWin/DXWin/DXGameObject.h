@@ -46,6 +46,11 @@ namespace MyDirectX
 		virtual void Render();
 		//自身の解放
 		virtual void Exit();
+		virtual void OnCollisionEnter(Collisioninfo* info);
+		virtual void OnCollisionStay(Collisioninfo* info);
+		virtual void OnCollisionExit(Collisioninfo* info);
+		std::string GetName() { return mName; }
+		void SetName(std::string name) { mName = name; }
 	protected:
 		//自身の座標回転スケール
 		TRANSFORM mTransform;
@@ -57,6 +62,7 @@ namespace MyDirectX
 		DXCamera* mDXCamera;
 		//自身が持つコンポーネントのリスト
 		std::vector<Component*> mComponentsList;
+		std::string mName;
 	};
 
 	template<typename T>

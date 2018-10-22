@@ -9,9 +9,12 @@ MeshRenderer::~MeshRenderer()
 	Exit();
 }
 
-void MeshRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology)
+void MeshRenderer::SetColor(float r, float g, float b, float a)
 {
-	mTopology = topology;
+	this->r = r;
+	this->g = g;
+	this->b = b;
+	this->a = a;
 }
 
 void MeshRenderer::Initialize(DXGameObject * gameObject)
@@ -21,6 +24,10 @@ void MeshRenderer::Initialize(DXGameObject * gameObject)
 	mDeviceContext = mDXManager->GetDeviceContext();
 	mGameObject = gameObject;
 	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	r = 0;
+	g = 1;
+	b = 0;
+	a = 1;
 }
 
 void MeshRenderer::Render()
@@ -29,7 +36,7 @@ void MeshRenderer::Render()
 	auto cameraParam = mDXCamera->GetCameraParam();
 	cBuffer.mW = mDXCamera->GetWorld(transform);
 	cBuffer.mWVP = mDXCamera->GetDXCameraParam(transform);
-	cBuffer.vColor = XMVectorSet(0, 1, 0, 1);
+	cBuffer.vColor = XMVectorSet(r, g, b, a);
 	cBuffer.vLightPos = XMVectorSet(-1.0f, 1.0f, -2.0f, 1.0f);
 	cBuffer.vEyePos = cameraParam.mPos;
 	//ƒf[ƒ^‚ð“n‚·
@@ -70,4 +77,19 @@ void MeshRenderer::Exit()
 	if (mIndexBuffer)mIndexBuffer->Release();
 	if (mConstantBuffer)mConstantBuffer->Release();
 	if (mRasterizerState)mRasterizerState->Release();
+}
+
+void MeshRenderer::OnCollisionEnter(Collisioninfo * info)
+{
+	SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+}
+
+void MeshRenderer::OnCollisionStay(Collisioninfo * info)
+{
+	SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void MeshRenderer::OnCollisionExit(Collisioninfo * info)
+{
+	SetColor(0.0f, 1.0f, 0.0f, 1.0f);
 }

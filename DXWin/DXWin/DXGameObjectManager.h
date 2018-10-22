@@ -18,7 +18,7 @@ namespace MyDirectX
 	{
 	public:
 		DXGameObjectManager(HWND hwnd);
-		~DXGameObjectManager() {};
+		~DXGameObjectManager();
 		DXManager* GetDXManager() const { return mDXManager.get(); }
 		DXGameObject* Instantiate();
 		DXGameObject* CreateCube();
@@ -33,8 +33,10 @@ namespace MyDirectX
 	private:
 		void CreateResources(HWND hwnd);
 		void CreateGameObject();
+		void StoreCollider2D();
 		std::unique_ptr<DXManager> mDXManager;
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
+		std::vector<Collider2D*> mCollider2DList;
 		SquareCollider2D* testCollider1;
 		SquareCollider2D* testCollider2;
 	};

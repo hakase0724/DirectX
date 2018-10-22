@@ -10,6 +10,7 @@ void SquareCollider2D::Initialize(DXGameObject * gameObject)
 	mGameObject = gameObject;
 	mPos = CalcPos();
 	oneSide = 1.0f;
+	mName = mGameObject->GetName();
 }
 
 void SquareCollider2D::Render()
@@ -28,9 +29,33 @@ void SquareCollider2D::Exit()
 bool SquareCollider2D::isCollision(Collider2D* otherCollider)
 {
 	auto square = dynamic_cast<SquareCollider2D*>(otherCollider);
-	if (square != NULL)
-		return isSquareCollision(square);
-	else return false;
+	if (square == NULL) return false;
+	std::string otherName = otherCollider->GetName();
+	bool isCollisionResult = isSquareCollision(square);
+	if(isCollisionResult)
+	{
+		//“–‚½‚è‘±‚¯‚Ä‚¢‚é
+		if(isCollided)
+		{
+			mGameObject->OnCollisionStay(&info);
+		}
+		//“–‚½‚èŽn‚ß‚½
+		else
+		{
+			mGameObject->OnCollisionEnter(&info);
+		}
+	}
+	else
+	{
+		//“–‚½‚èI‚í‚Á‚½
+		if (isCollided)
+		{
+			mGameObject->OnCollisionExit(&info);
+		}
+	}
+	isCollided = isCollisionResult;
+	return isCollided;
+
 }
 
 Point2D SquareCollider2D::CalcPos()
@@ -41,7 +66,7 @@ Point2D SquareCollider2D::CalcPos()
 
 bool SquareCollider2D::isSquareCollision(SquareCollider2D* otherSquareCollider)
 {
-	Point2D* points[4] = 
+	Point2D* points[] = 
 	{
 		otherSquareCollider->LeftTop(),
 		otherSquareCollider->RightTop(),
@@ -55,11 +80,12 @@ bool SquareCollider2D::isSquareCollision(SquareCollider2D* otherSquareCollider)
 		if (mPos.x - oneSide / 2 <= point->x && point ->x <= mPos.x + oneSide / 2)
 		{
 			if (mPos.y - oneSide / 2 <= point->y && point->y <= mPos.y + oneSide / 2)
-			{
+			{			
 				judgeResult = true;
 				break;
 			}
 		}
 	}
+	info.name = otherSquareCollider->GetName();
 	return judgeResult;
 }
