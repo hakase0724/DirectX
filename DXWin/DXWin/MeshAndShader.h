@@ -5,3 +5,4 @@
 #include "NormalShader.h"
 #include "LightingShader.h"
 #include "SquareCollider2DMesh.h"
+#include "NonLightingShader.h"

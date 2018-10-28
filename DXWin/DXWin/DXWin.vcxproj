@@ -172,7 +172,9 @@
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Mover.h" />
     <ClInclude Include="MyStructs.h" />
+    <ClInclude Include="NonLightingShader.h" />
     <ClInclude Include="NormalShader.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Primitive2D.h" />
     <ClInclude Include="Primitive3D.h" />
     <ClInclude Include="Resource.h" />
@@ -207,7 +209,9 @@
     <ClCompile Include="MeshInfo.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
+    <ClCompile Include="NonLightingShader.cpp" />
     <ClCompile Include="NormalShader.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Roller.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
@@ -245,6 +249,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="shader2.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="NonLightingShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>

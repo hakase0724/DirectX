@@ -11,5 +11,5 @@ void DXSquare::Initialize(DXGameObject * gameObject)
 		renderer = gameObject->AddComponent<MeshRenderer>();
 	}
 	renderer->CreateMesh<SquareMesh>();
-	renderer->CreateShader<LightingShader>();
+	renderer->CreateShader<NonLightingShader>();
 }

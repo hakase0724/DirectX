@@ -56,10 +56,42 @@ void DXInput::SetInputState()
 	mInputDevice->GetDeviceState(sizeof(mInputBuffer), (LPVOID)&mInputBuffer);
 }
 
+void DXInput::SetPreBuffer()
+{
+	for(int i = 0;i < 256;i++)
+	{
+		mPreInputBuffer[i] = mInputBuffer[i];
+	}
+}
+
 BOOL DXInput::GetInputState(int key)
 {
 	if (mInputBuffer[key] & isInputNum) return TRUE;
 	else return FALSE;
+}
+
+BOOL DXInput::GetKeyDown(int key)
+{
+	if(mInputBuffer[key] & isInputNum)
+	{
+		if(!(mPreInputBuffer[key] & isInputNum))
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+BOOL DXInput::GetKeyUp(int key)
+{
+	if (!(mInputBuffer[key] & isInputNum))
+	{
+		if (mPreInputBuffer[key] & isInputNum)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 void DXInput::ExitDirectInput()

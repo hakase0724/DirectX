@@ -80,6 +80,10 @@ void DXGameObject::Render()
 //持っているコンポーネントの解放処理を行う
 void DXGameObject::Exit()
 {
+	/*OutputDebugStringA("消えるよ！");
+	OutputDebugStringA("\n");
+	OutputDebugStringA(mName.c_str());
+	OutputDebugStringA("\n");*/
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;

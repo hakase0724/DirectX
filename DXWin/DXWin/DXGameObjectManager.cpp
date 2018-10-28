@@ -31,20 +31,23 @@ void DXGameObjectManager::CreateGameObject()
 	test->SetName("MoveObject");
 	test->AddComponent<Mover>();
 	test->AddComponent<SquareCollider2D>();
+	auto player = test->AddComponent<Player>();
+	player->SetManager(this);
 
-	auto test2 = Create<DXSquare>();
-	test2->SetName("NotMoveObject");
-	auto transfrom = test2->GetTransform();
-	transfrom.Position = XMFLOAT3(-2.0f, 0.0f, 0.0f);
-	test2->SetTransform(&transfrom);
-	test2->AddComponent<SquareCollider2D>();
 
-	auto test3 = Create<DXSquare>();
-	test3->SetName("NotMoveObject2");
-	auto transfrom2 = test3->GetTransform();
-	transfrom2.Position = XMFLOAT3(-1.0f, 1.5f, 0.0f);
-	test3->SetTransform(&transfrom2);
-	test3->AddComponent<SquareCollider2D>();
+	//auto test2 = Create<DXSquare>();
+	//test2->SetName("NotMoveObject");
+	//auto transfrom = test2->GetTransform();
+	//transfrom.Position = XMFLOAT3(-2.0f, 0.0f, 0.0f);
+	//test2->SetTransform(&transfrom);
+	//test2->AddComponent<SquareCollider2D>();
+
+	//auto test3 = Create<DXSquare>();
+	//test3->SetName("NotMoveObject2");
+	//auto transfrom2 = test3->GetTransform();
+	//transfrom2.Position = XMFLOAT3(-1.0f, 1.5f, 0.0f);
+	//test3->SetTransform(&transfrom2);
+	//test3->AddComponent<SquareCollider2D>();
 }
 
 void DXGameObjectManager::StoreCollider2D()
@@ -63,6 +66,15 @@ DXGameObject * DXGameObjectManager::Instantiate()
 	mGameObjectCounter++;
 	mGameObjectsList.back().get()->SetID(mGameObjectCounter);
 	return mGameObjectsList.back().get();
+}
+//ゲーム内で生成する
+DXGameObject * DXGameObjectManager::InstantiateTemp()
+{
+	mTempGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get()));
+	mGameObjectCounter++;
+	mTempGameObjectsList.back().get()->SetID(mGameObjectCounter);
+	mTempGameObjectsList.back().get()->AddComponent<DXSquare>();
+	return mTempGameObjectsList.back().get();
 }
 //キューブ生成
 DXGameObject * DXGameObjectManager::CreateCube()
@@ -90,6 +102,8 @@ BOOL DXGameObjectManager::Update()
 {
 	//現在の入力状態を取得
 	mDXManager->GetDXInput()->SetInputState();
+	mCollider2DList.clear();
+	StoreCollider2D();
 	//生成したオブジェクトの更新処理
 	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();++itr)
 	{
@@ -108,10 +122,11 @@ void DXGameObjectManager::LateUpdate()
 	//総当たり衝突判定
 	for(auto col:mCollider2DList)
 	{
+		auto col1ID = col->GetID();
 		for(auto col2:mCollider2DList)
 		{
-			if (col == col2) continue;
-			col->IsCollision(col2);
+			if (col1ID != col2->GetID())
+				col->IsCollision(col2);
 		}
 	}
 }
@@ -135,6 +150,15 @@ void DXGameObjectManager::Render()
 	}
 	//画面表示
 	mDXManager->EndScene();
+	//1フレーム内に追加生成されたものがあれば管理リストに追加する
+	for (auto itr = mTempGameObjectsList.begin(); itr != mTempGameObjectsList.end(); ++itr)
+	{
+		//中身のないものは追加しない
+		if (*itr == nullptr) continue;
+		mGameObjectsList.push_back(std::move(*itr));
+	}
+	mTempGameObjectsList.clear();
+	mDXManager->GetDXInput()->SetPreBuffer();
 }
 
 

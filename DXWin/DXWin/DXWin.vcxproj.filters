@@ -129,6 +129,12 @@
     <ClInclude Include="MeshRenderer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="NonLightingShader.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -218,6 +224,12 @@
     <ClCompile Include="MeshRenderer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="NonLightingShader.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXWin.rc">
@@ -235,5 +247,6 @@
   <ItemGroup>
     <None Include="shader.hlsl" />
     <None Include="shader2.hlsl" />
+    <None Include="NonLightingShader.hlsl" />
   </ItemGroup>
 </Project>

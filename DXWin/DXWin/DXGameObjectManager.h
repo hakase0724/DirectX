@@ -10,6 +10,7 @@
 #include "DXSquare.h"
 #include "Roller.h"
 #include "Colliders.h"
+#include "Player.h"
 
 
 namespace MyDirectX 
@@ -21,6 +22,7 @@ namespace MyDirectX
 		~DXGameObjectManager();
 		DXManager* GetDXManager() const { return mDXManager.get(); }
 		DXGameObject* Instantiate();
+		DXGameObject* InstantiateTemp();
 		DXGameObject* CreateCube();
 		DXGameObject* CreateSphere();
 		DXGameObject* CreateSquare();
@@ -36,7 +38,10 @@ namespace MyDirectX
 		void StoreCollider2D();
 		UINT mGameObjectCounter;
 		std::unique_ptr<DXManager> mDXManager;
+		//ゲームオブジェクト管理配列
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
+		//ゲーム中に追加生成されたものを一時的に入れておく
+		std::vector<std::unique_ptr<DXGameObject>> mTempGameObjectsList;
 		std::vector<Collider2D*> mCollider2DList;
 	};
 	
