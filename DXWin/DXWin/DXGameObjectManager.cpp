@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DXGameObjectManager.h"
+#include "DXManager.h"
 
 using namespace MyDirectX;
 using namespace DirectX;
@@ -27,36 +28,46 @@ void DXGameObjectManager::CreateResources(HWND hwnd)
 
 void DXGameObjectManager::CreateGameObject()
 {
-	auto test = Create<DXSquare>();
+	auto test = InstantiateTemp();
 	test->SetName("MoveObject");
+	test->SetTag(Tag::PlayerTag);
 	test->AddComponent<Mover>();
-	test->AddComponent<SquareCollider2D>();
+	auto col = test->AddComponent<SquareCollider2D>();
 	auto player = test->AddComponent<Player>();
 	player->SetManager(this);
+	col->SetOneSide(col->GetOneSide() / 10.0f);
 
-
-	//auto test2 = Create<DXSquare>();
-	//test2->SetName("NotMoveObject");
-	//auto transfrom = test2->GetTransform();
-	//transfrom.Position = XMFLOAT3(-2.0f, 0.0f, 0.0f);
-	//test2->SetTransform(&transfrom);
-	//test2->AddComponent<SquareCollider2D>();
-
-	//auto test3 = Create<DXSquare>();
-	//test3->SetName("NotMoveObject2");
-	//auto transfrom2 = test3->GetTransform();
-	//transfrom2.Position = XMFLOAT3(-1.0f, 1.5f, 0.0f);
-	//test3->SetTransform(&transfrom2);
-	//test3->AddComponent<SquareCollider2D>();
+	/*auto test3 = InstantiateTemp();
+	test3->SetName("NotMoveObject2");
+	auto transfrom2 = test3->GetTransform();
+	transfrom2.Position = XMFLOAT3(0.0f,1.0f, 0.0f);
+	test3->SetTransform(&transfrom2);
+	test3->SetTag(Tag::EnemyTag);
+	test3->AddComponent<SquareCollider2D>();*/
 }
 
 void DXGameObjectManager::StoreCollider2D()
 {
 	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
 	{
-		auto com = itr->get()->GetComponent<Collider2D>();
+		auto game = itr->get();
+		if (!game->GetEnable()) continue;
+		auto com = game->GetComponent<Collider2D>();
+		
 		if (com != nullptr) mCollider2DList.push_back(com);
+
 	}
+}
+
+bool DXGameObjectManager::IsCollisionJudge(Tag shooter, Tag bullet)
+{
+	//同じタグなら判定しない
+	if (shooter == bullet) return false;
+	//自機と自機の弾は判定しない
+	if (shooter == Tag::PlayerTag && bullet == Tag::PlayerBullet) return false;
+	//敵機と敵機の弾は判定しない
+	if (shooter == Tag::EnemyTag && bullet == Tag::EnemyBullet) return false;
+	return true;
 }
 
 //ゲームオブジェクトを作り配列に格納、作ったゲームオブジェクトのポインタを返す
@@ -64,17 +75,21 @@ DXGameObject * DXGameObjectManager::Instantiate()
 {
 	mGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get()));
 	mGameObjectCounter++;
-	mGameObjectsList.back().get()->SetID(mGameObjectCounter);
-	return mGameObjectsList.back().get();
+	auto game = mGameObjectsList.back().get();
+	game->SetID(mGameObjectCounter);
+	game->SetEnable(true);
+	return game;
 }
 //ゲーム内で生成する
 DXGameObject * DXGameObjectManager::InstantiateTemp()
 {
-	mTempGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get()));
+	mTempGameObjectsList.push_back(std::make_unique<DXGameObject>(mDXManager.get(),this));
 	mGameObjectCounter++;
-	mTempGameObjectsList.back().get()->SetID(mGameObjectCounter);
-	mTempGameObjectsList.back().get()->AddComponent<DXSquare>();
-	return mTempGameObjectsList.back().get();
+	auto game = mTempGameObjectsList.back().get();
+	game->SetID(mGameObjectCounter);
+	game->AddComponent<DXSquare>();
+	game->SetEnable(true);
+	return game;
 }
 //キューブ生成
 DXGameObject * DXGameObjectManager::CreateCube()
@@ -107,7 +122,8 @@ BOOL DXGameObjectManager::Update()
 	//生成したオブジェクトの更新処理
 	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();++itr)
 	{
-		itr->get()->Update();
+		auto game = itr->get();
+		if(game->GetEnable()) itr->get()->Update();
 	}
 	if (mDXManager->GetDXInput()->GetInputState(DIK_ESCAPE))return FALSE;
 	return TRUE;
@@ -117,16 +133,20 @@ void DXGameObjectManager::LateUpdate()
 {
 	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
 	{
-		itr->get()->LateUpdate();
+		auto game = itr->get();
+		if (game->GetEnable()) itr->get()->LateUpdate();
 	}
-	//総当たり衝突判定
+	//当たり判定
 	for(auto col:mCollider2DList)
 	{
-		auto col1ID = col->GetID();
+		auto col1Tag = col->GetTag();
+		//自機または敵機のコライダーのみ抽出
+		if (col1Tag == Tag::PlayerBullet) continue;
+		if (col1Tag == Tag::EnemyBullet) continue;
 		for(auto col2:mCollider2DList)
 		{
-			if (col1ID != col2->GetID())
-				col->IsCollision(col2);
+			if (!IsCollisionJudge(col1Tag, col2->GetTag())) continue;
+			col->IsCollision(col2);
 		}
 	}
 }
@@ -135,7 +155,8 @@ void DXGameObjectManager::FixedUpdate()
 {
 	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
 	{
-		itr->get()->FixedUpdate();
+		auto game = itr->get();
+		if (game->GetEnable()) itr->get()->FixedUpdate();
 	}
 }
 
@@ -146,7 +167,8 @@ void DXGameObjectManager::Render()
 	//生成したオブジェクトのレンダリング処理
 	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
 	{
-		itr->get()->Render();
+		auto game = itr->get();
+		if (game->GetEnable()) itr->get()->Render();
 	}
 	//画面表示
 	mDXManager->EndScene();
@@ -159,6 +181,22 @@ void DXGameObjectManager::Render()
 	}
 	mTempGameObjectsList.clear();
 	mDXManager->GetDXInput()->SetPreBuffer();
+}
+
+bool DXGameObjectManager::IsEnable(UINT id)
+{
+	bool result = false;
+	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end(); ++itr)
+	{
+		auto game = itr->get();
+		if (game->GetID() != id) continue;
+		if(game->GetEnable())
+		{
+			result = true;
+			break;
+		}
+	}
+	return result;
 }
 
 

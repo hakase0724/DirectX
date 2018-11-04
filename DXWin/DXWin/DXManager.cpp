@@ -42,6 +42,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	);
 	mDXCamera = std::make_unique<DXCamera>(cParam);
 	mDXFactory = std::make_unique<DXFactory>();
+	mDXRenderDataPool = std::make_unique<DXRenderDataPool>();
 #ifdef _DEBUG
 	flags = D3D11_CREATE_DEVICE_DEBUG;
 #endif

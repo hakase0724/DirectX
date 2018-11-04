@@ -5,6 +5,7 @@
 #include "IComponent.h"
 #include "DXGameObject.h"
 #include "MeshAndShader.h"
+#include "DXRenderDataPool.h"
 
 namespace MyDirectX
 {
@@ -22,9 +23,9 @@ namespace MyDirectX
 		virtual void Update() override {};
 		virtual void Render() override;
 		virtual void Exit() override;
-		virtual void OnCollisionEnter(Collisioninfo* info) override;
-		virtual void OnCollisionStay(Collisioninfo* info) override;
-		virtual void OnCollisionExit(Collisioninfo* info) override;
+		virtual void OnCollisionEnter(CollisionInfo* info) override;
+		virtual void OnCollisionStay(CollisionInfo* info) override;
+		virtual void OnCollisionExit(CollisionInfo* info) override;
 		//メッシュを作る
 		template <typename T>
 		void CreateMesh();
@@ -48,6 +49,8 @@ namespace MyDirectX
 		//自身が保持するデータ
 		DXManager* mDXManager;
 		DXCamera* mDXCamera;
+		DXFactory* mDXFactory;
+		ID3D11Device* mDevice;
 		ID3D11DeviceContext* mDeviceContext;
 		//入力アセンブラステージの入力データにアクセス　入力してなんかするときに使いそう
 		ID3D11InputLayout* mVertexLayout;
@@ -59,7 +62,7 @@ namespace MyDirectX
 		ID3D11Buffer* mConstantBuffer;
 		//頂点シェーダー用のバッファ
 		ID3D11Buffer* mVertexBuffer;
-		//インデックス要のバッファ
+		//インデックス用のバッファ
 		ID3D11Buffer* mIndexBuffer;
 		//ラスタライズステート
 		ID3D11RasterizerState* mRasterizerState;
@@ -67,26 +70,29 @@ namespace MyDirectX
 		D3D11_PRIMITIVE_TOPOLOGY mTopology;
 	};
 
+	//メッシュを作る
 	template<typename T>
 	inline void MeshRenderer::CreateMesh()
 	{
+		//受け取れる型でなければreturn
 		if (!typeid(T).before(typeid(MeshInfo*))) return;
-		auto mesh = new T();
-		//一文を短くして可読性を上げる
-		auto factory = mDXManager->GetDXFactory();
-		auto device = mDXManager->GetDevice();
-		factory->CreateMesh(mesh, device, &mVertexBuffer, &mIndexBuffer);
-		mDrawNum = mesh->indexNum;
+		//メッシュ情報取得
+		T* pInfo = mGameObject->GetDXManager()->GetDXRenderDataPool()->GetMesh<T>();	
+		//メッシュ情報をもとにレンダリングに必要なメッシュを作成
+		mDXFactory->CreateMesh(pInfo, mDevice, &mVertexBuffer, &mIndexBuffer);
+		//描画する頂点数をセット
+		mDrawNum = pInfo->indexNum;
 	}
+	//シェーダーを作る
 	template<typename T>
 	inline void MeshRenderer::CreateShader()
 	{
+		//受け取れる型でなければreturn
 		if (!typeid(T).before(typeid(ShaderInfo*))) return;
-		auto shader = new T();
-		//一文を短くして可読性を上げる
-		auto factory = mDXManager->GetDXFactory();
-		auto device = mDXManager->GetDevice();
-		factory->CreateShader(shader, device, &mVertexShader, &mPixelShader, &mVertexLayout, &mRasterizerState, &mConstantBuffer);
+		//シェーダー情報取得
+		T* pInfo = mGameObject->GetDXManager()->GetDXRenderDataPool()->GetShader<T>();
+		//シェーダー情報をもとにシェーダーを作成
+		mDXFactory->CreateShader(pInfo, mDevice, &mVertexShader, &mPixelShader, &mVertexLayout, &mRasterizerState, &mConstantBuffer);
 	}
 }
 

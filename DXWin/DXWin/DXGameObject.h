@@ -8,15 +8,27 @@
 #include "IComponent.h"
 
 
+
+
 namespace MyDirectX
 {
+	class DXGameObjectManager;
+	enum Tag
+	{
+		PlayerTag = 0,
+		EnemyTag = 1,
+		PlayerBullet = 2,
+		EnemyBullet = 3,
+	};
 	//このプロジェクトの核となるクラス
 	//このクラスにComponentクラスを継承したクラスを追加していく
 	class DXGameObject
 	{
 	public:
 		DXGameObject(DXManager* dxManager);
+		DXGameObject(DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		DXGameObject(TRANSFORM* transform, DXManager* dxManager);
+		DXGameObject(TRANSFORM* transform, DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		virtual ~DXGameObject();
 		//自身のtransform情報を公開
 		TRANSFORM GetTransform() const { return mTransform; }
@@ -46,13 +58,19 @@ namespace MyDirectX
 		virtual void Render();
 		//自身の解放
 		virtual void Exit();
-		virtual void OnCollisionEnter(Collisioninfo* info);
-		virtual void OnCollisionStay(Collisioninfo* info);
-		virtual void OnCollisionExit(Collisioninfo* info);
+		virtual void OnCollisionEnter(CollisionInfo* info);
+		virtual void OnCollisionStay(CollisionInfo* info);
+		virtual void OnCollisionExit(CollisionInfo* info);
+		//ゲッターとセッター
 		std::string GetName() { return mName; }
 		void SetName(std::string name) { mName = name; }
 		UINT GetID() { return mId; }
 		void SetID(UINT id) { mId = id; }
+		Tag GetTag() const { return mTag; }
+		void SetTag(Tag tag) { mTag = tag; }
+		bool GetEnable() const { return mEnable; }
+		void SetEnable(bool enable) { mEnable = enable; }
+		DXGameObjectManager* GetDXGameObjectManager() const { return mDXGameObjectManager; }
 	protected:
 		//自身の座標回転スケール
 		TRANSFORM mTransform;
@@ -62,10 +80,13 @@ namespace MyDirectX
 		DXInput* mDXInput;
 		//カメラ情報
 		DXCamera* mDXCamera;
+		DXGameObjectManager* mDXGameObjectManager;
 		//自身が持つコンポーネントのリスト
 		std::vector<Component*> mComponentsList;
 		std::string mName;
+		Tag mTag;
 		UINT mId;
+		bool mEnable;
 	};
 
 	template<typename T>

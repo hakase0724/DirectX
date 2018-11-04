@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "DXGameObject.h"
+#include "DXGameObjectManager.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -15,6 +16,18 @@ DXGameObject::DXGameObject(DXManager * dxManager)
 	mName = "GameObject";
 }
 
+DXGameObject::DXGameObject(DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
+{
+	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	mDXManager = dxManager;
+	mDXInput = mDXManager->GetDXInput();
+	mDXCamera = mDXManager->GetDXCamera();
+	mDXGameObjectManager = dxGameObjectManager;
+	mName = "GameObject";
+}
+
 DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
 {
 	mTransform = *transform;
@@ -23,6 +36,18 @@ DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
 	mDXCamera = mDXManager->GetDXCamera();
 	mName = "GameObject";
 }
+
+DXGameObject::DXGameObject(TRANSFORM * transform, DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
+{
+	mTransform = *transform;
+	mDXManager = dxManager;
+	mDXInput = mDXManager->GetDXInput();
+	mDXCamera = mDXManager->GetDXCamera();
+	mDXGameObjectManager = dxGameObjectManager;
+	mName = "GameObject";
+}
+
+
 
 
 DXGameObject::~DXGameObject()
@@ -92,7 +117,7 @@ void DXGameObject::Exit()
 	}
 }
 
-void DXGameObject::OnCollisionEnter(Collisioninfo* info)
+void DXGameObject::OnCollisionEnter(CollisionInfo* info)
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
@@ -101,7 +126,7 @@ void DXGameObject::OnCollisionEnter(Collisioninfo* info)
 	}
 }
 
-void DXGameObject::OnCollisionStay(Collisioninfo* info)
+void DXGameObject::OnCollisionStay(CollisionInfo* info)
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
@@ -110,7 +135,7 @@ void DXGameObject::OnCollisionStay(Collisioninfo* info)
 	}
 }
 
-void DXGameObject::OnCollisionExit(Collisioninfo* info)
+void DXGameObject::OnCollisionExit(CollisionInfo* info)
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{

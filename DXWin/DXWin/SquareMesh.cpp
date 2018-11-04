@@ -2,6 +2,7 @@
 #include "SquareMesh.h"
 
 using namespace MyDirectX;
+using namespace DirectX;
 
 SquareMesh::SquareMesh()
 {
@@ -12,10 +13,10 @@ SquareMesh::SquareMesh()
 	//キューブの頂点情報
 	VERTEX_DATA SquareVertex[] =
 	{
-		{ DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, 0.0f),  DirectX::XMFLOAT3(-oneSideHarf, -oneSideHarf, 0.0f)},
-		{ DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, 0.0f),   DirectX::XMFLOAT3(oneSideHarf, -oneSideHarf, 0.0f)},
-		{ DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, 0.0f),   DirectX::XMFLOAT3(-oneSideHarf, oneSideHarf, 0.0f)},
-		{ DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, 0.0f),    DirectX::XMFLOAT3(oneSideHarf, oneSideHarf, 0.0f)},
+		{ XMFLOAT3(-oneSideHarf, -oneSideHarf, 0.0f),  XMFLOAT3(-oneSideHarf, -oneSideHarf, 0.0f)},
+		{ XMFLOAT3(oneSideHarf, -oneSideHarf, 0.0f),   XMFLOAT3(oneSideHarf, -oneSideHarf, 0.0f)},
+		{ XMFLOAT3(-oneSideHarf, oneSideHarf, 0.0f),   XMFLOAT3(-oneSideHarf, oneSideHarf, 0.0f)},
+		{ XMFLOAT3(oneSideHarf, oneSideHarf, 0.0f),    XMFLOAT3(oneSideHarf, oneSideHarf, 0.0f)},
 	};
 	vertexNum = ARRAYSIZE(SquareVertex);
 	vertics = new VERTEX_DATA[vertexNum];

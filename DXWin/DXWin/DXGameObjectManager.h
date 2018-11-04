@@ -32,10 +32,12 @@ namespace MyDirectX
 		void LateUpdate();
 		void FixedUpdate();
 		void Render();
+		bool IsEnable(UINT id);
 	private:
 		void CreateResources(HWND hwnd);
 		void CreateGameObject();
 		void StoreCollider2D();
+		bool IsCollisionJudge(Tag shooter,Tag bullet);
 		UINT mGameObjectCounter;
 		std::unique_ptr<DXManager> mDXManager;
 		//ゲームオブジェクト管理配列
@@ -43,6 +45,8 @@ namespace MyDirectX
 		//ゲーム中に追加生成されたものを一時的に入れておく
 		std::vector<std::unique_ptr<DXGameObject>> mTempGameObjectsList;
 		std::vector<Collider2D*> mCollider2DList;
+		std::vector<Collider2D*> mShooterCollider2DList;
+		std::vector<Collider2D*> mBulletCollider2DList;
 	};
 	
 	template<typename T>

@@ -7,13 +7,14 @@
 #include <wrl/client.h>
 #include "DXFactory.h"
 #include "MyStructs.h"
+#include "DXRenderDataPool.h"
 
 
 namespace MyDirectX
 {
 	//画面解像度
-	const float cWidth = 1280;
-	const float cHeight = 720;
+	const float cWidth = 1920;
+	const float cHeight = 1080;
 	class DXManager
 	{
 	public:
@@ -53,6 +54,7 @@ namespace MyDirectX
 		DXInput* GetDXInput() const { return mDXInput.get(); }
 		DXCamera* GetDXCamera() const { return mDXCamera.get(); }
 		DXFactory* GetDXFactory() const { return mDXFactory.get(); }
+		DXRenderDataPool* GetDXRenderDataPool() const { return mDXRenderDataPool.get(); }
 	private:
 		//ウィンドルのハンドル
 		HWND mHwnd;
@@ -80,6 +82,7 @@ namespace MyDirectX
 		std::unique_ptr<DXInput> mDXInput;
 		std::unique_ptr<DXCamera> mDXCamera;
 		std::unique_ptr<DXFactory> mDXFactory;
+		std::unique_ptr<DXRenderDataPool> mDXRenderDataPool;
 		
 	};
 }

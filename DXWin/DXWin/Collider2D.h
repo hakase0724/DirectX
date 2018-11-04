@@ -26,7 +26,7 @@ namespace MyDirectX
 		virtual void Exit()override {};
 	protected:
 		//Õ“Ëî•ñ
-		Collisioninfo info;
+		CollisionInfo info;
 		//1ƒtƒŒ[ƒ€‘O‚ÉÕ“Ë‚µ‚Ä‚¢‚½‚©
 		bool isCollided = false;
 		std::vector<UINT> mCollisionList;

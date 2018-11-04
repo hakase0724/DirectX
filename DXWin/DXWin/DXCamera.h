@@ -69,16 +69,18 @@ namespace MyDirectX
 	class DXCamera
 	{
 	public:
-		DXCamera(CameraParam *param) { mParam = *param; }
+		DXCamera(CameraParam *param);
 		~DXCamera() {};
 		DirectX::XMMATRIX GetDXCameraParam(TRANSFORM transform);
 		CameraParam GetCameraParam() const { return mParam;}
 		DirectX::XMMATRIX GetWorld(TRANSFORM transform);
+		DirectX::XMVECTOR WorldToScreenPoint(TRANSFORM* transform);
 		void SetEyeParamWithRatio(DirectX::XMVECTOR pos, DirectX::XMVECTOR lookup, DirectX::XMVECTOR up,float ratio);
 		void SetRotation(float x, float y );
 		void SetPos(float x = 0.0f, float y = 0.0f,float z = 0.0f);
 	private:
 		CameraParam mParam;	
+		DirectX::XMMATRIX* mWorldToScreenPointMatrix;
 	};
 }
 

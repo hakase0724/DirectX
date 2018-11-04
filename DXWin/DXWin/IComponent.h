@@ -5,12 +5,13 @@
 namespace MyDirectX
 {
 	class DXGameObject;
+	enum Tag;
 
-	struct Collisioninfo
+	struct CollisionInfo
 	{
 		std::string name;
 		UINT id;
-		Collisioninfo() {};
+		CollisionInfo() {};
 	};
 
 	//コンポーネントのインターフェイス
@@ -25,9 +26,9 @@ namespace MyDirectX
 		virtual void FixedUpdate() = 0;
 		virtual void Render() = 0;
 		virtual void Exit() = 0;
-		virtual void OnCollisionEnter(Collisioninfo* info) = 0;
-		virtual void OnCollisionStay(Collisioninfo* info) = 0;
-		virtual void OnCollisionExit(Collisioninfo* info) = 0;
+		virtual void OnCollisionEnter(CollisionInfo* info) = 0;
+		virtual void OnCollisionStay(CollisionInfo* info) = 0;
+		virtual void OnCollisionExit(CollisionInfo* info) = 0;
 		virtual std::string GetName() = 0;
 		virtual UINT GetID() = 0;
 		virtual ~IComponent() = 0 {};
@@ -52,15 +53,19 @@ namespace MyDirectX
 		virtual void Render() {};
 		//解放処理
 		virtual void Exit() {};
-		virtual void OnCollisionEnter(Collisioninfo* info) {};
-		virtual void OnCollisionStay(Collisioninfo* info) {};
-		virtual void OnCollisionExit(Collisioninfo* info) {};
-		virtual std::string GetName() { return mName; }
-		virtual UINT GetID() { return mId; }
+		virtual void OnCollisionEnter(CollisionInfo* info) {};
+		virtual void OnCollisionStay(CollisionInfo* info) {};
+		virtual void OnCollisionExit(CollisionInfo* info) {};
+		std::string GetName() { return mName; }
+		UINT GetID() { return mId; }
+		Tag GetTag() const { return mTag; }
+		void SetTag(Tag tag) { mTag = tag; }
 		virtual ~Component() {};
 	protected:
 		DXGameObject* mGameObject;
 		std::string mName;
 		UINT mId;
+		Tag mTag;
+		bool mEnable;
 	};
 }

@@ -91,10 +91,12 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalIncludeDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\DDSTextureLoader;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\WICTextureLoader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -149,6 +151,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="BoxCollider.h" />
+    <ClInclude Include="Bullet.h" />
+    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Colliders.h" />
@@ -161,6 +165,7 @@
     <ClInclude Include="DXGameObjectManager.h" />
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
+    <ClInclude Include="DXRenderDataPool.h" />
     <ClInclude Include="DXSphere.h" />
     <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXWin.h" />
@@ -191,6 +196,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
+    <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
@@ -201,6 +208,7 @@
     <ClCompile Include="DXGameObjectManager.cpp" />
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
+    <ClCompile Include="DXRenderDataPool.cpp" />
     <ClCompile Include="DXSphere.cpp" />
     <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXWin.cpp" />

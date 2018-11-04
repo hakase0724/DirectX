@@ -23,6 +23,8 @@ void MeshRenderer::Initialize(DXGameObject * gameObject)
 	mDXCamera = gameObject->GetDXCamera();
 	mDeviceContext = mDXManager->GetDeviceContext();
 	mGameObject = gameObject;
+	mDXFactory = mDXManager->GetDXFactory();
+	mDevice = mDXManager->GetDevice();
 	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	r = 0;
 	g = 1;
@@ -79,17 +81,17 @@ void MeshRenderer::Exit()
 	if (mRasterizerState)mRasterizerState->Release();
 }
 
-void MeshRenderer::OnCollisionEnter(Collisioninfo * info)
+void MeshRenderer::OnCollisionEnter(CollisionInfo * info)
 {
 	SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void MeshRenderer::OnCollisionStay(Collisioninfo * info)
+void MeshRenderer::OnCollisionStay(CollisionInfo * info)
 {
 	SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void MeshRenderer::OnCollisionExit(Collisioninfo * info)
+void MeshRenderer::OnCollisionExit(CollisionInfo * info)
 {
 	SetColor(0.0f, 1.0f, 0.0f, 1.0f);
 }
