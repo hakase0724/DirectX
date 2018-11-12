@@ -4,17 +4,15 @@
 #include "DXInput.h"
 #include "DXCamera.h"
 #include <DirectXMath.h>
-#include <wrl/client.h>
 #include "DXFactory.h"
 #include "MyStructs.h"
 #include "DXRenderDataPool.h"
+#include "CommonValues.h"
+#include <dxgidebug.h>
 
 
 namespace MyDirectX
 {
-	//画面解像度
-	const float cWidth = 1920;
-	const float cHeight = 1080;
 	class DXManager
 	{
 	public:
@@ -56,6 +54,7 @@ namespace MyDirectX
 		DXFactory* GetDXFactory() const { return mDXFactory.get(); }
 		DXRenderDataPool* GetDXRenderDataPool() const { return mDXRenderDataPool.get(); }
 	private:
+		ID3D11Debug* mD3dDebug;
 		//ウィンドルのハンドル
 		HWND mHwnd;
 		//ドライバーの種類オプション　NULLはデバッグ用らしい

@@ -9,7 +9,6 @@
 
 using namespace DirectX;
 using namespace MyDirectX;
-using namespace Microsoft::WRL;
 
 DXManager::DXManager(HWND hwnd)
 {
@@ -33,7 +32,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	UINT flags = 0;
 	mDXInput = std::make_unique<DXInput>(hwnd);
 	//カメラを生成
-	auto cParam = new CameraParam
+	auto cParam = new CAMERA_PARAM
 	(
 		DirectX::XMVectorSet(0.0f, 0.0f, -3.5f, 1.0f),
 		DirectX::XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f),
@@ -84,14 +83,14 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	if (FAILED(hr)) return S_FALSE;
 
 	//バックバッファの確保
-	std::unique_ptr<ID3D11Texture2D> back_buff;
-	auto pBack_Buff = back_buff.get();;
-	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBack_Buff);
+	ID3D11Texture2D* back_buff;
+	hr = mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&back_buff);
 	if (FAILED(hr)) 
 	{
 		ExitDX11();
 		return S_FALSE;
 	}
+
 
 	//深度バッファで使うテクスチャ生成
 	D3D11_TEXTURE2D_DESC depthDesc;
@@ -135,7 +134,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	hr = mDevice->CreateDepthStencilState(&depthStencilDesc,&mDepthStencilState);
 
 	//レンダーターゲットビュー生成
-	hr = mDevice->CreateRenderTargetView(pBack_Buff,NULL,&mRenderTargetView);
+	hr = mDevice->CreateRenderTargetView(back_buff,NULL,&mRenderTargetView);
 	
 	if (FAILED(hr))
 	{
@@ -153,6 +152,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	mDeviceContext->OMSetRenderTargets(1, &mRenderTargetView, mDepthStencilView);
 	mDeviceContext->RSSetViewports(1, &mView);
 	delete cParam;
+	back_buff->Release();
 	return S_OK;
 }
 //終了

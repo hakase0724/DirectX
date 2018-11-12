@@ -5,50 +5,31 @@
 using namespace DirectX;
 using namespace MyDirectX;
 
-DXGameObject::DXGameObject(DXManager * dxManager)
-{
-	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	mDXManager = dxManager;
-	mDXInput = mDXManager->GetDXInput();
-	mDXCamera = mDXManager->GetDXCamera();
-	mName = "GameObject";
-}
-
 DXGameObject::DXGameObject(DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
 {
-	mTransform.Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform.Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	mTransform = std::make_unique<TRANSFORM>();
+	mTransform->Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mTransform->Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mTransform->Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	mDXManager = dxManager;
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
 	mDXGameObjectManager = dxGameObjectManager;
-	mName = "GameObject";
-}
-
-DXGameObject::DXGameObject(TRANSFORM *transform, DXManager * dxManager)
-{
-	mTransform = *transform;
-	mDXManager = dxManager;
-	mDXInput = mDXManager->GetDXInput();
-	mDXCamera = mDXManager->GetDXCamera();
 	mName = "GameObject";
 }
 
 DXGameObject::DXGameObject(TRANSFORM * transform, DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
 {
-	mTransform = *transform;
+	mTransform = std::make_unique<TRANSFORM>();
+	mTransform->Position = transform->Position;
+	mTransform->Rotation = transform->Rotation;
+	mTransform->Scale = transform->Scale;
 	mDXManager = dxManager;
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
 	mDXGameObjectManager = dxGameObjectManager;
 	mName = "GameObject";
 }
-
-
-
 
 DXGameObject::~DXGameObject()
 {
@@ -64,6 +45,16 @@ HRESULT DXGameObject::Init(DXManager * dxManager)
 	return S_OK;
 }
 
+//持っているコンポーネントの初期化処理を行う
+void DXGameObject::InitializeComponent()
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->Initialize();
+	}
+}
+
 //持っているコンポーネントの更新処理を行う
 void DXGameObject::Update()
 {
@@ -74,6 +65,7 @@ void DXGameObject::Update()
 	}
 }
 
+//持っているコンポーネントの更新処理が終わった後での更新処理
 void DXGameObject::LateUpdate()
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
@@ -83,14 +75,6 @@ void DXGameObject::LateUpdate()
 	}
 }
 
-void DXGameObject::FixedUpdate()
-{
-	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
-	{
-		auto pItr = *itr;
-		pItr->FixedUpdate();
-	}
-}
 
 //持っているコンポーネントの描画処理を行う
 void DXGameObject::Render()
@@ -105,10 +89,6 @@ void DXGameObject::Render()
 //持っているコンポーネントの解放処理を行う
 void DXGameObject::Exit()
 {
-	/*OutputDebugStringA("消えるよ！");
-	OutputDebugStringA("\n");
-	OutputDebugStringA(mName.c_str());
-	OutputDebugStringA("\n");*/
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
@@ -117,29 +97,22 @@ void DXGameObject::Exit()
 	}
 }
 
-void DXGameObject::OnCollisionEnter(CollisionInfo* info)
+//衝突した時の処理
+void DXGameObject::OnCollisionEnter()
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
-		pItr->OnCollisionEnter(info);
+		pItr->OnCollisionEnter();
 	}
 }
 
-void DXGameObject::OnCollisionStay(CollisionInfo* info)
+//衝突が終わった時の処理
+void DXGameObject::OnCollisionExit()
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
-		pItr->OnCollisionStay(info);
-	}
-}
-
-void DXGameObject::OnCollisionExit(CollisionInfo* info)
-{
-	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
-	{
-		auto pItr = *itr;
-		pItr->OnCollisionExit(info);
+		pItr->OnCollisionExit();
 	}
 }

@@ -7,7 +7,7 @@ using namespace DirectX;
 SquareMesh::SquareMesh()
 {
 	//一辺の長さ
-	float oneSide = 1.0f;
+	float oneSide = cMyOneSide;
 	//長さの半分を頂点座標にすれば一辺の長さが同じ四角形ができる
 	float oneSideHarf = oneSide / 2.0f;
 	//キューブの頂点情報

@@ -23,7 +23,7 @@ void MeshFactory::CreateVertex(MeshInfo * info, ID3D11Device * device, ID3D11Buf
 	bd.StructureByteStride = 0;
 	//サブリソースの初期化ポインター
 	D3D11_SUBRESOURCE_DATA data;
-	data.pSysMem = info->vertics;
+	data.pSysMem = info->vertexInfo;
 	device->CreateBuffer(&bd, &data, vertexBuffer);
 }
 

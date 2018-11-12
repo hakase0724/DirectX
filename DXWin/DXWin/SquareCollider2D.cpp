@@ -7,7 +7,6 @@ using namespace DirectX;
 using namespace MyDirectX;
 
 
-DXGameObjectManager* mDXGameObjectManager;
 
 void SquareCollider2D::Initialize(DXGameObject * gameObject)
 {
@@ -20,140 +19,69 @@ void SquareCollider2D::Initialize(DXGameObject * gameObject)
 	mRightTop = new Point2D();
 	mRightBottom = new Point2D();
 	CalcPos();
-	mOneSide = 1.0f;
+	mOneSide = cMyOneSide;
 	mOneSideHarf = mOneSide / 2.0f;
 	mName = mGameObject->GetName();
 	mDXGameObjectManager = mGameObject->GetDXGameObjectManager();
+	mCollisionNum = 0;
 }
 
-void SquareCollider2D::Render()
+void SquareCollider2D::Initialize()
 {
+	mId = mGameObject->GetID();
+	mTag = mGameObject->GetTag();
+	CalcPos();
+	mName = mGameObject->GetName();
 }
 
 void SquareCollider2D::LateUpdate()
 {
 	CalcPos();
-	auto camera = mGameObject->GetDXCamera();
-
-	/*スクリーン座標計算(1920*1080)*/
-
-	//自身の左上の頂点のスクリーン座標
-	auto leftTop = new TRANSFORM();
-	auto leftTopPoint = GetLeftTop();
-	leftTop->Position.x = leftTopPoint->x;
-	leftTop->Position.y = leftTopPoint->y;
-	auto leftTopScreen = camera->WorldToScreenPoint(leftTop);
-
-	//自身の左下の頂点のスクリーン座標
-	auto leftBottom = new TRANSFORM();
-	auto leftBottomPoint = GetLeftBottom();
-	leftBottom->Position.x = leftBottomPoint->x;
-	leftBottom->Position.y = leftBottomPoint->y;
-	auto leftBottomScreen = camera->WorldToScreenPoint(leftBottom);
-
-	//自身の右上の頂点のスクリーン座標
-	auto rightTop = new TRANSFORM();
-	auto rightTopPoint = GetRightTop();
-	rightTop->Position.x = rightTopPoint->x;
-	rightTop->Position.y = rightTopPoint->y;
-	auto rightTopScreen = camera->WorldToScreenPoint(rightTop);
-
-	//自身の右下の頂点のスクリーン座標
-	auto rightBottom = new TRANSFORM();
-	auto rightBottomPoint = GetRightBottom();
-	rightBottom->Position.x = rightBottomPoint->x;
-	rightBottom->Position.y = rightBottomPoint->y;
-	auto rightBottomScreen = camera->WorldToScreenPoint(rightBottom);
-
-	//スクリーンの左上
-	auto screenLeftTop = new TRANSFORM();
-	screenLeftTop->Position.x = -1.0f;
-	screenLeftTop->Position.y = 1.0f;
-	auto screenLeftTopScreen = camera->WorldToScreenPoint(screenLeftTop);
-
-	//スクリーンの右下
-	auto screenRightBottom = new TRANSFORM();
-	screenRightBottom->Position.x = 1.0f;
-	screenRightBottom->Position.y = -1.0f;
-	auto screenRightBottomScreen = camera->WorldToScreenPoint(screenRightBottom);
-
-	//スクリーンの左下
-	auto screenLeftBottom = new TRANSFORM();
-	screenLeftBottom->Position.x = -1.0f;
-	screenLeftBottom->Position.y = -1.0f;
-	auto screenLeftBottomScreen = camera->WorldToScreenPoint(screenLeftBottom);
-
-	//スクリーンの右上
-	auto screenRightTop = new TRANSFORM();
-	screenRightTop->Position.x = 1.0f;
-	screenRightTop->Position.y = 1.0f;
-	auto screenRightTopScreen = camera->WorldToScreenPoint(screenRightTop);
 }
 
 void SquareCollider2D::Exit()
 {
+	delete mPos;
+	delete mLeftTop;
+	delete mLeftBottom;
+	delete mRightTop;
+	delete mRightBottom;
 }
 
 bool SquareCollider2D::IsCollision(Collider2D* otherCollider)
 {
-
 	auto square = dynamic_cast<SquareCollider2D*>(otherCollider);
 	if (square == NULL) return false;
-	info.name = otherCollider->GetName();
-	info.id = otherCollider->GetID();
-	auto found = std::find(mCollisionList.begin(), mCollisionList.end(), info.id);
-	bool isCollisionResult = IsSquareCollision(square);
-	if(isCollisionResult)
-	{		
-		//当たり続けている
-		if (found != mCollisionList.end()) 
-		{
-			mGameObject->OnCollisionStay(&info);
-		}
-		//当たり始めた
-		else
-		{
-			mGameObject->OnCollisionEnter(&info);
-		}
-	}
-	else
+	auto isCollision = IsSquareCollision(square);
+	if(isCollision)
 	{
-		//当たり終わった
-		if (found != mCollisionList.end())
-		{
-			mGameObject->OnCollisionExit(&info);
-		}
-		//当たっていないがすでに当たっているはずのオブジェクトがいる
-		else if(mCollisionList.size() != 0)
-		{
-			for(auto id:mCollisionList)
-			{
-				//当たっているはずのオブジェクトが非アクティブになっていたらOnCollisionExitの処理を行う
-				if(!mDXGameObjectManager->IsEnable(id))
-				{
-					mGameObject->OnCollisionExit(&info);
-					break;
-				}
-			}
-		}
+		mCollisionNum++;
 	}
-	return isCollisionResult;
+	if(mCollisionNum != 0)
+	{
+		mIsCollided = true;
+	}
+	return isCollision;
 }
 
-void SquareCollider2D::OnCollisionEnter(CollisionInfo * info)
+void SquareCollider2D::OnCollision()
 {
-	mCollisionList.push_back(info->id);
-}
-
-void SquareCollider2D::OnCollisionExit(CollisionInfo * info)
-{
-	auto remove = std::remove_if(mCollisionList.begin(), mCollisionList.end(), [&](UINT id)->bool {return id == info->id; });
-	mCollisionList.erase(remove, mCollisionList.end());
+	for(int i = 0;i < mCollisionNum;i++)
+	{
+		mGameObject->OnCollisionEnter();
+	}
+	for(int i = 0;i < mPreCollisionNum;i++)
+	{
+		mGameObject->OnCollisionExit();
+	}
+	mPreCollisionNum = mCollisionNum;
+	mCollisionNum = 0;
+	if(mPreCollisionNum == 0)mIsCollided = false;
 }
 
 void SquareCollider2D::CalcPos()
 {
-	auto pos = mGameObject->GetTransform().Position;
+	auto pos = mGameObject->GetTransform()->Position;
 	mPos->x = pos.x;
 	mPos->y = pos.y;
 	mOneSideHarf = mOneSide / 2;
@@ -230,3 +158,5 @@ bool SquareCollider2D::IsSquareCollision(SquareCollider2D* otherSquareCollider)
 	}
 	return judgeResult;
 }
+
+

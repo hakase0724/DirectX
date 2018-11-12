@@ -1,25 +1,16 @@
 #pragma once
-#include <DirectXMath.h>
-#include <memory>
+#include "MyStructs.h"
+#include "CommonValues.h"
 namespace MyDirectX 
 {
-	struct VERTEX_DATA
-	{
-		DirectX::XMFLOAT3 V;
-		DirectX::XMFLOAT3 N;
-		VERTEX_DATA() = default;
-		VERTEX_DATA(DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 n)
-		{
-			V = v;
-			N = n;
-		}
-	};
 	class MeshInfo
 	{
 	public:
 		MeshInfo() {};
+		virtual ~MeshInfo() {};
 		int* indexes;
 		VERTEX_DATA* vertics;
+		TEXTURE_VERTEX_DATA* vertexInfo;
 		int indexNum;
 		int vertexNum;
 		virtual UINT GetSize() = 0;

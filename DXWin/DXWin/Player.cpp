@@ -4,64 +4,62 @@
 
 using namespace MyDirectX;
 
-
-
 void Player::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
 	mDXInput = mGameObject->GetDXInput();
 	auto transform = mGameObject->GetTransform();
-	/*transform.Scale.x /= 10.0f;
-	transform.Scale.y /= 10.0f;
-	transform.Scale.z /= 10.0f;*/
-	/*transform.Position.x = -21.0f;
-	transform.Position.y = 10.0f;*/
-	mGameObject->SetTransform(&transform);
+	transform->Scale.x /= 2.0f;
+	transform->Scale.y /= 2.0f;
+	transform->Scale.z /= 2.0f;
+	mGameObject->SetTransform(transform);
 	mId = mGameObject->GetID();
-	waitCount = coolCount;
+	mWaitCount = mCoolCount;
+	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
 }
 
 void Player::Update()
 {
-	waitCount++;
+	//毎フレームカウントを行う
+	mWaitCount++;
 	
 	if(!isCoolTime())
 	{
-		
+		//発射しない
 	}
 	else if (mDXInput->GetInputState(DIK_Z))
 	{
-		for(int i = 0;i < 4;i++)
+		//複数発射する用テストコード
+		auto bulletNum = 4;
+		for(int i = 0;i < bulletNum;i++)
 		{
-			auto game = mManager->InstantiateTemp();
-			auto transform = mGameObject->GetTransform();
-			transform.Position.x += transform.Scale.x * (float)(i * 2 - 3);
-			transform.Position.y += transform.Scale.y;
-			game->SetTransform(&transform);
-			game->SetName("Bullet");
-			game->SetTag(Tag::PlayerTag);
-			auto col = game->AddComponent<SquareCollider2D>();
-			col->SetOneSide(col->GetOneSide() / 10.0f);
-			game->AddComponent<Bullet>();
-		}		
+			auto game = mBulletManager->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
+			auto gameTransform = game->GetTransform();
+			//各弾同士の間隔
+			auto offset = gameTransform->Scale.x/* + gameTransform->Scale.x / 2*/;
+			gameTransform->Position.x += offset * (i - (float)bulletNum / 3.0f);
+			game->SetTransform(gameTransform);
+		}
 	}	
-	if(mDXInput->GetKeyDown(DIK_LEFTARROW))
+	else if(!mDXInput->GetInputState(DIK_Z))
 	{
-		auto transform = mGameObject->GetTransform();
-		transform.Position.x -= 1.0f;
-		mGameObject->SetTransform(&transform);
+		//発射しなかった場合は発射可能状態にしておく
+		mWaitCount = mCoolCount - 1;
 	}
-}
-
-void Player::SetManager(DXGameObjectManager * manager)
-{
-	mManager = manager;
+	//デバッグ用
+	//エンターキーが押されたとき処理を止める
+	if (mDXInput->GetInputState(DIK_RETURN))
+	{
+		//何も意味のないコードだとコンパイル時の最適化によって消える模様
+		mGameObject->SetEnable(false);
+	}
 }
 
 bool Player::isCoolTime()
 {
-	if(waitCount % coolCount == 0)
+	if(mWaitCount % mCoolCount == 0)
 	{
+		mWaitCount = 0;
 		return true;
 	}
 	else

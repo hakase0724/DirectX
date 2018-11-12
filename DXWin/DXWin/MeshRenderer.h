@@ -16,28 +16,28 @@ namespace MyDirectX
 		~MeshRenderer();
 		//パイプラインの解釈の仕方を変更する
 		void SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { mTopology = topology; }
+		void SetDefaultColor(float r, float g, float b, float a);
 		void SetColor(float r, float g, float b, float a);
+		void SetColor();
 		virtual void Initialize(DXGameObject* gameObject) override;
-		virtual void Awake() override {};
-		virtual void Start() override {};
-		virtual void Update() override {};
 		virtual void Render() override;
 		virtual void Exit() override;
-		virtual void OnCollisionEnter(CollisionInfo* info) override;
-		virtual void OnCollisionStay(CollisionInfo* info) override;
-		virtual void OnCollisionExit(CollisionInfo* info) override;
+		virtual void OnCollisionEnter() override;
+		virtual void OnCollisionExit() override;
 		//メッシュを作る
 		template <typename T>
 		void CreateMesh();
 		//シェーダーを作る
 		template <typename T>
 		void CreateShader();
-	private:
+	protected:
 		//データ更新用バッファ
 		CONSTANT_BUFFER cBuffer;
 		//描画数
 		int mDrawNum;
 		//描画色
+		COLOR mColor;
+		COLOR mDefaultColor;
 		//赤
 		float r;
 		//緑

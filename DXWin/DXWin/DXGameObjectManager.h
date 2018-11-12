@@ -2,7 +2,6 @@
 #include "DXManager.h"
 #include "DXCube.h"
 #include "DXSphere.h"
-#include <memory>
 #include <vector> 
 #include "DXGameObject.h"
 #include "Mover.h"
@@ -11,7 +10,10 @@
 #include "Roller.h"
 #include "Colliders.h"
 #include "Player.h"
-
+#include "FPSCountor.h"
+#include "BulletManager.h"
+#include "MyStructs.h"
+#include "DXTexture.h"
 
 namespace MyDirectX 
 {
@@ -19,44 +21,40 @@ namespace MyDirectX
 	{
 	public:
 		DXGameObjectManager(HWND hwnd);
-		~DXGameObjectManager();
+		~DXGameObjectManager() {};
 		DXManager* GetDXManager() const { return mDXManager.get(); }
+		//オブジェクトを生成
 		DXGameObject* Instantiate();
-		DXGameObject* InstantiateTemp();
-		DXGameObject* CreateCube();
-		DXGameObject* CreateSphere();
-		DXGameObject* CreateSquare();
-		template<typename T>
-		DXGameObject* Create();
 		BOOL Update();
 		void LateUpdate();
-		void FixedUpdate();
 		void Render();
+		//指定したIDのオブジェクトのアクティブ状態を返す
 		bool IsEnable(UINT id);
+		//指定したIDのオブジェクトを返す
+		DXGameObject* GetDXGameObjectWithID(UINT id);
+		BulletManager* GetBulletManager() const { return mBulletManager.get(); }
 	private:
+		//ゲーム内に必要なクラスをインスタンス化する
 		void CreateResources(HWND hwnd);
+		//ゲームに最初から存在するゲームオブジェクトを生成する
 		void CreateGameObject();
+		//ゲーム中のコライダーを衝突判定に使用するため振り分けそれぞれの配列に入れる
 		void StoreCollider2D();
 		bool IsCollisionJudge(Tag shooter,Tag bullet);
+		//生成したオブジェクトの数　この値を各ゲームオブジェクトのIDとして割り当てる
 		UINT mGameObjectCounter;
+		std::unique_ptr<FPSCountor> mFPSCountor;
 		std::unique_ptr<DXManager> mDXManager;
+		std::unique_ptr<BulletManager> mBulletManager;
 		//ゲームオブジェクト管理配列
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
 		//ゲーム中に追加生成されたものを一時的に入れておく
 		std::vector<std::unique_ptr<DXGameObject>> mTempGameObjectsList;
-		std::vector<Collider2D*> mCollider2DList;
+		//弾を打つキャラクターのコライダーの配列
 		std::vector<Collider2D*> mShooterCollider2DList;
+		//弾のコライダーの配列
 		std::vector<Collider2D*> mBulletCollider2DList;
 	};
-	
-	template<typename T>
-	inline DXGameObject * DXGameObjectManager::Create()
-	{
-		auto gameObject = Instantiate();
-		gameObject->AddComponent<T>();
-		return gameObject;
-	}
-
 }
 
 

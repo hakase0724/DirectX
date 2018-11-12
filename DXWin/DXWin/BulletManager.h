@@ -1,39 +1,31 @@
 #pragma once
-#include "IComponent.h"
 #include "Bullet.h"
-#include <vector>
-#include <memory>
-#include "MeshAndShader.h"
 #include "DXGameObject.h"
+#include "Colliders.h"
+#include "MyStructs.h"
+#include <list>
 
 namespace MyDirectX
 {
-	class BulletManager :public Component
+	class DXGameObjectManager;
+
+	class BulletManager 
 	{
 	public:
-		BulletManager();
-		~BulletManager();
-		//初期化処理
-		virtual void Initialize(DXGameObject* gameObject);
-		//まだ呼ばれない　もしかしたらこのまま使わず消すかも・・・
-		virtual void Awake() {};
-		virtual void Start() {};
-		//更新処理
-		virtual void Update() {};
-		virtual void LateUpdate() {};
-		virtual void FixedUpdate() {};
-		//描画処理
-		virtual void Render() {};
-		//解放処理
-		virtual void Exit() {};
-		virtual void OnCollisionEnter(CollisionInfo* info) {};
-		virtual void OnCollisionStay(CollisionInfo* info) {};
-		virtual void OnCollisionExit(CollisionInfo* info) {};
-		DXGameObject* GetBullet();
+		BulletManager(DXGameObjectManager* manager);
+		~BulletManager() {};
+		//オブジェクトプールに予め弾を格納しておく
+		//preNum = 事前に生成しておく弾の数
+		void CreatePreBullets(int preNum = 500);
+		//弾を取得する
+		DXGameObject* GetBullet(TRANSFORM* transform,Tag tag);
+		//弾をオブジェクトプールに格納する
+		void ReturnBullet(DXGameObject* bullet);
 	private:
-		std::vector<std::unique_ptr<DXGameObject>> bulletList;
-		MeshInfo* mMeshInfo;
-		ShaderInfo* mShaderInfo;
+		DXGameObjectManager* mDXGameObjectManager;
+		//弾を生成する
+		DXGameObject* CreateBullet();
+		std::list<DXGameObject*> mBulletList;
 	};
 
 }

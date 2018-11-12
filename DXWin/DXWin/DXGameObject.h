@@ -6,32 +6,22 @@
 #include <algorithm>
 #include "DXManager.h"
 #include "IComponent.h"
-
-
-
+#include "MyEnums.h"
 
 namespace MyDirectX
 {
 	class DXGameObjectManager;
-	enum Tag
-	{
-		PlayerTag = 0,
-		EnemyTag = 1,
-		PlayerBullet = 2,
-		EnemyBullet = 3,
-	};
+	
 	//このプロジェクトの核となるクラス
 	//このクラスにComponentクラスを継承したクラスを追加していく
 	class DXGameObject
 	{
 	public:
-		DXGameObject(DXManager* dxManager);
 		DXGameObject(DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
-		DXGameObject(TRANSFORM* transform, DXManager* dxManager);
 		DXGameObject(TRANSFORM* transform, DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		virtual ~DXGameObject();
 		//自身のtransform情報を公開
-		TRANSFORM GetTransform() const { return mTransform; }
+		TRANSFORM* GetTransform() const { return mTransform.get(); }
 		//自身にコンポーネントを追加する
 		template<typename T>
 		T* AddComponent();
@@ -47,20 +37,23 @@ namespace MyDirectX
 		DXInput* GetDXInput() { return mDXInput; }
 		DXCamera* GetDXCamera() { return mDXCamera; }
 		//自身のtransform情報を更新
-		virtual void SetTransform(TRANSFORM *transform) { mTransform = *transform; }
+		virtual void SetTransform(TRANSFORM *transform) {/* mTransform = transform;*/ }
 		//自身の初期化
 		virtual HRESULT Init(DXManager* dxManager);
+		//自身の持っているコンポーネントの初期化
+		virtual void InitializeComponent();
 		//自身の情報更新
 		virtual void Update();
+		//全てのUpdateが終わった後で呼ばれる
 		virtual void LateUpdate();
-		virtual void FixedUpdate();
 		//自身の描画
 		virtual void Render();
 		//自身の解放
 		virtual void Exit();
-		virtual void OnCollisionEnter(CollisionInfo* info);
-		virtual void OnCollisionStay(CollisionInfo* info);
-		virtual void OnCollisionExit(CollisionInfo* info);
+		//衝突した時の処理
+		virtual void OnCollisionEnter();
+		//衝突が終わった時の処理
+		virtual void OnCollisionExit();
 		//ゲッターとセッター
 		std::string GetName() { return mName; }
 		void SetName(std::string name) { mName = name; }
@@ -73,7 +66,8 @@ namespace MyDirectX
 		DXGameObjectManager* GetDXGameObjectManager() const { return mDXGameObjectManager; }
 	protected:
 		//自身の座標回転スケール
-		TRANSFORM mTransform;
+		std::unique_ptr<TRANSFORM> mTransform;
+		//TRANSFORM* mTransform;
 		//DirectXのリソース管理クラス
 		DXManager* mDXManager;
 		//DirectInput管理クラス
@@ -96,6 +90,7 @@ namespace MyDirectX
 		//Componentの派生クラスでなければnullを返す
 		if (!typeid(T).before(typeid(Component*))) return pReturn;
 		pReturn = new T();
+		//追加したコンポーネントの初期化処理を呼び出す
 		pReturn->Initialize(this);
 		mComponentsList.push_back(pReturn);
 		return pReturn;

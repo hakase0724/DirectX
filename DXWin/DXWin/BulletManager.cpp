@@ -1,26 +1,72 @@
 #include "stdafx.h"
 #include "BulletManager.h"
+#include "DXGameObjectManager.h"
 
 using namespace MyDirectX;
 
-BulletManager::BulletManager()
+BulletManager::BulletManager(DXGameObjectManager* manager)
 {
+	mDXGameObjectManager = manager;
 }
 
-
-BulletManager::~BulletManager()
+void BulletManager::CreatePreBullets(int preNum)
 {
-	delete mMeshInfo;
-	delete mShaderInfo;
+	for(int i = 0;i < preNum;i++)
+	{
+		CreateBullet();
+	}
 }
 
-void BulletManager::Initialize(DXGameObject * gameObject)
+DXGameObject * BulletManager::GetBullet(TRANSFORM* transform,Tag tag)
 {
-	mGameObject = gameObject;
-	mId = mGameObject->GetID();
+	DXGameObject* pGame;
+	//オブジェクトがあれば使いまわす
+	//なければ新しく作る
+	if(mBulletList.size() <= 0)
+	{
+		pGame = CreateBullet();
+	}
+	else
+	{
+		pGame = mBulletList.back();
+		mBulletList.pop_back();
+	}
+	auto pGameTransform = pGame->GetTransform();
+	auto scale = transform->Scale;
+	//自機の大きさを1として弾の比率を決定する
+	auto scaleRatio = 0.3f;
+	scale.x *= scaleRatio;
+	scale.y *= scaleRatio;
+	scale.z *= scaleRatio;
+	pGameTransform->Position = transform->Position;
+	//自機分上にズラす
+	pGameTransform->Position.y = transform->Position.y + scale.y;
+	pGameTransform->Scale = scale;
+	pGameTransform->Rotation = transform->Rotation;
+	pGame->GetComponent<MeshRenderer>()->SetColor();
+	pGame->SetTag(tag);
+	pGame->SetEnable(true);
+	pGame->InitializeComponent();
+	return pGame;
 }
 
-DXGameObject * BulletManager::GetBullet()
+void BulletManager::ReturnBullet(DXGameObject * bullet)
 {
-	return nullptr;
+	bullet->SetEnable(false);
+	mBulletList.push_back(bullet);
+}
+
+DXGameObject * BulletManager::CreateBullet()
+{
+	auto game = mDXGameObjectManager->Instantiate();
+	game->SetName("Bullet");
+	game->SetTag(Tag::PlayerBullet);
+	game->SetEnable(false);
+	auto col = game->AddComponent<SquareCollider2D>();
+	col->SetOneSide(col->GetOneSide() / 10.0f);
+	game->AddComponent<Bullet>();
+	auto tex = game->AddComponent<DXTexture>();
+	tex->SetTexture(_T("Texture/Bullet3.png"));
+	mBulletList.push_back(game);
+	return game;
 }

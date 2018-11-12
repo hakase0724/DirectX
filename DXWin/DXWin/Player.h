@@ -5,6 +5,7 @@
 #include "Colliders.h"
 #include <string>
 #include "Bullet.h"
+#include "BulletManager.h"
 
 namespace MyDirectX
 {
@@ -17,27 +18,17 @@ namespace MyDirectX
 		~Player() {};
 		//初期化処理
 		virtual void Initialize(DXGameObject* gameObject);
-		//まだ呼ばれない　もしかしたらこのまま使わず消すかも・・・
-		virtual void Awake() {};
-		virtual void Start() {};
 		//更新処理
 		virtual void Update();
-		virtual void LateUpdate() {};
-		virtual void FixedUpdate() {};
-		//描画処理
-		virtual void Render() {};
-		//解放処理
-		virtual void Exit() {};
-		virtual void OnCollisionEnter(CollisionInfo* info) {};
-		virtual void OnCollisionStay(CollisionInfo* info) {};
-		virtual void OnCollisionExit(CollisionInfo* info) {};
-		void SetManager(DXGameObjectManager* manager);
 	private:
-		DXGameObjectManager* mManager;
 		DXInput* mDXInput;
+		BulletManager* mBulletManager;
+		//発射可能かどうか
 		bool isCoolTime();
-		int waitCount;
-		const int coolCount = 7;
+		//何フレーム経過したか
+		int mWaitCount;
+		//弾を発射するフレーム感覚
+		const int mCoolCount = 7;
 	};
 }
  

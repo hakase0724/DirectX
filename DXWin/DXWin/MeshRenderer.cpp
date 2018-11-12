@@ -6,15 +6,29 @@ using namespace MyDirectX;
 
 MeshRenderer::~MeshRenderer()
 {
-	Exit();
+	
+}
+
+void MeshRenderer::SetDefaultColor(float r, float g, float b, float a)
+{
+	mDefaultColor.r = r;
+	mDefaultColor.g = g;
+	mDefaultColor.b = b;
+	mDefaultColor.a = a;
+	mColor = mDefaultColor;
 }
 
 void MeshRenderer::SetColor(float r, float g, float b, float a)
 {
-	this->r = r;
-	this->g = g;
-	this->b = b;
-	this->a = a;
+	mColor.r = r;
+	mColor.g = g;
+	mColor.b = b;
+	mColor.a = a;
+}
+
+void MeshRenderer::SetColor()
+{
+	mColor = mDefaultColor;
 }
 
 void MeshRenderer::Initialize(DXGameObject * gameObject)
@@ -26,10 +40,11 @@ void MeshRenderer::Initialize(DXGameObject * gameObject)
 	mDXFactory = mDXManager->GetDXFactory();
 	mDevice = mDXManager->GetDevice();
 	mTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-	r = 0;
-	g = 1;
-	b = 0;
-	a = 1;
+	mDefaultColor.r = 0;
+	mDefaultColor.g = 1;
+	mDefaultColor.b = 0;
+	mDefaultColor.a = 1;
+	mColor = mDefaultColor;
 }
 
 void MeshRenderer::Render()
@@ -38,7 +53,7 @@ void MeshRenderer::Render()
 	auto cameraParam = mDXCamera->GetCameraParam();
 	cBuffer.mW = mDXCamera->GetWorld(transform);
 	cBuffer.mWVP = mDXCamera->GetDXCameraParam(transform);
-	cBuffer.vColor = XMVectorSet(r, g, b, a);
+	cBuffer.vColor = XMVectorSet(mColor.r, mColor.g, mColor.b, mColor.a);
 	cBuffer.vLightPos = XMVectorSet(-1.0f, 1.0f, -2.0f, 1.0f);
 	cBuffer.vEyePos = cameraParam.mPos;
 	//ƒf[ƒ^‚ð“n‚·
@@ -81,17 +96,12 @@ void MeshRenderer::Exit()
 	if (mRasterizerState)mRasterizerState->Release();
 }
 
-void MeshRenderer::OnCollisionEnter(CollisionInfo * info)
+void MeshRenderer::OnCollisionEnter()
 {
 	SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void MeshRenderer::OnCollisionStay(CollisionInfo * info)
+void MeshRenderer::OnCollisionExit()
 {
-	SetColor(1.0f, 0.0f, 0.0f, 1.0f);
-}
-
-void MeshRenderer::OnCollisionExit(CollisionInfo * info)
-{
-	SetColor(0.0f, 1.0f, 0.0f, 1.0f);
+	SetColor();
 }

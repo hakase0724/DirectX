@@ -156,6 +156,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Colliders.h" />
+    <ClInclude Include="CommonValues.h" />
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="dinputex.h" />
     <ClInclude Include="DXCamera.h" />
@@ -169,6 +170,7 @@
     <ClInclude Include="DXSphere.h" />
     <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXWin.h" />
+    <ClInclude Include="FPSCountor.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="LightingShader.h" />
     <ClInclude Include="MeshAndShader.h" />
@@ -176,6 +178,7 @@
     <ClInclude Include="MeshInfo.h" />
     <ClInclude Include="MeshRenderer.h" />
     <ClInclude Include="Mover.h" />
+    <ClInclude Include="MyEnums.h" />
     <ClInclude Include="MyStructs.h" />
     <ClInclude Include="NonLightingShader.h" />
     <ClInclude Include="NormalShader.h" />
@@ -193,6 +196,10 @@
     <ClInclude Include="SquareMesh.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="DXTexture.h" />
+    <ClInclude Include="TextureMesh.h" />
+    <ClInclude Include="TextureRenderer.h" />
+    <ClInclude Include="TextureShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BoxCollider.cpp" />
@@ -212,6 +219,7 @@
     <ClCompile Include="DXSphere.cpp" />
     <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXWin.cpp" />
+    <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="LightingShader.cpp" />
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="MeshInfo.cpp" />
@@ -234,6 +242,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DXTexture.cpp" />
+    <ClCompile Include="TextureMesh.cpp" />
+    <ClCompile Include="TextureRenderer.cpp" />
+    <ClCompile Include="TextureShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXWin.rc" />
@@ -278,6 +290,11 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+      <FileType>Document</FileType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TextureShader.hlsl">
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
