@@ -19,6 +19,7 @@ namespace MyDirectX
 		void CreatePreBullets(int preNum = 500);
 		//弾を取得する
 		DXGameObject* GetBullet(TRANSFORM* transform,Tag tag);
+		DXGameObject* GetBullet(TRANSFORM* transform, Tag tag,float x,float y);
 		//弾をオブジェクトプールに格納する
 		void ReturnBullet(DXGameObject* bullet);
 	private:

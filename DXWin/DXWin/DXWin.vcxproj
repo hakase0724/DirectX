@@ -150,6 +150,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BackGround.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -170,6 +171,7 @@
     <ClInclude Include="DXSphere.h" />
     <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXWin.h" />
+    <ClInclude Include="Enemy.h" />
     <ClInclude Include="FPSCountor.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="LightingShader.h" />
@@ -202,6 +204,7 @@
     <ClInclude Include="TextureShader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -219,6 +222,7 @@
     <ClCompile Include="DXSphere.cpp" />
     <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXWin.cpp" />
+    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="LightingShader.cpp" />
     <ClCompile Include="MeshFactory.cpp" />

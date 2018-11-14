@@ -12,10 +12,10 @@ void Player::Initialize(DXGameObject * gameObject)
 	transform->Scale.x /= 2.0f;
 	transform->Scale.y /= 2.0f;
 	transform->Scale.z /= 2.0f;
-	mGameObject->SetTransform(transform);
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
 	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
+	HitPoint = 1;
 }
 
 void Player::Update()
@@ -36,9 +36,8 @@ void Player::Update()
 			auto game = mBulletManager->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
 			auto gameTransform = game->GetTransform();
 			//各弾同士の間隔
-			auto offset = gameTransform->Scale.x/* + gameTransform->Scale.x / 2*/;
+			auto offset = gameTransform->Scale.x;
 			gameTransform->Position.x += offset * (i - (float)bulletNum / 3.0f);
-			game->SetTransform(gameTransform);
 		}
 	}	
 	else if(!mDXInput->GetInputState(DIK_Z))
@@ -51,6 +50,16 @@ void Player::Update()
 	if (mDXInput->GetInputState(DIK_RETURN))
 	{
 		//何も意味のないコードだとコンパイル時の最適化によって消える模様
+		mGameObject->SetEnable(false);
+	}
+}
+
+void Player::OnCollisionEnter()
+{
+	HitPoint--;
+	//体力がなくなったら自身のアクティブを切る
+	if(HitPoint <= 0)
+	{
 		mGameObject->SetEnable(false);
 	}
 }

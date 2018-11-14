@@ -33,6 +33,8 @@ DXGameObject * BulletManager::GetBullet(TRANSFORM* transform,Tag tag)
 	}
 	auto pGameTransform = pGame->GetTransform();
 	auto scale = transform->Scale;
+	auto pBullet = pGame->GetComponent<Bullet>();
+	pBullet->SetVectol(0, 0.05f);
 	//自機の大きさを1として弾の比率を決定する
 	auto scaleRatio = 0.3f;
 	scale.x *= scaleRatio;
@@ -41,6 +43,39 @@ DXGameObject * BulletManager::GetBullet(TRANSFORM* transform,Tag tag)
 	pGameTransform->Position = transform->Position;
 	//自機分上にズラす
 	pGameTransform->Position.y = transform->Position.y + scale.y;
+	pGameTransform->Scale = scale;
+	pGameTransform->Rotation = transform->Rotation;
+	pGame->GetComponent<MeshRenderer>()->SetColor();
+	pGame->SetTag(tag);
+	pGame->SetEnable(true);
+	pGame->InitializeComponent();
+	return pGame;
+}
+
+DXGameObject * BulletManager::GetBullet(TRANSFORM * transform, Tag tag, float x, float y)
+{
+	DXGameObject* pGame;
+	//オブジェクトがあれば使いまわす
+	//なければ新しく作る
+	if (mBulletList.size() <= 0)
+	{
+		pGame = CreateBullet();
+	}
+	else
+	{
+		pGame = mBulletList.back();
+		mBulletList.pop_back();
+	}
+	auto pGameTransform = pGame->GetTransform();
+	auto scale = transform->Scale;
+	auto pBullet = pGame->GetComponent<Bullet>();
+	pBullet->SetVectol(x, y);
+	//自機の大きさを1として弾の比率を決定する
+	auto scaleRatio = 0.3f;
+	scale.x *= scaleRatio;
+	scale.y *= scaleRatio;
+	scale.z *= scaleRatio;
+	pGameTransform->Position = transform->Position;
 	pGameTransform->Scale = scale;
 	pGameTransform->Rotation = transform->Rotation;
 	pGame->GetComponent<MeshRenderer>()->SetColor();

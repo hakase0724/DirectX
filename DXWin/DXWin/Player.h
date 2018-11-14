@@ -9,8 +9,6 @@
 
 namespace MyDirectX
 {
-	class DXGameObjectManager;
-
 	class Player :public Component
 	{
 	public:
@@ -20,6 +18,7 @@ namespace MyDirectX
 		virtual void Initialize(DXGameObject* gameObject);
 		//更新処理
 		virtual void Update();
+		virtual void OnCollisionEnter() override;
 	private:
 		DXInput* mDXInput;
 		BulletManager* mBulletManager;
@@ -29,6 +28,8 @@ namespace MyDirectX
 		int mWaitCount;
 		//弾を発射するフレーム感覚
 		const int mCoolCount = 7;
+		//体力
+		int HitPoint;
 	};
 }
  

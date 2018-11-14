@@ -21,31 +21,6 @@ void TextureRenderer::Initialize(DXGameObject * gameObject)
 	mColor = mDefaultColor;
 }
 
-void TextureRenderer::LoadTexture()
-{
-	//テクスチャの読み込み
-	CoInitialize(NULL);
-	HRESULT hr = CreateWICTextureFromFile(mDevice, _T("Texture/profile.png"), &mTexture, &mShaderResourceView);
-	//サンプラーデスク作成
-	D3D11_SAMPLER_DESC smpDesc;
-	::ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
-	smpDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-	smpDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-	smpDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-	smpDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-	smpDesc.MipLODBias = 0.0f;
-	smpDesc.MaxAnisotropy = 1;
-	smpDesc.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-	smpDesc.BorderColor[0] = 0;
-	smpDesc.BorderColor[1] = 0;
-	smpDesc.BorderColor[2] = 0;
-	smpDesc.BorderColor[3] = 0;
-	smpDesc.MinLOD = 0;
-	smpDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = mDevice->CreateSamplerState(&smpDesc, &mSampler);
-	CoUninitialize();
-}
-
 void TextureRenderer::LoadTexture(const wchar_t * fileName)
 {
 	//テクスチャの読み込み

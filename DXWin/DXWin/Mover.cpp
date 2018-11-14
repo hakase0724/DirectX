@@ -12,8 +12,8 @@ void Mover::Initialize(DXGameObject * gameObject)
 void Mover::Update()
 {
 	auto transform = mGameObject->GetTransform();
-	if (mDXInput->GetInputState(DIK_A)) transform->Position.x -= 0.01f;
-	if (mDXInput->GetInputState(DIK_D)) transform->Position.x += 0.01f;
-	if (mDXInput->GetInputState(DIK_W)) transform->Position.y += 0.01f;
-	if (mDXInput->GetInputState(DIK_S)) transform->Position.y -= 0.01f;
+	if (mDXInput->GetInputState(DIK_LEFTARROW)) transform->Position.x -= mMoveSpeed;
+	if (mDXInput->GetInputState(DIK_RIGHTARROW)) transform->Position.x += mMoveSpeed;
+	if (mDXInput->GetInputState(DIK_UPARROW)) transform->Position.y += mMoveSpeed;
+	if (mDXInput->GetInputState(DIK_DOWNARROW)) transform->Position.y -= mMoveSpeed;
 }

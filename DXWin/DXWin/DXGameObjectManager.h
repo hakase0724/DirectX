@@ -14,6 +14,8 @@
 #include "BulletManager.h"
 #include "MyStructs.h"
 #include "DXTexture.h"
+#include "Enemy.h"
+#include "BackGround.h"
 
 namespace MyDirectX 
 {
@@ -43,6 +45,7 @@ namespace MyDirectX
 		bool IsCollisionJudge(Tag shooter,Tag bullet);
 		//生成したオブジェクトの数　この値を各ゲームオブジェクトのIDとして割り当てる
 		UINT mGameObjectCounter;
+		std::unique_ptr<BackGround> mBackGround;
 		std::unique_ptr<FPSCountor> mFPSCountor;
 		std::unique_ptr<DXManager> mDXManager;
 		std::unique_ptr<BulletManager> mBulletManager;

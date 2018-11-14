@@ -14,6 +14,8 @@ namespace MyDirectX
 		virtual void Update() override;
 	private:
 		DXInput* mDXInput;
+		//ˆÚ“®‘¬“x
+		float mMoveSpeed = 0.02f;
 	};
 }
 
