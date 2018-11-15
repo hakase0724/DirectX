@@ -41,7 +41,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	);
 	mDXCamera = std::make_unique<DXCamera>(cParam);
 	mDXFactory = std::make_unique<DXFactory>();
-	mDXRenderDataPool = std::make_unique<DXRenderDataPool>();
+	
 #ifdef _DEBUG
 	flags = D3D11_CREATE_DEVICE_DEBUG;
 #endif
@@ -153,6 +153,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	mDeviceContext->RSSetViewports(1, &mView);
 	delete cParam;
 	back_buff->Release();
+	mDXRenderDataPool = std::make_unique<DXRenderDataPool>(mDevice);
 	return S_OK;
 }
 //èIóπ

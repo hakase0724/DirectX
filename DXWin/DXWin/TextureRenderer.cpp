@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "TextureRenderer.h"
-#include "WICTextureLoader.h"
-#include "WICTextureLoader.cpp"
 
+using namespace DirectX;
 using namespace MyDirectX;
 
 void TextureRenderer::Initialize(DXGameObject * gameObject)
@@ -21,11 +20,13 @@ void TextureRenderer::Initialize(DXGameObject * gameObject)
 	mColor = mDefaultColor;
 }
 
-void TextureRenderer::LoadTexture(const wchar_t * fileName)
+void TextureRenderer::LoadTexture(wchar_t * fileName)
 {
 	//テクスチャの読み込み
 	CoInitialize(NULL);
-	HRESULT hr = CreateWICTextureFromFile(mDevice, fileName, &mTexture, &mShaderResourceView);
+	auto textureData = mDXManager->GetDXRenderDataPool()->GetTexture(fileName);
+	mTexture = textureData->texture;
+	mShaderResourceView = textureData->shaderView;
 	//サンプラーデスク作成
 	D3D11_SAMPLER_DESC smpDesc;
 	::ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
@@ -42,7 +43,7 @@ void TextureRenderer::LoadTexture(const wchar_t * fileName)
 	smpDesc.BorderColor[3] = 0;
 	smpDesc.MinLOD = 0;
 	smpDesc.MaxLOD = D3D11_FLOAT32_MAX;
-	hr = mDevice->CreateSamplerState(&smpDesc, &mSampler);
+	mDevice->CreateSamplerState(&smpDesc, &mSampler);
 	CoUninitialize();
 }
 

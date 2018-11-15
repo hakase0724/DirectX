@@ -143,4 +143,12 @@ namespace MyDirectX
 		int LayoutNum;
 	};
 
+	//テクスチャ情報を保持
+	struct TextureData
+	{
+		wchar_t* fileName;
+		ID3D11Resource* texture;
+		ID3D11ShaderResourceView* shaderView;
+	};
+
 }

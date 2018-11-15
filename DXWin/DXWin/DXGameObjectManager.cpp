@@ -13,14 +13,17 @@ DXGameObjectManager::DXGameObjectManager(HWND hwnd)
 
 void DXGameObjectManager::CreateResources(HWND hwnd)
 {
+	mDXSound = std::make_unique<DXSound>(hwnd);
+	
 	//DirectXリソース管理
 	mDXManager = std::make_unique<DXManager>(hwnd);
 	//FPSカウンターを生成
 	mFPSCountor = std::make_unique<FPSCountor>();
 	//弾管理クラスを生成
 	mBulletManager = std::make_unique<BulletManager>(this);
-	mBulletManager->CreatePreBullets();
+	mBulletManager->CreatePreBullets(1000);
 	mBackGround = std::make_unique<BackGround>();
+	mDXSound->Play();
 }
 
 //ゲームに始めからいるオブジェクトを生成

@@ -9,7 +9,7 @@ namespace MyDirectX
 		TextureRenderer() {};
 		~TextureRenderer() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
-		virtual void LoadTexture(const wchar_t* fileName);
+		virtual void LoadTexture(wchar_t* fileName);
 		virtual void Render() override;
 		virtual void Exit() override;
 	private:

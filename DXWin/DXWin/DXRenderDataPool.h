@@ -9,16 +9,22 @@ namespace MyDirectX
 	class DXRenderDataPool
 	{
 	public:
-		DXRenderDataPool() {};
+		DXRenderDataPool(ID3D11Device* device) { mDevice = device; }
 		~DXRenderDataPool() {};
+		//メッシュデータを取得
 		template<typename T>
 		T* GetMesh();
+		//シェーダーデータを取得
 		template<typename T>
 		T* GetShader();
+		//テクスチャデータを取得
+		TextureData* GetTexture(wchar_t* fileName);
 		
 	private:
+		ID3D11Device* mDevice;
 		std::vector<std::unique_ptr<MeshInfo>> mMeshInfoList;
 		std::vector<std::unique_ptr<ShaderInfo>> mShaderInfoList;
+		std::vector<std::unique_ptr<TextureData>> mTextureList;
 	};
 	template<typename T>
 	inline T * DXRenderDataPool::GetMesh()

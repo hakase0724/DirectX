@@ -168,6 +168,7 @@
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXRenderDataPool.h" />
+    <ClInclude Include="DXSound.h" />
     <ClInclude Include="DXSphere.h" />
     <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXWin.h" />
@@ -219,6 +220,7 @@
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXRenderDataPool.cpp" />
+    <ClCompile Include="DXSound.cpp" />
     <ClCompile Include="DXSphere.cpp" />
     <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXWin.cpp" />

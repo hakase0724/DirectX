@@ -19,5 +19,5 @@ void DXTexture::SetTexture(const wchar_t * fileName)
 {
 	mRenderer->CreateMesh<TextureMesh>();
 	mRenderer->CreateShader<TextureShader>();
-	mRenderer->LoadTexture(fileName);
+	mRenderer->LoadTexture(const_cast<wchar_t*>(fileName));
 }

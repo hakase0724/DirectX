@@ -16,6 +16,7 @@
 #include "DXTexture.h"
 #include "Enemy.h"
 #include "BackGround.h"
+#include "DXSound.h"
 
 namespace MyDirectX 
 {
@@ -49,6 +50,7 @@ namespace MyDirectX
 		std::unique_ptr<FPSCountor> mFPSCountor;
 		std::unique_ptr<DXManager> mDXManager;
 		std::unique_ptr<BulletManager> mBulletManager;
+		std::unique_ptr<DXSound> mDXSound;
 		//ゲームオブジェクト管理配列
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
 		//ゲーム中に追加生成されたものを一時的に入れておく
