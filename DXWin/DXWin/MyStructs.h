@@ -149,6 +149,11 @@ namespace MyDirectX
 		wchar_t* fileName;
 		ID3D11Resource* texture;
 		ID3D11ShaderResourceView* shaderView;
+		~TextureData()
+		{
+			if(texture)texture->Release();
+			if(shaderView)shaderView->Release();
+		}
 	};
 
 }

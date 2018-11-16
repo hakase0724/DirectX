@@ -22,4 +22,12 @@ namespace MyDirectX
 		//Õ“Ë‚ªI‚í‚Á‚½
 		Exit = 3
 	};
+
+	enum BarrageName
+	{
+		AllDirectionsSync = 0,
+		AllDirectionsAsync = 1,
+		TargetPlayer = 2,
+		SixWayRazer = 3,
+	};
 }

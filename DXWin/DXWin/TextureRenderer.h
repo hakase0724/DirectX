@@ -12,6 +12,7 @@ namespace MyDirectX
 		virtual void LoadTexture(wchar_t* fileName);
 		virtual void Render() override;
 		virtual void Exit() override;
+		virtual void OnCollisionEnter() override;
 	private:
 		TEXTURE_CONSTANT_BUFFER cTextureBuffer;
 		//テクスチャリソースのポインタ

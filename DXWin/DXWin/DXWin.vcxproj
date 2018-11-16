@@ -150,7 +150,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AllDirectionSync.h" />
     <ClInclude Include="BackGround.h" />
+    <ClInclude Include="BarrageBase.h" />
+    <ClInclude Include="BarrageManager.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -192,12 +195,14 @@
     <ClInclude Include="Roller.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
+    <ClInclude Include="SixWayRazerBarrage.h" />
     <ClInclude Include="SphereCollider.h" />
     <ClInclude Include="SphereMesh.h" />
     <ClInclude Include="SquareCollider2D.h" />
     <ClInclude Include="SquareCollider2DMesh.h" />
     <ClInclude Include="SquareMesh.h" />
     <ClInclude Include="stdafx.h" />
+    <ClInclude Include="TargetPlayerBarrage.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="DXTexture.h" />
     <ClInclude Include="TextureMesh.h" />
@@ -205,7 +210,10 @@
     <ClInclude Include="TextureShader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AllDirectionSync.cpp" />
     <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="BarrageBase.cpp" />
+    <ClCompile Include="BarrageManager.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -237,6 +245,7 @@
     <ClCompile Include="Roller.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
+    <ClCompile Include="SixWayRazerBarrage.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphereMesh.cpp" />
     <ClCompile Include="SquareCollider2D.cpp" />
@@ -249,6 +258,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="DXTexture.cpp" />
+    <ClCompile Include="TargetPlayerBarrage.cpp" />
     <ClCompile Include="TextureMesh.cpp" />
     <ClCompile Include="TextureRenderer.cpp" />
     <ClCompile Include="TextureShader.cpp" />

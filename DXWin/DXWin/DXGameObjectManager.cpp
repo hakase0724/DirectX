@@ -43,12 +43,11 @@ void DXGameObjectManager::CreateGameObject()
 	auto enemy = Instantiate();
 	enemy->SetTag(Tag::EnemyTag);
 	auto enemyTex = enemy->AddComponent<DXTexture>();
-	enemyTex->SetTexture(_T("Texture/Bullet3.png"));
+	enemyTex->SetTexture(_T("Texture/Enemy.png"));
 	auto texPos = enemy->GetTransform();
 	texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
 	auto enemyCol = enemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
-	enemy->GetComponent<MeshRenderer>()->SetDefaultColor(0, 1, 0, 1);
 	auto enemyCom = enemy->AddComponent<Enemy>();
 	enemyCom->SetPlayer(player);
 

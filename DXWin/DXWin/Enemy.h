@@ -5,6 +5,10 @@
 #include "BulletManager.h"
 #include "Colliders.h"
 #include "DXGameObject.h"
+#include "AllDirectionSync.h"
+#include "BarrageBase.h"
+#include "BarrageManager.h"
+
 
 namespace MyDirectX
 {
@@ -21,12 +25,10 @@ namespace MyDirectX
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
 	private:
 		BulletManager* mBulletManager;
-		//発射可能かどうか
-		bool isCoolTime();
 		//何フレーム経過したか
 		int mWaitCount;
-		//弾を発射するフレーム感覚
-		const int mCoolCount = 80;
+		//弾を発射するフレーム間隔
+		const int mCoolCount = 60;
 		//体力
 		int HitPoint;
 		DXGameObject* mPlayer;
@@ -35,6 +37,10 @@ namespace MyDirectX
 		float mRadianCoefficient;
 		//角度
 		float mAngle;
+		BarrageBase* mBarrage;
+		std::unique_ptr<BarrageManager> mBarrageManager;
+		BarrageName mBarrageName;
+		void ChangeBarrageName();
 	};
 
 }

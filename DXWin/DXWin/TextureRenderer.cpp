@@ -94,7 +94,13 @@ void TextureRenderer::Exit()
 	if (mIndexBuffer)mIndexBuffer->Release();
 	if (mConstantBuffer)mConstantBuffer->Release();
 	if (mRasterizerState)mRasterizerState->Release();
-	if (mTexture)mTexture->Release();
-	if (mShaderResourceView)mShaderResourceView->Release();
 	if (mSampler)mSampler->Release();
+}
+
+void TextureRenderer::OnCollisionEnter()
+{
+	mColor.r = 0;
+	mColor.g = 0;
+	mColor.b = 0;
+	mColor.a = 0;
 }
