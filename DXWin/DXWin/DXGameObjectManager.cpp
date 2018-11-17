@@ -19,77 +19,81 @@ void DXGameObjectManager::CreateResources(HWND hwnd)
 	mDXManager = std::make_unique<DXManager>(hwnd);
 	//FPSカウンターを生成
 	mFPSCountor = std::make_unique<FPSCountor>();
-	//弾管理クラスを生成
-	mBulletManager = std::make_unique<BulletManager>(this);
-	mBulletManager->CreatePreBullets(1000);
-	mBackGround = std::make_unique<BackGround>();
-	mDXSound->Play();
+	////弾管理クラスを生成
+	//mBulletManager = std::make_unique<BulletManager>(this);
+	//mBulletManager->CreatePreBullets(1000);
+	//mBackGround = std::make_unique<BackGround>();
+	//mDXSound->Play();
 }
 
 //ゲームに始めからいるオブジェクトを生成
 void DXGameObjectManager::CreateGameObject()
 {
-	//自機
-	auto player = Instantiate();
-	auto playerTex = player->AddComponent<DXTexture>();
-	playerTex->SetTexture();
-	player->SetTag(Tag::PlayerTag);
-	player->AddComponent<Mover>();
-	player->AddComponent<Player>();
-	auto playerCol = player->AddComponent<SquareCollider2D>();
-	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
+	////自機
+	//auto player = Instantiate();
+	//auto playerTex = player->AddComponent<DXTexture>();
+	//playerTex->SetTexture();
+	//player->SetTag(Tag::PlayerTag);
+	//player->AddComponent<Mover>();
+	//player->AddComponent<Player>();
+	//auto playerCol = player->AddComponent<SquareCollider2D>();
+	//playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
 
-	//敵
-	auto enemy = Instantiate();
-	enemy->SetTag(Tag::EnemyTag);
-	auto enemyTex = enemy->AddComponent<DXTexture>();
-	enemyTex->SetTexture(_T("Texture/Enemy.png"));
-	auto texPos = enemy->GetTransform();
-	texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	auto enemyCol = enemy->AddComponent<SquareCollider2D>();
-	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
-	auto enemyCom = enemy->AddComponent<Enemy>();
-	enemyCom->SetPlayer(player);
+	////敵
+	//auto enemy = Instantiate();
+	//enemy->SetTag(Tag::EnemyTag);
+	//auto enemyTex = enemy->AddComponent<DXTexture>();
+	//enemyTex->SetTexture(_T("Texture/Enemy.png"));
+	//auto texPos = enemy->GetTransform();
+	//texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	//auto enemyCol = enemy->AddComponent<SquareCollider2D>();
+	//enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
+	//auto enemyCom = enemy->AddComponent<Enemy>();
+	//enemyCom->SetPlayer(player);
 
-	//背景用画像1
-	auto back = Instantiate();
-	auto texBack = back->AddComponent<DXTexture>();
-	texBack->SetTexture(_T("Texture/background.png"));
-	auto backTransform = back->GetTransform();
-	backTransform->Position.z = 2.0f;
-	backTransform->Scale.x = 5.0f;
-	backTransform->Scale.y = 5.0f;
+	////背景用画像1
+	//auto back = Instantiate();
+	//auto texBack = back->AddComponent<DXTexture>();
+	//texBack->SetTexture(_T("Texture/background.png"));
+	//auto backTransform = back->GetTransform();
+	//backTransform->Position.z = 2.0f;
+	//backTransform->Scale.x = 5.0f;
+	//backTransform->Scale.y = 5.0f;
 
-	//背景用画像2
-	auto back2 = Instantiate();
-	auto texBack2 = back2->AddComponent<DXTexture>();
-	texBack2->SetTexture(_T("Texture/background.png"));
-	auto backTransform2 = back2->GetTransform();
-	backTransform2->Position.y = 5.0f;
-	backTransform2->Position.z = 2.0f;
-	backTransform2->Scale.x = 5.0f;
-	backTransform2->Scale.y = 5.0f;
+	////背景用画像2
+	//auto back2 = Instantiate();
+	//auto texBack2 = back2->AddComponent<DXTexture>();
+	//texBack2->SetTexture(_T("Texture/background.png"));
+	//auto backTransform2 = back2->GetTransform();
+	//backTransform2->Position.y = 5.0f;
+	//backTransform2->Position.z = 2.0f;
+	//backTransform2->Scale.x = 5.0f;
+	//backTransform2->Scale.y = 5.0f;
 
-	//動かす背景をセット
-	mBackGround->SetBackGrounds(back, back2);
+	////動かす背景をセット
+	//mBackGround->SetBackGrounds(back, back2);
 
-	//右の黒帯
-	auto black = Instantiate();
-	auto blackBack = black->AddComponent<DXTexture>();
-	blackBack->SetTexture(_T("Texture/black.png"));
-	auto blackTransform = black->GetTransform();
-	blackTransform->Position.z = -1.0f;
-	blackTransform->Position.x = 1.63f;
-	blackTransform->Scale.y = 3.0f;
+	////右の黒帯
+	//auto black = Instantiate();
+	//auto blackBack = black->AddComponent<DXTexture>();
+	//blackBack->SetTexture(_T("Texture/black.png"));
+	//auto blackTransform = black->GetTransform();
+	//blackTransform->Position.z = -1.0f;
+	//blackTransform->Position.x = 1.63f;
+	//blackTransform->Scale.y = 3.0f;
 
-	//左の黒帯
-	auto black2 = Instantiate();
-	auto blackBack2 = black2->AddComponent<DXTexture>();
-	blackBack2->SetTexture(_T("Texture/black.png"));
-	auto blackTransform2 = black2->GetTransform();
-	blackTransform2->Position.z = -1.0f;
-	blackTransform2->Position.x = -1.63f;
-	blackTransform2->Scale.y = 3.0f;
+	////左の黒帯
+	//auto black2 = Instantiate();
+	//auto blackBack2 = black2->AddComponent<DXTexture>();
+	//blackBack2->SetTexture(_T("Texture/black.png"));
+	//auto blackTransform2 = black2->GetTransform();
+	//blackTransform2->Position.z = -1.0f;
+	//blackTransform2->Position.x = -1.63f;
+	//blackTransform2->Scale.y = 3.0f;
+
+	auto textS = Instantiate();
+	textS->AddComponent<DXText>();
+	
 }
 
 //生きているコライダーを取得
@@ -154,7 +158,7 @@ BOOL DXGameObjectManager::Update()
 	stream << fps << std::endl;
 	OutputDebugStringA(stream.str().c_str());
 	//背景移動
-	mBackGround->UpdateBackGrounds();
+	//mBackGround->UpdateBackGrounds();
 
 	//現在の入力状態を取得
 	mDXManager->GetDXInput()->SetInputState();

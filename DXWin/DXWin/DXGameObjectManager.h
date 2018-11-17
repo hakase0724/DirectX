@@ -17,6 +17,7 @@
 #include "Enemy.h"
 #include "BackGround.h"
 #include "DXSound.h"
+#include "DXText.h"
 
 namespace MyDirectX 
 {
