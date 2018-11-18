@@ -144,12 +144,12 @@ namespace MyDirectX
 	};
 
 	//テクスチャ情報を保持
-	struct TextureData
+	struct TEXTURE_DATA
 	{
 		wchar_t* fileName;
 		ID3D11Resource* texture;
 		ID3D11ShaderResourceView* shaderView;
-		~TextureData()
+		~TEXTURE_DATA()
 		{
 			if(texture)texture->Release();
 			if(shaderView)shaderView->Release();

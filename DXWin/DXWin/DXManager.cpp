@@ -153,7 +153,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	mDeviceContext->RSSetViewports(1, &mView);
 	delete cParam;
 	back_buff->Release();
-	mDXRenderDataPool = std::make_unique<DXRenderDataPool>(mDevice);
+	mDXRenderDataPool = std::make_unique<DXRenderDataPool>(mDevice,mDeviceContext);
 	return S_OK;
 }
 //èIóπ

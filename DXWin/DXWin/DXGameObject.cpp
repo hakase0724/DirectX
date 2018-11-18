@@ -36,6 +36,14 @@ DXGameObject::~DXGameObject()
 	Exit();
 }
 
+void DXGameObject::RemoveComponent(Component * com)
+{
+	//条件式に合致したものを配列の終端に押し込む
+	auto remove = std::remove_if(mComponentsList.begin(), mComponentsList.end(), [&](Component* mCom)->bool {return mCom == com; });
+	//消すものは終端に集まってるため後ろから消す
+	mComponentsList.erase(remove, mComponentsList.end());
+}
+
 //自身の初期化
 HRESULT DXGameObject::Init(DXManager * dxManager)
 {

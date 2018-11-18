@@ -38,6 +38,7 @@ namespace MyDirectX
 		DXGameObject* GetDXGameObjectWithID(UINT id);
 		BulletManager* GetBulletManager() const { return mBulletManager.get(); }
 	private:
+		void ShowFPS();
 		//ゲーム内に必要なクラスをインスタンス化する
 		void CreateResources(HWND hwnd);
 		//ゲームに最初から存在するゲームオブジェクトを生成する
@@ -60,6 +61,11 @@ namespace MyDirectX
 		std::vector<Collider2D*> mShooterCollider2DList;
 		//弾のコライダーの配列
 		std::vector<Collider2D*> mBulletCollider2DList;
+		DXGameObject* testObj;
+		TextRenderer* textRenderer;
+		DXText* mText;
+		int mFrameCount;
+		int mShowCoolTime = 60;
 	};
 }
 

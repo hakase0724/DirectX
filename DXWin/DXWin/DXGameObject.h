@@ -32,6 +32,7 @@ namespace MyDirectX
 		//指定したコンポーネントを消す
 		template<typename T>
 		void RemoveComponent();
+		void RemoveComponent(Component* com);
 		//ゲッター
 		DXManager* GetDXManager() { return mDXManager; }
 		DXInput* GetDXInput() { return mDXInput; }

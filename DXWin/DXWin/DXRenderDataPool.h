@@ -9,7 +9,7 @@ namespace MyDirectX
 	class DXRenderDataPool
 	{
 	public:
-		DXRenderDataPool(ID3D11Device* device) { mDevice = device; }
+		DXRenderDataPool(ID3D11Device* device, ID3D11DeviceContext* deviceContext);
 		~DXRenderDataPool() {};
 		//メッシュデータを取得
 		template<typename T>
@@ -18,13 +18,20 @@ namespace MyDirectX
 		template<typename T>
 		T* GetShader();
 		//テクスチャデータを取得
-		TextureData* GetTexture(wchar_t* fileName);
+		//fileName = テクスチャのファイルパス
+		TEXTURE_DATA* GetTexture(wchar_t* fileName);
+		//文字のテクスチャを取得　なければnullptrを返す
+		TEXTURE_DATA* GetFontTexture(wchar_t* text, WCHAR* fontName = (WCHAR*)"ＭＳ Ｐ明朝");
 		
 	private:
+		//テクスチャデータを探す見つからなければnullptrを返す
+		//text = 探すデータの名前
+		TEXTURE_DATA* FindTextureData(wchar_t* text);
 		ID3D11Device* mDevice;
+		ID3D11DeviceContext* mDeviceContext;
 		std::vector<std::unique_ptr<MeshInfo>> mMeshInfoList;
 		std::vector<std::unique_ptr<ShaderInfo>> mShaderInfoList;
-		std::vector<std::unique_ptr<TextureData>> mTextureList;
+		std::vector<std::unique_ptr<TEXTURE_DATA>> mTextureList;
 	};
 	template<typename T>
 	inline T * DXRenderDataPool::GetMesh()
