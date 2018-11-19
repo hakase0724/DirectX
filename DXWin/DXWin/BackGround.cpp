@@ -5,6 +5,8 @@ using namespace MyDirectX;
 
 void BackGround::UpdateBackGrounds()
 {
+	if (mBackFirst == nullptr) return;
+	if (mBackSecond == nullptr) return;
 	auto first = mBackFirst->GetTransform();
 	auto second = mBackSecond->GetTransform();
 	first->Position.y -= 0.01f;

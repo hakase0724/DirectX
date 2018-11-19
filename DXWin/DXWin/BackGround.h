@@ -13,6 +13,11 @@ namespace MyDirectX
 			mBackFirst = back1;
 			mBackSecond = back2;
 		}
+		void ClearBackGrounds()
+		{
+			mBackFirst = nullptr;
+			mBackSecond = nullptr;
+		}
 		void UpdateBackGrounds();
 	private:
 		DXGameObject* mBackFirst;

@@ -15,7 +15,7 @@ void Player::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
 	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
-	HitPoint = 1;
+	HitPoint = 4.0;
 }
 
 void Player::Update()
@@ -56,7 +56,7 @@ void Player::Update()
 
 void Player::OnCollisionEnter()
 {
-	HitPoint--;
+	HitPoint -= 1.0;
 	//体力がなくなったら自身のアクティブを切る
 	if(HitPoint <= 0)
 	{

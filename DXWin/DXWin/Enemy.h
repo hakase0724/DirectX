@@ -12,7 +12,7 @@
 
 namespace MyDirectX
 {
-	class Enemy :public Component
+	class Enemy :public Component,public IHP
 	{
 	public:
 		Enemy() {};
@@ -23,6 +23,7 @@ namespace MyDirectX
 		virtual void Update();
 		virtual void OnCollisionEnter() override;
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
+		virtual double GetHP() { return HitPoint; }
 	private:
 		BulletManager* mBulletManager;
 		//何フレーム経過したか
@@ -30,7 +31,7 @@ namespace MyDirectX
 		//弾を発射するフレーム間隔
 		const int mCoolCount = 60;
 		//体力
-		int HitPoint;
+		double HitPoint;
 		DXGameObject* mPlayer;
 		float mBulletSpeed;
 		//角度をラジアンに変換する係数

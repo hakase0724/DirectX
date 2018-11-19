@@ -8,7 +8,8 @@ using namespace DirectX;
 DXGameObjectManager::DXGameObjectManager(HWND hwnd)
 {
 	CreateResources(hwnd);
-	CreateGameObject();
+	mSceneState = Title;
+	CreateTitleSceneObject();
 }
 
 void DXGameObjectManager::ShowFPS()
@@ -16,9 +17,6 @@ void DXGameObjectManager::ShowFPS()
 	mFrameCount++;
 	//FPSを計算しデバッグウィンドウに出力する
 	auto fps = mFPSCountor.get()->GetFPS();
-	std::stringstream stream;
-	stream << fps << std::endl;
-	OutputDebugStringA(stream.str().c_str());
 	if(mFrameCount % mShowCoolTime == 0)
 	{
 		mFrameCount = 0;	
@@ -29,6 +27,17 @@ void DXGameObjectManager::ShowFPS()
 		auto pt = t.c_str();
 		mText->UpdateText(pt);
 		ws.clear();	
+		/*if (mEnemyCom)
+		{
+			std::wstringstream ws2;
+			ws2.precision(6);
+			auto hp = mEnemyCom->GetHP();
+			ws2 << hp << std::endl;
+			auto t2 = ws2.str();
+			auto pt2 = t2.c_str();
+			mEnemyHPTextCom->UpdateText(pt2);
+			ws2.clear();
+		}*/
 	}
 }
 
@@ -44,33 +53,32 @@ void DXGameObjectManager::CreateResources(HWND hwnd)
 	mBulletManager = std::make_unique<BulletManager>(this);
 	mBulletManager->CreatePreBullets(1000);
 	mBackGround = std::make_unique<BackGround>();
-	mDXSound->Play();
 }
 
 //ゲームに始めからいるオブジェクトを生成
 void DXGameObjectManager::CreateGameObject()
 {
 	//自機
-	auto player = Instantiate();
-	auto playerTex = player->AddComponent<DXTexture>();
+	mPlayer = Instantiate();
+	auto playerTex = mPlayer->AddComponent<DXTexture>();
 	playerTex->SetTexture();
-	player->SetTag(Tag::PlayerTag);
-	player->AddComponent<Mover>();
-	player->AddComponent<Player>();
-	auto playerCol = player->AddComponent<SquareCollider2D>();
+	mPlayer->SetTag(Tag::PlayerTag);
+	mPlayer->AddComponent<Mover>();
+	auto player = mPlayer->AddComponent<Player>();
+	auto playerCol = mPlayer->AddComponent<SquareCollider2D>();
 	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
 
 	//敵
-	auto enemy = Instantiate();
-	enemy->SetTag(Tag::EnemyTag);
-	auto enemyTex = enemy->AddComponent<DXTexture>();
+	mEnemy = Instantiate();
+	mEnemy->SetTag(Tag::EnemyTag);
+	auto enemyTex = mEnemy->AddComponent<DXTexture>();
 	enemyTex->SetTexture(_T("Texture/Enemy.png"));
-	auto texPos = enemy->GetTransform();
+	auto texPos = mEnemy->GetTransform();
 	texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	auto enemyCol = enemy->AddComponent<SquareCollider2D>();
+	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
-	auto enemyCom = enemy->AddComponent<Enemy>();
-	enemyCom->SetPlayer(player);
+	mEnemyCom = mEnemy->AddComponent<Enemy>();
+	mEnemyCom->SetPlayer(mPlayer);
 
 	//背景用画像1
 	auto back = Instantiate();
@@ -119,6 +127,26 @@ void DXGameObjectManager::CreateGameObject()
 	testObj->GetTransform()->Scale.x = 0.07f;
 	testObj->GetTransform()->Scale.y = 0.07f;
 	mText = testObj->AddComponent<DXText>();
+
+	//mEnemyHPText = Instantiate();
+	//mEnemyHPText->GetTransform()->Position.x = 1.2f;
+	//mEnemyHPText->GetTransform()->Position.y = 0.8f;
+	//mEnemyHPText->GetTransform()->Position.z = -1.1f;
+	//mEnemyHPText->GetTransform()->Scale.x = 0.07f;
+	//mEnemyHPText->GetTransform()->Scale.y = 0.07f;
+	//mEnemyHPTextCom = mEnemyHPText->AddComponent<DXText>();
+	////mEnemyHPView = std::make_unique<HPView>(mEnemyCom, mEnemyHPTextCom);
+
+	//mPlayerHPText = Instantiate();
+	//mPlayerHPText->GetTransform()->Position.x = -1.7f;
+	//mPlayerHPText->GetTransform()->Position.y = 0.8f;
+	//mPlayerHPText->GetTransform()->Position.z = -1.1f;
+	//mPlayerHPText->GetTransform()->Scale.x = 0.07f;
+	//mPlayerHPText->GetTransform()->Scale.y = 0.07f;
+	//mPlayerHPTextCom = mPlayerHPText->AddComponent<DXText>();
+	//mPlayerHPView = std::make_unique<HPView>(player, mPlayerHPTextCom);
+
+	mDXSound->Play();
 }
 
 //生きているコライダーを取得
@@ -161,6 +189,42 @@ bool DXGameObjectManager::IsCollisionJudge(Tag tag1, Tag tag2)
 	return true;
 }
 
+void DXGameObjectManager::Reset()
+{
+	//全ての弾を一時配列に逃がす
+	for (auto &bullet : mGameObjectsList)
+	{
+		auto tag = bullet->GetTag();
+		if (tag == PlayerBullet || tag == EnemyBullet)
+		{
+			mBulletManager->ReturnBullet(bullet.get());
+			mTempGameObjectsList.push_back(std::move(bullet));
+		}
+	}
+	//管理配列をクリアしオブジェクトを再生成
+	mGameObjectsList.clear();
+	switch (mSceneState)
+	{
+	case Title:
+		CreateTitleSceneObject();
+		break;
+	case Play:
+		CreateGameSceneObject();
+		break;
+	default:
+		break;
+	}
+	//逃がした弾をもとに戻す
+	for (auto itr = mTempGameObjectsList.begin(); itr != mTempGameObjectsList.end(); ++itr)
+	{
+		//中身のないものは追加しない
+		if (*itr == nullptr) continue;
+		mGameObjectsList.push_back(std::move(*itr));
+	}
+	mTempGameObjectsList.clear();
+	isReset = false;
+}
+
 //ゲームオブジェクトを作り配列に格納、作ったゲームオブジェクトのポインタを返す
 DXGameObject * DXGameObjectManager::Instantiate()
 {
@@ -174,10 +238,6 @@ DXGameObject * DXGameObjectManager::Instantiate()
 
 BOOL DXGameObjectManager::Update()
 {
-	ShowFPS();
-	//背景移動
-	mBackGround->UpdateBackGrounds();
-
 	//現在の入力状態を取得
 	mDXManager->GetDXInput()->SetInputState();
 	mShooterCollider2DList.clear();
@@ -189,21 +249,24 @@ BOOL DXGameObjectManager::Update()
 		auto game = itr->get();
 		if(game->GetEnable()) itr->get()->Update();
 	}
-	if (mDXManager->GetDXInput()->GetInputState(DIK_U)) 
+	
+	if (mDXManager->GetDXInput()->GetKeyDown(DIK_T)) ChangeScene(SceneState::Title);	
+	if (mDXManager->GetDXInput()->GetKeyDown(DIK_P)) ChangeScene(SceneState::Play);
+	if (mSceneState == Play)
 	{
-		auto text = testObj->GetComponent<DXText>();
-		text->UpdateText(L"where");
+		ShowFPS();
+		//背景移動
+		mBackGround->UpdateBackGrounds();
+		//自機もしくは敵が死んだらタイトルへ
+		if (mPlayer) if (!mPlayer->GetEnable()) 
+			ChangeScene(SceneState::Title);
+		if (mEnemy) if (!mEnemy->GetEnable()) 
+			ChangeScene(SceneState::Title);
+		/*if(mPlayerHPView) mPlayerHPView->Update();
+		if(mEnemyHPView) mEnemyHPView->Update();*/
+		
 	}
-	if (mDXManager->GetDXInput()->GetInputState(DIK_O))
-	{
-		auto text = testObj->GetComponent<DXText>();
-		text->UpdateText(L"windows");
-	}
-	if (mDXManager->GetDXInput()->GetInputState(DIK_D))
-	{
-		auto text = testObj->GetComponent<DXText>();
-		text->UpdateText(L"who");
-	}
+
 	if (mDXManager->GetDXInput()->GetInputState(DIK_ESCAPE))return FALSE;
 	return TRUE;
 }
@@ -276,8 +339,11 @@ void DXGameObjectManager::Render()
 		mGameObjectsList.push_back(std::move(*itr));
 	}
 
-	//次フレーム用に一時配列のクリアと入力状況の取得
+	//次フレーム用の準備
 	mTempGameObjectsList.clear();
+	//リセットするなら
+	if (isReset) Reset();
+	//現フレームの入力情報を記憶
 	mDXManager->GetDXInput()->SetPreBuffer();
 }
 
@@ -310,6 +376,35 @@ DXGameObject * DXGameObjectManager::GetDXGameObjectWithID(UINT id)
 		break;
 	}
 	return pGame;
+}
+
+void DXGameObjectManager::CreateTitleSceneObject()
+{
+	mPlayer = nullptr;
+	mEnemy = nullptr;
+	mDXSound->Stop();
+	auto title = Instantiate();
+	auto text = title->AddComponent<DXText>();
+	auto transform = title->GetTransform();
+	transform->Scale = XMFLOAT3(0.5f,0.5f,0.5f);
+	transform->Position.x -= 1.0f;
+	text->UpdateText(L"TITLE");
+	mBackGround->ClearBackGrounds();
+}
+
+void DXGameObjectManager::CreateGameSceneObject()
+{
+	CreateGameObject();
+}
+
+void DXGameObjectManager::CreateResultSceneObject()
+{
+}
+
+void DXGameObjectManager::ChangeScene(SceneState state)
+{
+	mSceneState = state;
+	isReset = true;
 }
 
 

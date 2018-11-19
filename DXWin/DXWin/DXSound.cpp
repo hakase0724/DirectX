@@ -55,6 +55,11 @@ void DXSound::Play()
 	mDsBuffer->Play(0, 0, 0);
 }
 
+void DXSound::Stop()
+{
+	mDsBuffer->Stop();
+}
+
 bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** ppData, DWORD & dataSize)
 {
 	if (filepath == 0) return false;

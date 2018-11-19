@@ -14,8 +14,8 @@ DXRenderDataPool::DXRenderDataPool(ID3D11Device * device, ID3D11DeviceContext * 
 	//フォントを書き込むテクスチャ作成
 	D3D11_TEXTURE2D_DESC fontTextureDesc;
 	ZeroMemory(&fontTextureDesc, sizeof(fontTextureDesc));
-	fontTextureDesc.Width = 0;
-	fontTextureDesc.Height = 0;
+	fontTextureDesc.Width = 1;
+	fontTextureDesc.Height = 1;
 	fontTextureDesc.MipLevels = 1;
 	fontTextureDesc.ArraySize = 1;
 	fontTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;

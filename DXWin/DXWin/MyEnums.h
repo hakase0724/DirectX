@@ -30,4 +30,11 @@ namespace MyDirectX
 		TargetPlayer = 2,
 		SixWayRazer = 3,
 	};
+
+	enum SceneState
+	{
+		Title = 0,
+		Play = 1,
+		Result = 2,
+	};
 }

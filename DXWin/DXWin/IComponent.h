@@ -25,6 +25,12 @@ namespace MyDirectX
 		virtual ~IComponent() = 0 {};
 	};
 
+	class IHP
+	{
+	public:
+		virtual double GetHP() = 0;
+	};
+
 	//コンポーネントクラス
 	//このクラスを継承したクラスをDXGameObjectに追加していく
 	//C++では抽象クラスをtemplateに渡すことができないらしいのでこのクラスを渡す

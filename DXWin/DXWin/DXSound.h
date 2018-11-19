@@ -11,6 +11,7 @@ namespace MyDirectX
 		DXSound(HWND hwnd);
 		~DXSound();
 		void Play();
+		void Stop();
 	private:
 		IDirectSound8* mDirectSound;
 		IDirectSoundBuffer8* mDsBuffer;

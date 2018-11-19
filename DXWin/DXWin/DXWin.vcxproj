@@ -178,6 +178,7 @@
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="FPSCountor.h" />
+    <ClInclude Include="HPView.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="LightingShader.h" />
     <ClInclude Include="MeshAndShader.h" />
@@ -237,6 +238,7 @@
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
+    <ClCompile Include="HPView.cpp" />
     <ClCompile Include="LightingShader.cpp" />
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="MeshInfo.cpp" />

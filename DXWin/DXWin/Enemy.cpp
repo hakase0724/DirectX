@@ -11,7 +11,7 @@ void Enemy::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
 	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
-	HitPoint = 100000;
+	HitPoint = 1000.0;
 	mBulletSpeed = 0.01f;
 	mRadianCoefficient = acos(-1.0f) / 180.0f;
 	mAngle = 0.0f;
@@ -41,7 +41,7 @@ void Enemy::Update()
 
 void Enemy::OnCollisionEnter()
 {
-	HitPoint--;
+	HitPoint -= 1.0;
 	//体力がなくなったら自身のアクティブを切る
 	if (HitPoint <= 0)
 	{

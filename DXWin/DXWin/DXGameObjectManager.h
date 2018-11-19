@@ -18,6 +18,8 @@
 #include "BackGround.h"
 #include "DXSound.h"
 #include "DXText.h"
+#include "HPView.h"
+
 
 namespace MyDirectX 
 {
@@ -37,7 +39,13 @@ namespace MyDirectX
 		//指定したIDのオブジェクトを返す
 		DXGameObject* GetDXGameObjectWithID(UINT id);
 		BulletManager* GetBulletManager() const { return mBulletManager.get(); }
+		void CreateTitleSceneObject();
+		void CreateGameSceneObject();
+		void CreateResultSceneObject();
+		void ChangeScene(SceneState state);
 	private:
+		bool isReset;
+		//FPSを表示する
 		void ShowFPS();
 		//ゲーム内に必要なクラスをインスタンス化する
 		void CreateResources(HWND hwnd);
@@ -62,10 +70,20 @@ namespace MyDirectX
 		//弾のコライダーの配列
 		std::vector<Collider2D*> mBulletCollider2DList;
 		DXGameObject* testObj;
-		TextRenderer* textRenderer;
 		DXText* mText;
 		int mFrameCount;
 		int mShowCoolTime = 60;
+		void Reset();
+		SceneState mSceneState;
+		DXGameObject* mPlayer;
+		DXGameObject* mPlayerHPText;
+		DXText* mPlayerHPTextCom;
+		DXGameObject* mEnemy;
+		Enemy* mEnemyCom;
+		DXGameObject* mEnemyHPText;
+		DXText* mEnemyHPTextCom;
+		std::unique_ptr<HPView> mPlayerHPView;
+		std::unique_ptr<HPView> mEnemyHPView;
 	};
 }
 

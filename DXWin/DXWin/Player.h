@@ -9,7 +9,7 @@
 
 namespace MyDirectX
 {
-	class Player :public Component
+	class Player :public Component,public IHP
 	{
 	public:
 		Player() {};
@@ -19,6 +19,7 @@ namespace MyDirectX
 		//更新処理
 		virtual void Update();
 		virtual void OnCollisionEnter() override;
+		virtual double GetHP() { return HitPoint; }
 	private:
 		DXInput* mDXInput;
 		BulletManager* mBulletManager;
@@ -29,7 +30,7 @@ namespace MyDirectX
 		//弾を発射するフレーム感覚
 		const int mCoolCount = 7;
 		//体力
-		int HitPoint;
+		double HitPoint;
 	};
 }
  
