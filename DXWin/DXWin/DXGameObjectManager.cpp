@@ -27,24 +27,12 @@ void DXGameObjectManager::ShowFPS()
 		auto pt = t.c_str();
 		mText->UpdateText(pt);
 		ws.clear();	
-		/*if (mEnemyCom)
-		{
-			std::wstringstream ws2;
-			ws2.precision(6);
-			auto hp = mEnemyCom->GetHP();
-			ws2 << hp << std::endl;
-			auto t2 = ws2.str();
-			auto pt2 = t2.c_str();
-			mEnemyHPTextCom->UpdateText(pt2);
-			ws2.clear();
-		}*/
 	}
 }
 
 void DXGameObjectManager::CreateResources(HWND hwnd)
 {
 	mDXSound = std::make_unique<DXSound>(hwnd);
-	
 	//DirectXリソース管理
 	mDXManager = std::make_unique<DXManager>(hwnd);
 	//FPSカウンターを生成
@@ -127,24 +115,6 @@ void DXGameObjectManager::CreateGameObject()
 	testObj->GetTransform()->Scale.x = 0.07f;
 	testObj->GetTransform()->Scale.y = 0.07f;
 	mText = testObj->AddComponent<DXText>();
-
-	//mEnemyHPText = Instantiate();
-	//mEnemyHPText->GetTransform()->Position.x = 1.2f;
-	//mEnemyHPText->GetTransform()->Position.y = 0.8f;
-	//mEnemyHPText->GetTransform()->Position.z = -1.1f;
-	//mEnemyHPText->GetTransform()->Scale.x = 0.07f;
-	//mEnemyHPText->GetTransform()->Scale.y = 0.07f;
-	//mEnemyHPTextCom = mEnemyHPText->AddComponent<DXText>();
-	////mEnemyHPView = std::make_unique<HPView>(mEnemyCom, mEnemyHPTextCom);
-
-	//mPlayerHPText = Instantiate();
-	//mPlayerHPText->GetTransform()->Position.x = -1.7f;
-	//mPlayerHPText->GetTransform()->Position.y = 0.8f;
-	//mPlayerHPText->GetTransform()->Position.z = -1.1f;
-	//mPlayerHPText->GetTransform()->Scale.x = 0.07f;
-	//mPlayerHPText->GetTransform()->Scale.y = 0.07f;
-	//mPlayerHPTextCom = mPlayerHPText->AddComponent<DXText>();
-	//mPlayerHPView = std::make_unique<HPView>(player, mPlayerHPTextCom);
 
 	mDXSound->Play();
 }
@@ -262,9 +232,6 @@ BOOL DXGameObjectManager::Update()
 			ChangeScene(SceneState::Title);
 		if (mEnemy) if (!mEnemy->GetEnable()) 
 			ChangeScene(SceneState::Title);
-		/*if(mPlayerHPView) mPlayerHPView->Update();
-		if(mEnemyHPView) mEnemyHPView->Update();*/
-		
 	}
 
 	if (mDXManager->GetDXInput()->GetInputState(DIK_ESCAPE))return FALSE;

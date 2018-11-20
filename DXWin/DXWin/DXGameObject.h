@@ -11,12 +11,13 @@
 namespace MyDirectX
 {
 	class DXGameObjectManager;
-	
+	class Scene;
 	//このプロジェクトの核となるクラス
 	//このクラスにComponentクラスを継承したクラスを追加していく
 	class DXGameObject
 	{
 	public:
+		DXGameObject(DXManager* dxManager);
 		DXGameObject(DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		DXGameObject(TRANSFORM* transform, DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		virtual ~DXGameObject();
@@ -56,14 +57,21 @@ namespace MyDirectX
 		//衝突が終わった時の処理
 		virtual void OnCollisionExit();
 		//ゲッターとセッター
+		//名前
 		std::string GetName() { return mName; }
 		void SetName(std::string name) { mName = name; }
-		UINT GetID() { return mId; }
+		//ID
+		UINT GetID() const { return mId; }
 		void SetID(UINT id) { mId = id; }
+		//タグ
 		Tag GetTag() const { return mTag; }
 		void SetTag(Tag tag) { mTag = tag; }
+		//アクティブ状態
 		bool GetEnable() const { return mEnable; }
 		void SetEnable(bool enable) { mEnable = enable; }
+		//シーン情報
+		Scene* GetScene() const { return mScene; }
+		void SetScene(Scene* scene) { mScene = scene; }
 		DXGameObjectManager* GetDXGameObjectManager() const { return mDXGameObjectManager; }
 	protected:
 		//自身の座標回転スケール
@@ -82,6 +90,7 @@ namespace MyDirectX
 		Tag mTag;
 		UINT mId;
 		bool mEnable;
+		Scene* mScene;
 	};
 
 	template<typename T>

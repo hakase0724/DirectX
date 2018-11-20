@@ -157,20 +157,24 @@
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
+    <ClInclude Include="BulletPool.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collider2D.h" />
     <ClInclude Include="Colliders.h" />
+    <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CommonValues.h" />
     <ClInclude Include="CubeMesh.h" />
     <ClInclude Include="dinputex.h" />
     <ClInclude Include="DXCamera.h" />
     <ClInclude Include="DXCube.h" />
+    <ClInclude Include="DXExcuter.h" />
     <ClInclude Include="DXFactory.h" />
     <ClInclude Include="DXGameObject.h" />
     <ClInclude Include="DXGameObjectManager.h" />
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXRenderDataPool.h" />
+    <ClInclude Include="DXResourceManager.h" />
     <ClInclude Include="DXSound.h" />
     <ClInclude Include="DXSphere.h" />
     <ClInclude Include="DXSquare.h" />
@@ -191,10 +195,12 @@
     <ClInclude Include="NonLightingShader.h" />
     <ClInclude Include="NormalShader.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayScene.h" />
     <ClInclude Include="Primitive2D.h" />
     <ClInclude Include="Primitive3D.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Roller.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SixWayRazerBarrage.h" />
@@ -211,6 +217,7 @@
     <ClInclude Include="TextureMesh.h" />
     <ClInclude Include="TextureRenderer.h" />
     <ClInclude Include="TextureShader.h" />
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AllDirectionSync.cpp" />
@@ -220,17 +227,21 @@
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
+    <ClCompile Include="BulletPool.cpp" />
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="Collider2D.cpp" />
+    <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="DXCamera.cpp" />
     <ClCompile Include="DXCube.cpp" />
+    <ClCompile Include="DXExcuter.cpp" />
     <ClCompile Include="DXFactory.cpp" />
     <ClCompile Include="DXGameObject.cpp" />
     <ClCompile Include="DXGameObjectManager.cpp" />
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXRenderDataPool.cpp" />
+    <ClCompile Include="DXResourceManager.cpp" />
     <ClCompile Include="DXSound.cpp" />
     <ClCompile Include="DXSphere.cpp" />
     <ClCompile Include="DXSquare.cpp" />
@@ -247,7 +258,9 @@
     <ClCompile Include="NonLightingShader.cpp" />
     <ClCompile Include="NormalShader.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="Roller.cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="SixWayRazerBarrage.cpp" />
@@ -268,6 +281,7 @@
     <ClCompile Include="TextureMesh.cpp" />
     <ClCompile Include="TextureRenderer.cpp" />
     <ClCompile Include="TextureShader.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXWin.rc" />

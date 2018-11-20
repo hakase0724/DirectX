@@ -1,0 +1,47 @@
+#pragma once
+#include <memory>
+#include <vector>
+#include "DXGameObject.h"
+#include "MyEnums.h"
+#include "DXResourceManager.h"
+namespace MyDirectX
+{
+	class DXGameObject;
+
+	class Scene
+	{
+	public:
+		Scene() {};
+		virtual ~Scene() {};
+		void SetDXResourceManager(DXResourceManager* manager) { mDXRescourceManager = manager; }
+		//自身のシーンを表すシーンステートを返す
+		SceneState GetSceneState() const { return mSceneState; }
+		//シーンに最初から存在するゲームオブジェクトを渡す
+		std::vector<DXGameObject*> GetGameObjects() const
+		{ 
+			std::vector<DXGameObject*> games;
+			for(auto& game:mGameObjectsList)
+			{
+				games.push_back(game.get());
+			}
+			return games;
+		}
+		//ゲームオブジェクトをシーンに登録し参照を渡す
+		virtual DXGameObject* Instantiate();
+		//Update前に呼ばれる　ゲームオブジェクトに依存しないUpdate
+		virtual void SceneUpdate() {};
+		//LateUpdate前に呼ばれる　ゲームオブジェクトに依存しないLateUpdate
+		virtual void SceneLateUpdate() {};
+		//描画処理が終わった後に呼ばれる　1フレームの最後に行う処理
+		virtual void SceneEndFrame() {};
+	protected:
+		//このシーンに最初から存在するゲームオブジェクトのリスト
+		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
+		//自身のシーンを表す
+		SceneState mSceneState;
+		//全体リソース管理クラスへの参照
+		DXResourceManager* mDXRescourceManager;
+	};
+}
+
+
