@@ -5,6 +5,7 @@ using namespace MyDirectX;
 DXExcuter::DXExcuter()
 {
 	mCollisionManager = std::make_unique<CollisionManager>();
+	mScene = nullptr;
 }
 
 DXExcuter::~DXExcuter()
@@ -13,7 +14,10 @@ DXExcuter::~DXExcuter()
 
 void DXExcuter::SetScene(Scene * scene)
 {
+	if (mScene != nullptr) mScene->SceneEnd();
 	mScene = scene;
+	mScene->SceneStart();
+	mExcuteObjectsList.clear();
 	mExcuteObjectsList = mScene->GetGameObjects();
 }
 
@@ -23,10 +27,12 @@ void DXExcuter::Excute()
 	if (!mScene) return;
 	//1フレームの処理を行う
 	mScene->SceneUpdate();
+	//コライダーを格納
 	mCollisionManager->SetGameObjects(mExcuteObjectsList);
 	Update();
 	mScene->SceneLateUpdate();
 	LateUpdate();
+	//衝突処理
 	mCollisionManager->Collision();
 	Render();
 	mScene->SceneEndFrame();

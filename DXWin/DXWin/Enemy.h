@@ -8,6 +8,7 @@
 #include "AllDirectionSync.h"
 #include "BarrageBase.h"
 #include "BarrageManager.h"
+#include "BulletPool.h"
 
 
 namespace MyDirectX
@@ -19,6 +20,7 @@ namespace MyDirectX
 		~Enemy() {};
 		//初期化処理
 		virtual void Initialize(DXGameObject* gameObject);
+		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		//更新処理
 		virtual void Update();
 		virtual void OnCollisionEnter() override;
@@ -26,6 +28,7 @@ namespace MyDirectX
 		virtual double GetHP() { return HitPoint; }
 	private:
 		BulletManager* mBulletManager;
+		BulletPool* mBulletPool;
 		//何フレーム経過したか
 		int mWaitCount;
 		//弾を発射するフレーム間隔

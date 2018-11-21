@@ -6,6 +6,7 @@
 #include <string>
 #include "Bullet.h"
 #include "BulletManager.h"
+#include "BulletPool.h"
 
 namespace MyDirectX
 {
@@ -16,6 +17,7 @@ namespace MyDirectX
 		~Player() {};
 		//初期化処理
 		virtual void Initialize(DXGameObject* gameObject);
+		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		//更新処理
 		virtual void Update();
 		virtual void OnCollisionEnter() override;
@@ -23,6 +25,7 @@ namespace MyDirectX
 	private:
 		DXInput* mDXInput;
 		BulletManager* mBulletManager;
+		BulletPool* mBulletPool;
 		//発射可能かどうか
 		bool isCoolTime();
 		//何フレーム経過したか

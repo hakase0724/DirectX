@@ -10,7 +10,7 @@ void Enemy::Initialize(DXGameObject * gameObject)
 	mGameObject = gameObject;
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
-	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
+	//mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
 	HitPoint = 1000.0;
 	mBulletSpeed = 0.01f;
 	mRadianCoefficient = acos(-1.0f) / 180.0f;
@@ -30,7 +30,7 @@ void Enemy::Update()
 	{
 		mWaitCount = 0;
 		//’e–‹‚ð¶¬‚·‚é
-		mBarrage->CreateBarrage(mBulletManager, mPlayer, mGameObject);
+		mBarrage->CreateBarrage(mBulletPool, mPlayer, mGameObject);
 		if (mBarrage->IsBarrageEnd()) 
 		{
 			ChangeBarrageName();

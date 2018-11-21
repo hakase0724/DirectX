@@ -5,6 +5,7 @@
 namespace MyDirectX
 {
 	class BulletManager;
+	class BulletPool;
 	class DXGameObject;
 	class BarrageBase
 	{
@@ -19,6 +20,7 @@ namespace MyDirectX
 		virtual bool IsBarrageEnd() = 0;
 		//’e‚Ì‹O“¹‚ðŒvŽZ‚·‚é
 		virtual void CreateBarrage(BulletManager* manager,DXGameObject* player,DXGameObject* enemy) = 0;
+		virtual void CreateBarrage(BulletPool* pool, DXGameObject* player, DXGameObject* enemy) = 0;
 	protected:
 		//’e–‹‚Ì–¼‘O‚ðŽ¦‚·enum
 		BarrageName mName;

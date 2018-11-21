@@ -5,6 +5,7 @@
 namespace MyDirectX
 {
 	class BulletManager;
+	class BulletPool;
 
 	class Bullet :public Component
 	{
@@ -14,6 +15,7 @@ namespace MyDirectX
 		//‰Šú‰»ˆ—
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Initialize() override;
+		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		//ƒxƒNƒgƒ‹İ’è
 		void SetVectol(float x, float y)
 		{ 
@@ -36,6 +38,7 @@ namespace MyDirectX
 		TRANSFORM* mTransform;
 		BulletManager* mBulletManager;
 		Vec2* mMoveVectol;
+		BulletPool* mBulletPool;
 	};
 }
 

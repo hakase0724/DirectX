@@ -14,7 +14,7 @@ void Player::Initialize(DXGameObject * gameObject)
 	transform->Scale.z /= 2.0f;
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
-	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
+	//mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
 	HitPoint = 4.0;
 }
 
@@ -33,7 +33,8 @@ void Player::Update()
 		auto bulletNum = 4;
 		for(int i = 0;i < bulletNum;i++)
 		{
-			auto game = mBulletManager->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
+			//auto game = mBulletManager->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
+			auto game = mBulletPool->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
 			auto gameTransform = game->GetTransform();
 			//Še’e“¯Žm‚ÌŠÔŠu
 			auto offset = gameTransform->Scale.x;

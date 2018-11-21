@@ -3,6 +3,7 @@
 #include "CommonValues.h"
 #include "BulletManager.h"
 #include "DXGameObjectManager.h"
+#include "BulletPool.h"
 
 using namespace MyDirectX;
 
@@ -13,7 +14,7 @@ void Bullet::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mDXCamera = mGameObject->GetDXCamera();
 	auto manager = mGameObject->GetDXGameObjectManager();
-	mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
+	//mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
 	mTag = mGameObject->GetTag();
 }
 
@@ -38,19 +39,23 @@ void Bullet::Update()
 	//âÊñ äOÇ…èoÇΩÇÁ
 	if(screenPosY < -cHeight / 2)
 	{
-		mBulletManager->ReturnBullet(mGameObject);
+		//mBulletManager->ReturnBullet(mGameObject);
+		mBulletPool->ReturnBullet(mGameObject);
 	}
 	if(screenPosY > cHeight + cHeight / 2)
 	{
-		mBulletManager->ReturnBullet(mGameObject);
+		//mBulletManager->ReturnBullet(mGameObject);
+		mBulletPool->ReturnBullet(mGameObject);
 	}
 	if(screenPosX < -cWidth / 2)
 	{
-		mBulletManager->ReturnBullet(mGameObject);
+		//mBulletManager->ReturnBullet(mGameObject);
+		mBulletPool->ReturnBullet(mGameObject);
 	}
 	if (screenPosX > cWidth + cWidth / 2)
 	{
-		mBulletManager->ReturnBullet(mGameObject);
+		//mBulletManager->ReturnBullet(mGameObject);
+		mBulletPool->ReturnBullet(mGameObject);
 	}
 	
 	
@@ -58,5 +63,6 @@ void Bullet::Update()
 
 void Bullet::OnCollisionEnter()
 {
-	mBulletManager->ReturnBullet(mGameObject);
+	//mBulletManager->ReturnBullet(mGameObject);
+	mBulletPool->ReturnBullet(mGameObject);
 }

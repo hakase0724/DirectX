@@ -7,8 +7,6 @@
 
 namespace MyDirectX
 {
-	class DXGameObjectManager;
-
 	class SquareCollider2D :public Collider2D
 	{
 	public:
@@ -35,7 +33,6 @@ namespace MyDirectX
 		//Õ“Ë‰“š
 		virtual void OnCollision() override;
 	private:
-		DXGameObjectManager* mDXGameObjectManager;
 		float mOneSide;
 		float mOneSideHarf;
 		//¡‚ÌƒtƒŒ[ƒ€‚Å‚ÌÕ“Ë‰ñ”

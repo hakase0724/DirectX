@@ -28,12 +28,16 @@ namespace MyDirectX
 		}
 		//ゲームオブジェクトをシーンに登録し参照を渡す
 		virtual DXGameObject* Instantiate();
+		//シーンが始まった時に呼ばれる
+		virtual void SceneStart() {};
 		//Update前に呼ばれる　ゲームオブジェクトに依存しないUpdate
 		virtual void SceneUpdate() {};
 		//LateUpdate前に呼ばれる　ゲームオブジェクトに依存しないLateUpdate
 		virtual void SceneLateUpdate() {};
 		//描画処理が終わった後に呼ばれる　1フレームの最後に行う処理
 		virtual void SceneEndFrame() {};
+		//シーンの終わりに呼ばれる
+		virtual void SceneEnd() {};
 	protected:
 		//このシーンに最初から存在するゲームオブジェクトのリスト
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;

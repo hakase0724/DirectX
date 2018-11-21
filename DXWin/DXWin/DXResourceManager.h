@@ -16,6 +16,8 @@ namespace MyDirectX
 		DXManager* GetDXManager() const { return mDXManager.get(); }
 		bool GetKeyDown(int key) { return mDXManager->GetDXInput()->GetKeyDown(key); }
 		bool GetKey(int key) { return mDXManager->GetDXInput()->GetInputState(key); }
+		DXSound* GetDXSound() const { return mDXSound.get(); }
+		double GetFPS() const { return mFPSCountor->GetFPS(); }
 		void SetInputState() { mDXManager->GetDXInput()->SetInputState(); }
 		void SetPreBuffer() { mDXManager->GetDXInput()->SetPreBuffer(); }
 		bool IsEnd();

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SquareCollider2D.h"
 #include <typeinfo>
-#include "DXGameObjectManager.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -22,7 +21,6 @@ void SquareCollider2D::Initialize(DXGameObject * gameObject)
 	mOneSide = cMyOneSide;
 	mOneSideHarf = mOneSide / 2.0f;
 	mName = mGameObject->GetName();
-	mDXGameObjectManager = mGameObject->GetDXGameObjectManager();
 	mCollisionNum = 0;
 }
 
