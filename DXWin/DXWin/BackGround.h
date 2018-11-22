@@ -19,6 +19,11 @@ namespace MyDirectX
 			mBackSecond = nullptr;
 		}
 		void UpdateBackGrounds();
+		void ChangeBackGroundEnable(bool enable)
+		{
+			mBackFirst->SetEnable(enable);
+			mBackSecond->SetEnable(enable);
+		}
 	private:
 		DXGameObject* mBackFirst;
 		DXGameObject* mBackSecond;

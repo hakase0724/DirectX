@@ -2,7 +2,6 @@
 #include "IComponent.h"
 #include "DXManager.h"
 #include "Bullet.h"
-#include "BulletManager.h"
 #include "Colliders.h"
 #include "DXGameObject.h"
 #include "AllDirectionSync.h"
@@ -19,7 +18,8 @@ namespace MyDirectX
 		Enemy() {};
 		~Enemy() {};
 		//初期化処理
-		virtual void Initialize(DXGameObject* gameObject);
+		virtual void Initialize(DXGameObject* gameObject) override;
+		virtual void Initialize() override;
 		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		//更新処理
 		virtual void Update();
@@ -27,7 +27,7 @@ namespace MyDirectX
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
 		virtual double GetHP() { return HitPoint; }
 	private:
-		BulletManager* mBulletManager;
+		//弾のオブジェクトプール
 		BulletPool* mBulletPool;
 		//何フレーム経過したか
 		int mWaitCount;
@@ -35,15 +35,15 @@ namespace MyDirectX
 		const int mCoolCount = 60;
 		//体力
 		double HitPoint;
+		//プレイヤー
 		DXGameObject* mPlayer;
-		float mBulletSpeed;
-		//角度をラジアンに変換する係数
-		float mRadianCoefficient;
-		//角度
-		float mAngle;
+		//今セットされている弾幕
 		BarrageBase* mBarrage;
+		//弾幕管理クラス
 		std::unique_ptr<BarrageManager> mBarrageManager;
+		//弾幕識別に使用
 		BarrageName mBarrageName;
+		//弾幕切り替え
 		void ChangeBarrageName();
 	};
 

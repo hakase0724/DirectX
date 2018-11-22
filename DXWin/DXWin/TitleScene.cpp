@@ -14,4 +14,5 @@ void TitleScene::Init()
 	transform->Scale = XMFLOAT3(0.5f, 0.5f, 0.5f);
 	transform->Position.x -= 1.0f;
 	text->UpdateText(L"TITLE");
+	title->SetEnable(true);
 }

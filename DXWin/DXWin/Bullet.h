@@ -4,7 +4,6 @@
 
 namespace MyDirectX
 {
-	class BulletManager;
 	class BulletPool;
 
 	class Bullet :public Component
@@ -32,11 +31,12 @@ namespace MyDirectX
 		//çXêVèàóù1
 		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
+		virtual void OnDisable() override;
+		void ReturnPool();
 	private:
 		DXInput* mDXInput;
 		DXCamera* mDXCamera;
 		TRANSFORM* mTransform;
-		BulletManager* mBulletManager;
 		Vec2* mMoveVectol;
 		BulletPool* mBulletPool;
 	};

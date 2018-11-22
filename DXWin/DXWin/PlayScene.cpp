@@ -21,6 +21,7 @@ void PlayScene::Init()
 	auto transform = play->GetTransform();
 	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
+	mAwakeObject.push_back(play);
 
 	//©‹@
 	auto mPlayer = Instantiate();
@@ -32,6 +33,7 @@ void PlayScene::Init()
 	player->SetBulletPool(mBulletPool.get());
 	auto playerCol = mPlayer->AddComponent<SquareCollider2D>();
 	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
+	mAwakeObject.push_back(mPlayer);
 
 	//“G
 	auto mEnemy = Instantiate();
@@ -45,6 +47,7 @@ void PlayScene::Init()
 	enemy->SetPlayer(mPlayer);
 	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
+	mAwakeObject.push_back(mEnemy);
 	
 	//”wŒi—p‰æ‘œ1
 	auto back = Instantiate();
@@ -54,6 +57,7 @@ void PlayScene::Init()
 	backTransform->Position.z = 2.0f;
 	backTransform->Scale.x = 5.0f;
 	backTransform->Scale.y = 5.0f;
+	mAwakeObject.push_back(back);
 
 	//”wŒi—p‰æ‘œ2
 	auto back2 = Instantiate();
@@ -64,6 +68,7 @@ void PlayScene::Init()
 	backTransform2->Position.z = 2.0f;
 	backTransform2->Scale.x = 5.0f;
 	backTransform2->Scale.y = 5.0f;
+	mAwakeObject.push_back(back2);
 
 	//”wŒi‚ğ“®‚©‚·ƒNƒ‰ƒX
 	mBackGround = std::make_unique<BackGround>();
@@ -77,6 +82,7 @@ void PlayScene::Init()
 	blackTransform->Position.z = -1.0f;
 	blackTransform->Position.x = 1.63f;
 	blackTransform->Scale.y = 3.0f;
+	mAwakeObject.push_back(black);
 
 	//¶‚Ì•‘Ñ
 	auto black2 = Instantiate();
@@ -86,10 +92,21 @@ void PlayScene::Init()
 	blackTransform2->Position.z = -1.0f;
 	blackTransform2->Position.x = -1.63f;
 	blackTransform2->Scale.y = 3.0f;
+	mAwakeObject.push_back(black2);
+
+	mFrameCount = FPS_CHEACK_FRAME_COUNT;
 }
 
 void PlayScene::SceneStart()
 {
+	for(auto &game:mGameObjectsList)
+	{
+		game->InitializeComponent();
+	}
+	for(auto game:mAwakeObject)
+	{
+		game->SetEnable(true);
+	}
 	mDXRescourceManager->GetDXSound()->Play();
 }
 
@@ -119,5 +136,9 @@ void PlayScene::SceneUpdate()
 
 void PlayScene::SceneEnd()
 {
+	for (auto &game : mGameObjectsList)
+	{
+		game->SetEnable(false);
+	}
 	mDXRescourceManager->GetDXSound()->Stop();
 }

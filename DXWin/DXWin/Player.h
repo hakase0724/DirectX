@@ -5,7 +5,6 @@
 #include "Colliders.h"
 #include <string>
 #include "Bullet.h"
-#include "BulletManager.h"
 #include "BulletPool.h"
 
 namespace MyDirectX
@@ -16,15 +15,15 @@ namespace MyDirectX
 		Player() {};
 		~Player() {};
 		//‰Šú‰»ˆ—
-		virtual void Initialize(DXGameObject* gameObject);
+		virtual void Initialize(DXGameObject* gameObject) override;
+		virtual void Initialize() override;
 		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		//XVˆ—
-		virtual void Update();
+		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
 		virtual double GetHP() { return HitPoint; }
 	private:
 		DXInput* mDXInput;
-		BulletManager* mBulletManager;
 		BulletPool* mBulletPool;
 		//”­Ë‰Â”\‚©‚Ç‚¤‚©
 		bool isCoolTime();
@@ -34,6 +33,7 @@ namespace MyDirectX
 		const int mCoolCount = 7;
 		//‘Ì—Í
 		double HitPoint;
+		
 	};
 }
  

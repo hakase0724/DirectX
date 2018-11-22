@@ -21,6 +21,8 @@ namespace MyDirectX
 		int mFrameCount;
 		const int FPS_CHEACK_FRAME_COUNT = 60;
 		DXText* mFPSText;
+		//シーン開始時にアクティブにするオブジェクト
+		std::vector<DXGameObject*> mAwakeObject;
 	};
 }
 

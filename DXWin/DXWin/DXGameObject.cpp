@@ -136,3 +136,23 @@ void DXGameObject::OnCollisionExit()
 		pItr->OnCollisionExit();
 	}
 }
+
+//アクティブになった時
+void DXGameObject::OnEnable()
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->OnEnable();
+	}
+}
+
+//非アクティブになった時
+void DXGameObject::OnDisable()
+{
+	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+	{
+		auto pItr = *itr;
+		pItr->OnDisable();
+	}
+}

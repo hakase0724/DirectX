@@ -56,6 +56,15 @@ namespace MyDirectX
 		virtual void OnCollisionEnter();
 		//衝突が終わった時の処理
 		virtual void OnCollisionExit();
+		virtual void OnEnable();
+		virtual void OnDisable();
+		void SetDefaultTransform(TRANSFORM* transform) { mDefaultTransform = *transform; }
+		void ResetTransform() 
+		{
+			mTransform->Position = mDefaultTransform.Position;
+			mTransform->Rotation = mDefaultTransform.Rotation;
+			mTransform->Scale = mDefaultTransform.Scale;
+		};
 		//ゲッターとセッター
 		//名前
 		std::string GetName() { return mName; }
@@ -68,7 +77,29 @@ namespace MyDirectX
 		void SetTag(Tag tag) { mTag = tag; }
 		//アクティブ状態
 		bool GetEnable() const { return mEnable; }
-		void SetEnable(bool enable) { mEnable = enable; }
+		void SetEnable(bool enable) 
+		{
+			mEnable = enable; 
+			//falseからtrueになったら
+			if(mEnable == true)
+			{
+				if (mPreEnable == false)
+				{
+					mPreEnable = mEnable;
+					OnEnable();
+				}
+			}
+
+			//trueからfalseになったら
+			if (mEnable == false)
+			{
+				if (mPreEnable == true)
+				{
+					mPreEnable = mEnable;
+					OnDisable();
+				}
+			}
+		}
 		//シーン情報
 		Scene* GetScene() const { return mScene; }
 		void SetScene(Scene* scene) { mScene = scene; }
@@ -91,6 +122,10 @@ namespace MyDirectX
 		UINT mId;
 		bool mEnable;
 		Scene* mScene;
+		TRANSFORM mDefaultTransform;
+	private:
+		//1フレーム前のアクティブ状態
+		bool mPreEnable = false;
 	};
 
 	template<typename T>

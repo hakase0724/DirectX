@@ -13,9 +13,16 @@ void Player::Initialize(DXGameObject * gameObject)
 	transform->Scale.y /= 2.0f;
 	transform->Scale.z /= 2.0f;
 	mId = mGameObject->GetID();
+	mGameObject->SetDefaultTransform(transform);
 	mWaitCount = mCoolCount;
-	//mBulletManager = mGameObject->GetDXGameObjectManager()->GetBulletManager();
 	HitPoint = 4.0;
+}
+
+void Player::Initialize()
+{
+	//mGameObject->ResetTransform();
+	mWaitCount = mCoolCount;
+	HitPoint = 4.0f;
 }
 
 void Player::Update()
@@ -33,7 +40,6 @@ void Player::Update()
 		auto bulletNum = 4;
 		for(int i = 0;i < bulletNum;i++)
 		{
-			//auto game = mBulletManager->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
 			auto game = mBulletPool->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
 			auto gameTransform = game->GetTransform();
 			//各弾同士の間隔
@@ -45,13 +51,6 @@ void Player::Update()
 	{
 		//発射しなかった場合は発射可能状態にしておく
 		mWaitCount = mCoolCount - 1;
-	}
-	//デバッグ用
-	//エンターキーが押されたとき処理を止める
-	if (mDXInput->GetInputState(DIK_RETURN))
-	{
-		//何も意味のないコードだとコンパイル時の最適化によって消える模様
-		mGameObject->SetEnable(false);
 	}
 }
 

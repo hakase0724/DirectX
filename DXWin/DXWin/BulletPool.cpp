@@ -82,7 +82,6 @@ DXGameObject * BulletPool::GetBullet(TRANSFORM * transform, Tag tag, float x, fl
 
 void BulletPool::ReturnBullet(DXGameObject * bullet)
 {
-	bullet->SetEnable(false);
 	mBulletList.push_back(bullet);
 }
 
@@ -91,7 +90,6 @@ DXGameObject * BulletPool::CreateBullet()
 	auto game = mScene->Instantiate();
 	game->SetName("Bullet");
 	game->SetTag(Tag::PlayerBullet);
-	game->SetEnable(false);
 	auto col = game->AddComponent<SquareCollider2D>();
 	col->SetOneSide(col->GetOneSide() / 10.0f);
 	auto bullet = game->AddComponent<Bullet>();

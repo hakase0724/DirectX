@@ -20,6 +20,8 @@ namespace MyDirectX
 		virtual void Exit() = 0;
 		virtual void OnCollisionEnter() = 0;
 		virtual void OnCollisionExit() = 0;
+		virtual void OnEnable() = 0;
+		virtual void OnDisable() = 0;
 		virtual std::string GetName() = 0;
 		virtual UINT GetID() = 0;
 		virtual ~IComponent() = 0 {};
@@ -50,6 +52,8 @@ namespace MyDirectX
 		//è’ìÀÇÃèàóù
 		virtual void OnCollisionEnter() {};
 		virtual void OnCollisionExit() {};
+		virtual void OnEnable() {};
+		virtual void OnDisable() {};
 		std::string GetName() { return mName; }
 		UINT GetID() { return mId; }
 		Tag GetTag() const { return mTag; }
