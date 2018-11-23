@@ -19,11 +19,12 @@ void Enemy::Initialize(DXGameObject * gameObject)
 
 void Enemy::Initialize()
 {
-	//mGameObject->ResetTransform();
+	mGameObject->ResetTransform();
 	mWaitCount = mCoolCount;
 	HitPoint = 1000.0;
 	mBarrageName = BarrageName::SixWayRazer;
 	mBarrage = mBarrageManager->GetBarrage(mBarrageName);
+	mBarrage->Init();
 }
 
 void Enemy::Update()

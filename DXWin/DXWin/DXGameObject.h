@@ -58,6 +58,7 @@ namespace MyDirectX
 		virtual void OnCollisionExit();
 		virtual void OnEnable();
 		virtual void OnDisable();
+		void SetDefaultTransform() { mDefaultTransform = *mTransform; }
 		void SetDefaultTransform(TRANSFORM* transform) { mDefaultTransform = *transform; }
 		void ResetTransform() 
 		{

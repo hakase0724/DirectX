@@ -38,6 +38,8 @@ namespace MyDirectX
 		virtual void SceneEndFrame() {};
 		//シーンの終わりに呼ばれる
 		virtual void SceneEnd() {};
+		//シーンの終了条件
+		virtual bool IsSceneEnd() { return false; }
 	protected:
 		//このシーンに最初から存在するゲームオブジェクトのリスト
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;

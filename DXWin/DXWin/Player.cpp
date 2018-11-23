@@ -20,7 +20,7 @@ void Player::Initialize(DXGameObject * gameObject)
 
 void Player::Initialize()
 {
-	//mGameObject->ResetTransform();
+	mGameObject->ResetTransform();
 	mWaitCount = mCoolCount;
 	HitPoint = 4.0f;
 }

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "TitleScene.h"
 #include "DXText.h"
-#include <DirectXMath.h>
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -15,4 +14,10 @@ void TitleScene::Init()
 	transform->Position.x -= 1.0f;
 	text->UpdateText(L"TITLE");
 	title->SetEnable(true);
+}
+
+bool TitleScene::IsSceneEnd()
+{
+	if (mDXRescourceManager->GetKeyDown(DIK_RETURN))return true;
+	return false;
 }

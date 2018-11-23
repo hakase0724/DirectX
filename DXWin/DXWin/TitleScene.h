@@ -9,6 +9,7 @@ namespace MyDirectX
 		TitleScene() {};
 		void Init();
 		~TitleScene() {};
+		virtual bool IsSceneEnd() override;
 	};
 }
 

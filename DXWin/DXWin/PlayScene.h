@@ -15,6 +15,7 @@ namespace MyDirectX
 		virtual void SceneStart() override;
 		virtual void SceneUpdate() override;
 		virtual void SceneEnd() override;
+		virtual bool IsSceneEnd() override;
 	private:
 		std::unique_ptr<BackGround> mBackGround;
 		std::unique_ptr<BulletPool> mBulletPool;
@@ -23,6 +24,8 @@ namespace MyDirectX
 		DXText* mFPSText;
 		//シーン開始時にアクティブにするオブジェクト
 		std::vector<DXGameObject*> mAwakeObject;
+		DXGameObject* mPlayer;
+		DXGameObject* mEnemy;
 	};
 }
 

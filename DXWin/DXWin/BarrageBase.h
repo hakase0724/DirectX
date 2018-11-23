@@ -14,6 +14,7 @@ namespace MyDirectX
 		~BarrageBase() {};
 		BarrageName GetName() const { return mName; }
 		int GetBulletNum() const { return mBulletNum; }
+		void Init() { mCount = 0; }
 		//”­Ë‘Ò‹@’†‚©
 		bool IsCoolTime(int time) { return time % mCoolTime == 0; }
 		//’e–‹‚ª‘Å‚¿I‚í‚Á‚½‚©

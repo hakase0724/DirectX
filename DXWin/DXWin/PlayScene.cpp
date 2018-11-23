@@ -24,7 +24,7 @@ void PlayScene::Init()
 	mAwakeObject.push_back(play);
 
 	//Ž©‹@
-	auto mPlayer = Instantiate();
+	mPlayer = Instantiate();
 	auto playerTex = mPlayer->AddComponent<DXTexture>();
 	playerTex->SetTexture();
 	mPlayer->SetTag(Tag::PlayerTag);
@@ -36,7 +36,7 @@ void PlayScene::Init()
 	mAwakeObject.push_back(mPlayer);
 
 	//“G
-	auto mEnemy = Instantiate();
+	mEnemy = Instantiate();
 	mEnemy->SetTag(Tag::EnemyTag);
 	auto enemyTex = mEnemy->AddComponent<DXTexture>();
 	enemyTex->SetTexture(_T("Texture/Enemy.png"));
@@ -95,6 +95,11 @@ void PlayScene::Init()
 	mAwakeObject.push_back(black2);
 
 	mFrameCount = FPS_CHEACK_FRAME_COUNT;
+
+	for(auto game:mAwakeObject)
+	{
+		game->SetDefaultTransform();
+	}
 }
 
 void PlayScene::SceneStart()
@@ -141,4 +146,13 @@ void PlayScene::SceneEnd()
 		game->SetEnable(false);
 	}
 	mDXRescourceManager->GetDXSound()->Stop();
+}
+
+bool PlayScene::IsSceneEnd()
+{
+	if (!mPlayer->GetEnable())
+		return true;
+	if (!mEnemy->GetEnable())
+		return true;
+	return false;
 }
