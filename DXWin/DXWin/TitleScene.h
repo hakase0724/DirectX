@@ -7,7 +7,7 @@ namespace MyDirectX
 	{
 	public:
 		TitleScene() {};
-		void Init();
+		virtual void Init() override;
 		~TitleScene() {};
 		virtual bool IsSceneEnd() override;
 	};

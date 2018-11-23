@@ -28,6 +28,8 @@ namespace MyDirectX
 		}
 		//ゲームオブジェクトをシーンに登録し参照を渡す
 		virtual DXGameObject* Instantiate();
+		//シーンの初期設定　シーン上のオブジェクトの生成などを行う
+		virtual void Init() {};
 		//シーンが始まった時に呼ばれる
 		virtual void SceneStart() {};
 		//Update前に呼ばれる　ゲームオブジェクトに依存しないUpdate

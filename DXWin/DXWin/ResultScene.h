@@ -8,7 +8,7 @@ namespace MyDirectX
 	public:
 		ResultScene();
 		~ResultScene();
-		void Init();
+		virtual void Init() override;
 		virtual bool IsSceneEnd() override;
 	};
 

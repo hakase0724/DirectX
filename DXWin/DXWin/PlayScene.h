@@ -11,7 +11,7 @@ namespace MyDirectX
 	public:
 		PlayScene() {};
 		~PlayScene() {};
-		void Init();
+		virtual void Init() override;
 		virtual void SceneStart() override;
 		virtual void SceneUpdate() override;
 		virtual void SceneEnd() override;
