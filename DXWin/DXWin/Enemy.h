@@ -25,6 +25,7 @@ namespace MyDirectX
 		virtual void Update();
 		virtual void OnCollisionEnter() override;
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
+		virtual void SetHP(double hp) {};
 		virtual double GetHP() { return HitPoint; }
 	private:
 		//弾のオブジェクトプール

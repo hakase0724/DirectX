@@ -21,6 +21,7 @@ namespace MyDirectX
 		//XVˆ—
 		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
+		virtual void SetHP(double hp) {};
 		virtual double GetHP() { return HitPoint; }
 	private:
 		DXInput* mDXInput;

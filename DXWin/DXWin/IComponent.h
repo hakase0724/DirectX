@@ -30,6 +30,7 @@ namespace MyDirectX
 	class IHP
 	{
 	public:
+		virtual void SetHP(double hp) = 0;
 		virtual double GetHP() = 0;
 	};
 

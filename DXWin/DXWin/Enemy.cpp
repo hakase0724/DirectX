@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Enemy.h"
-#include "DXGameObjectManager.h"
 #include <math.h>
 
 using namespace MyDirectX;
@@ -37,11 +36,11 @@ void Enemy::Update()
 		mWaitCount = 0;
 		//’e–‹‚ð¶¬‚·‚é
 		mBarrage->CreateBarrage(mBulletPool, mPlayer, mGameObject);
-		if (mBarrage->IsBarrageEnd()) 
+		/*if (mBarrage->IsBarrageEnd()) 
 		{
 			ChangeBarrageName();
 			mBarrage = mBarrageManager->GetBarrage(mBarrageName);
-		}
+		}*/
 	}
 }
 

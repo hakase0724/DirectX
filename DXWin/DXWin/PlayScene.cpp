@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "Mover.h"
 #include "Enemy.h"
+#include "BossEnemy.h"
+#include "NormalEnemy.h"
 #include <sstream>
 
 using namespace DirectX;
@@ -12,6 +14,7 @@ using namespace MyDirectX;
 
 void PlayScene::Init()
 {
+	mBarrageManager = std::make_unique<BarrageManager>();
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
 	mBulletPool->CreatePreBullets(1000);
@@ -35,19 +38,62 @@ void PlayScene::Init()
 	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
 	mAwakeObject.push_back(mPlayer);
 
-	//敵
+	//第一陣
+	std::vector<DXGameObject*> firstWave;
+	//第二陣
+	std::vector<DXGameObject*> secondWave;
+
+	//雑魚敵
+	auto normalEnemy = Instantiate();
+	normalEnemy->SetTag(EnemyTag);
+	auto normalEnemyTex = normalEnemy->AddComponent<DXTexture>();
+	normalEnemyTex->SetTexture(_T("Texture/NormalEnemy.png"));
+	auto normalEnemyTexPos = normalEnemy->GetTransform();
+	normalEnemyTexPos->Position = XMFLOAT3(1.0f, 1.0f, 0.0f);
+	normalEnemyTexPos->Scale.x /= 2;
+	normalEnemyTexPos->Scale.y /= 2;
+	normalEnemyTexPos->Scale.z /= 2;
+	auto normaEenemyCom = normalEnemy->AddComponent<NormalEnemy>();
+	normaEenemyCom->SetBulletPool(mBulletPool.get());
+	normaEenemyCom->SetPlayer(mPlayer);
+	normaEenemyCom->SetBarrageManager(mBarrageManager.get());
+	auto normalEnemyCol = normalEnemy->AddComponent<SquareCollider2D>();
+	normalEnemyCol->SetOneSide(normalEnemyCol->GetOneSide() / 2.0f);
+	firstWave.push_back(normalEnemy);
+
+	//雑魚敵
+	auto normalEnemy2 = Instantiate();
+	normalEnemy2->SetTag(EnemyTag);
+	auto normalEnemyTex2 = normalEnemy2->AddComponent<DXTexture>();
+	normalEnemyTex2->SetTexture(_T("Texture/NormalEnemy.png"));
+	auto normalEnemyTexPos2 = normalEnemy2->GetTransform();
+	normalEnemyTexPos2->Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
+	normalEnemyTexPos2->Scale.x /= 2;
+	normalEnemyTexPos2->Scale.y /= 2;
+	normalEnemyTexPos2->Scale.z /= 2;
+	auto normaEenemyCom2 = normalEnemy2->AddComponent<NormalEnemy>();
+	normaEenemyCom2->SetBulletPool(mBulletPool.get());
+	normaEenemyCom2->SetPlayer(mPlayer);
+	normaEenemyCom2->SetBarrageManager(mBarrageManager.get());
+	auto normalEnemyCol2 = normalEnemy2->AddComponent<SquareCollider2D>();
+	normalEnemyCol2->SetOneSide(normalEnemyCol2->GetOneSide() / 2.0f);
+	firstWave.push_back(normalEnemy2);
+
+	//ボス敵
 	mEnemy = Instantiate();
 	mEnemy->SetTag(Tag::EnemyTag);
 	auto enemyTex = mEnemy->AddComponent<DXTexture>();
 	enemyTex->SetTexture(_T("Texture/Enemy.png"));
 	auto texPos = mEnemy->GetTransform();
 	texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
-	auto enemy = mEnemy->AddComponent<Enemy>();
+	auto enemy = mEnemy->AddComponent<BossEnemy>();
 	enemy->SetBulletPool(mBulletPool.get());
 	enemy->SetPlayer(mPlayer);
+	enemy->SetBarrageManager(mBarrageManager.get());
+	enemy->SetHP(1000);
 	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
-	mAwakeObject.push_back(mEnemy);
+	secondWave.push_back(mEnemy);
 	
 	//背景用画像1
 	auto back = Instantiate();
@@ -94,9 +140,19 @@ void PlayScene::Init()
 	blackTransform2->Scale.y = 3.0f;
 	mAwakeObject.push_back(black2);
 
-	mFrameCount = FPS_CHEACK_FRAME_COUNT;
+	mWaveCount = 0;
+	
+	//第一陣を初期リストに追加
+	for(auto game:firstWave)
+	{
+		mAwakeObject.push_back(game);
+	}
+	//それぞれのウェーブ配列を管理配列に追加
+	mEnemyWaveList.push_back(firstWave);
+	mEnemyWaveList.push_back(secondWave);
 
-	for(auto game:mAwakeObject)
+	mFrameCount = FPS_CHEACK_FRAME_COUNT;
+	for(auto &game: mGameObjectsList)
 	{
 		game->SetDefaultTransform();
 	}
@@ -104,6 +160,9 @@ void PlayScene::Init()
 
 void PlayScene::SceneStart()
 {
+	//ウェーブ情報リセット
+	mWaveCount = 0;
+	mIsLastWave = false;
 	for(auto &game:mGameObjectsList)
 	{
 		game->InitializeComponent();
@@ -135,8 +194,32 @@ void PlayScene::SceneUpdate()
 		//中身をクリアする
 		ws.clear();
 	}
+
 	//背景を動かす
 	mBackGround->UpdateBackGrounds();
+
+	/*ウェーブ処理*/
+	//次のウェーブへ行くか
+	bool isNext = true;
+	//現在ウェーブの敵が一体でも生存していたら次ウェーブへ行かない
+	for(auto game:mEnemyWaveList[mWaveCount])
+	{
+		if (game->GetEnable()) isNext = false;
+	}
+
+	if(isNext)
+	{
+		mWaveCount++;
+		//最終ウェーブか
+		if (mWaveCount == mEnemyWaveList.size() - 1) mIsLastWave = true;
+		//もしもウェーブ数が用意している数を超えたら処理しない
+		if (mWaveCount >= mEnemyWaveList.size()) return;
+		//次ウェーブの敵をアクティブ化
+		for (auto game : mEnemyWaveList[mWaveCount])
+		{
+			game->SetEnable(true);
+		}
+	}
 }
 
 void PlayScene::SceneEnd()
@@ -150,9 +233,9 @@ void PlayScene::SceneEnd()
 
 bool PlayScene::IsSceneEnd()
 {
-	if (!mPlayer->GetEnable())
-		return true;
-	if (!mEnemy->GetEnable())
-		return true;
+	//自機がしんだら
+	if (!mPlayer->GetEnable()) return true;
+	//最終ウェーブで指定敵がしんだら
+	if (mIsLastWave) if (!mEnemy->GetEnable()) return true;
 	return false;
 }

@@ -13,15 +13,12 @@ namespace MyDirectX
 		BarrageBase() {};
 		~BarrageBase() {};
 		BarrageName GetName() const { return mName; }
-		int GetBulletNum() const { return mBulletNum; }
 		void Init() { mCount = 0; }
 		//”­Ë‘Ò‹@’†‚©
 		bool IsCoolTime(int time) { return time % mCoolTime == 0; }
-		//’e–‹‚ª‘Å‚¿I‚í‚Á‚½‚©
-		virtual bool IsBarrageEnd() = 0;
 		//’e‚Ì‹O“¹‚ğŒvZ‚·‚é
-		virtual void CreateBarrage(BulletManager* manager,DXGameObject* player,DXGameObject* enemy) = 0;
 		virtual void CreateBarrage(BulletPool* pool, DXGameObject* player, DXGameObject* enemy) = 0;
+		int GetShotNum() const { return mShotNum; }
 	protected:
 		//’e–‹‚Ì–¼‘O‚ğ¦‚·enum
 		BarrageName mName;
@@ -39,6 +36,8 @@ namespace MyDirectX
 		void Normalization(float &x, float &y);
 		//ŒÄ‚Î‚ê‚½‰ñ”
 		int mCount;
+		//’e”
+		int mShotNum;
 	};
 }
 

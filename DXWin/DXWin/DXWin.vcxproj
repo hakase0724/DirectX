@@ -154,6 +154,7 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="BarrageBase.h" />
     <ClInclude Include="BarrageManager.h" />
+    <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletManager.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="DXText.h" />
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="FPSCountor.h" />
     <ClInclude Include="HPView.h" />
@@ -195,6 +197,7 @@
     <ClInclude Include="MyEnums.h" />
     <ClInclude Include="MyStructs.h" />
     <ClInclude Include="NonLightingShader.h" />
+    <ClInclude Include="NormalEnemy.h" />
     <ClInclude Include="NormalShader.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
@@ -227,6 +230,7 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="BarrageBase.cpp" />
     <ClCompile Include="BarrageManager.cpp" />
+    <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletManager.cpp" />
@@ -252,6 +256,7 @@
     <ClCompile Include="DXText.cpp" />
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="HPView.cpp" />
@@ -261,6 +266,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="NonLightingShader.cpp" />
+    <ClCompile Include="NormalEnemy.cpp" />
     <ClCompile Include="NormalShader.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
