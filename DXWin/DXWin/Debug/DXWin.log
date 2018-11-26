@@ -1,4 +1,1 @@
-﻿  PlayScene.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\hakas\source\repos\directx\dxwin\dxwin\playscene.cpp(207): warning C4018: '>=': signed と unsigned の数値を比較しようとしました。
-  DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe
+﻿  DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe

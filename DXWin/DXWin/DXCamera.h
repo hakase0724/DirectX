@@ -1,13 +1,14 @@
 #pragma once
 #include <DirectXMath.h>
 #include "MyStructs.h"
+#include "AlignedAllocationPolicy.h"
 namespace MyDirectX
 {
-	class DXCamera
+	class DXCamera:public AlignedAllocationPolicy<16>
 	{
 	public:
 		DXCamera(CAMERA_PARAM *param);
-		~DXCamera();
+		~DXCamera() {};
 		DirectX::XMMATRIX GetDXCameraParam(TRANSFORM* transform);
 		CAMERA_PARAM GetCameraParam() const { return mParam;}
 		DirectX::XMMATRIX GetWorld(TRANSFORM* transform);
@@ -17,7 +18,7 @@ namespace MyDirectX
 		void SetPos(float x = 0.0f, float y = 0.0f,float z = 0.0f);
 	private:
 		CAMERA_PARAM mParam;	
-		DirectX::XMMATRIX* mWorldToScreenPointMatrix;
+		DirectX::XMMATRIX mMatrix;
 	};
 }
 

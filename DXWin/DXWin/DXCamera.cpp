@@ -12,12 +12,7 @@ DXCamera::DXCamera(CAMERA_PARAM * param)
 	XMVECTOR two = XMVectorSet(0.0f, -cHeight / 2.0f, 0.0f, 0.0f);
 	XMVECTOR three = XMVectorSet(cWidth / 2.0f, 0.0f, 1.0f, 0.0f);
 	XMVECTOR four = XMVectorSet(cWidth / 2.0f, cHeight / 2.0f, 0.0f, 1.0f);
-	mWorldToScreenPointMatrix = new XMMATRIX(one,two,three,four);
-}
-
-DXCamera::~DXCamera()
-{
-	delete mWorldToScreenPointMatrix;
+	mMatrix = XMMATRIX(one, two, three, four);
 }
 
 XMMATRIX DXCamera::GetDXCameraParam(TRANSFORM* transform)
@@ -59,7 +54,7 @@ XMMATRIX DXCamera::GetWorld(TRANSFORM* transform)
 XMVECTOR DXCamera::WorldToScreenPoint(TRANSFORM* transform)
 {
 	auto vector = XMVectorSet(transform->Position.x, transform->Position.y, transform->Position.z, 1.0f);
-	auto screen = XMVector3Transform(vector, *mWorldToScreenPointMatrix);
+	auto screen = XMVector3Transform(vector, mMatrix);
 	return screen;
 }
 

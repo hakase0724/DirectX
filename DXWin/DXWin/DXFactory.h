@@ -13,11 +13,13 @@ namespace MyDirectX
 	public:
 		DXFactory();
 		~DXFactory() {};
+		//メッシュを作る
 		void CreateMesh(
 			MeshInfo* info,
 			ID3D11Device* device,
 			ID3D11Buffer ** vertexBuffer,
 			ID3D11Buffer ** indexBuffer);
+		//シェーダーを作る
 		void CreateShader(ShaderInfo * info, 
 			ID3D11Device * device,
 			ID3D11VertexShader ** vertex,

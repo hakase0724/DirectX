@@ -9,11 +9,12 @@
 #include "DXRenderDataPool.h"
 #include "CommonValues.h"
 #include <dxgidebug.h>
+#include "AlignedAllocationPolicy.h"
 
 
 namespace MyDirectX
 {
-	class DXManager
+	class DXManager:public AlignedAllocationPolicy<16>
 	{
 	public:
 		DXManager(HWND hwnd);

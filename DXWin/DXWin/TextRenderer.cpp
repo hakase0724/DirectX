@@ -37,18 +37,21 @@ void TextRenderer::Initialize(DXGameObject * gameObject)
 	samDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	mGameObject->GetDXManager()->GetDevice()->CreateSamplerState(&samDesc, &mSampler);
-
 	CreateMesh<TextureMesh>();
 	CreateShader<TextureShader>();
 }
 
 void TextRenderer::CreateText(const wchar_t * text,float xOffset, float yOffset, WCHAR * fontName)
 {
+	//constを外す
 	wchar_t* w = const_cast<wchar_t*>(text);
+	//オブジェクトプールへアクセス
 	auto pool = mDXManager->GetDXRenderDataPool();
+	//フォントテクスチャを取得
 	auto data = pool->GetFontTexture(w, fontName);
 	mTexture = data->texture;
 	mShaderResorceView = data->shaderView;
+	//文字を原点からずらす
 	mTransform = *mGameObject->GetTransform();
 	mTransform.Position.x += xOffset;
 	mTransform.Position.y += yOffset;

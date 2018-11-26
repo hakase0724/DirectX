@@ -6,8 +6,8 @@ using namespace MyDirectX;
 TextureShader::TextureShader()
 {
 	shader = new SHADER_DATA();
-	shader->VertexName = L"TextureShader.hlsl";
-	shader->PixelName = L"TextureShader.hlsl";
+	shader->VertexName = L"Shader/TextureShader.hlsl";
+	shader->PixelName = L"Shader/TextureShader.hlsl";
 	shader->VertexEntry = "VS";
 	shader->PixelEntry = "PS";
 	shader->VertexVersion = "vs_5_0";

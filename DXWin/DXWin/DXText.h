@@ -11,7 +11,6 @@ namespace MyDirectX
 		~DXText() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
 		void UpdateText(const wchar_t* texts);
-		void SetText(const wchar_t* texts);
 	private:
 		std::vector<TextRenderer*> mRenderers;
 	};

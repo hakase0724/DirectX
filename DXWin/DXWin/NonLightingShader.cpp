@@ -6,8 +6,8 @@ using namespace MyDirectX;
 NonLightingShader::NonLightingShader()
 {
 	shader = new SHADER_DATA();
-	shader->VertexName = L"NonLightingShader.hlsl";
-	shader->PixelName = L"NonLightingShader.hlsl";
+	shader->VertexName = L"Shader/NonLightingShader.hlsl";
+	shader->PixelName = L"Shader/NonLightingShader.hlsl";
 	shader->VertexEntry = "VS";
 	shader->PixelEntry = "PS";
 	shader->VertexVersion = "vs_5_0";

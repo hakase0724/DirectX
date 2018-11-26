@@ -7,6 +7,7 @@
 #include "DXManager.h"
 #include "IComponent.h"
 #include "MyEnums.h"
+#include "AlignedAllocationPolicy.h"
 
 namespace MyDirectX
 {
@@ -14,12 +15,10 @@ namespace MyDirectX
 	class Scene;
 	//このプロジェクトの核となるクラス
 	//このクラスにComponentクラスを継承したクラスを追加していく
-	class DXGameObject
+	class DXGameObject :public AlignedAllocationPolicy<16>
 	{
 	public:
 		DXGameObject(DXManager* dxManager);
-		DXGameObject(DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
-		DXGameObject(TRANSFORM* transform, DXManager* dxManager, DXGameObjectManager* dxGameObjectManager);
 		virtual ~DXGameObject();
 		//自身のtransform情報を公開
 		TRANSFORM* GetTransform() const { return mTransform.get(); }
@@ -58,8 +57,10 @@ namespace MyDirectX
 		virtual void OnCollisionExit();
 		virtual void OnEnable();
 		virtual void OnDisable();
+		//初期位置を設定する
 		void SetDefaultTransform() { mDefaultTransform = *mTransform; }
 		void SetDefaultTransform(TRANSFORM* transform) { mDefaultTransform = *transform; }
+		//初期位置に移動する
 		void ResetTransform() 
 		{
 			mTransform->Position = mDefaultTransform.Position;
@@ -104,18 +105,15 @@ namespace MyDirectX
 		//シーン情報
 		Scene* GetScene() const { return mScene; }
 		void SetScene(Scene* scene) { mScene = scene; }
-		DXGameObjectManager* GetDXGameObjectManager() const { return mDXGameObjectManager; }
 	protected:
 		//自身の座標回転スケール
 		std::unique_ptr<TRANSFORM> mTransform;
-		//TRANSFORM* mTransform;
 		//DirectXのリソース管理クラス
 		DXManager* mDXManager;
 		//DirectInput管理クラス
 		DXInput* mDXInput;
 		//カメラ情報
 		DXCamera* mDXCamera;
-		DXGameObjectManager* mDXGameObjectManager;
 		//自身が持つコンポーネントのリスト
 		std::vector<Component*> mComponentsList;
 		std::string mName;

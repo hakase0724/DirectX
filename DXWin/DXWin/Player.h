@@ -22,7 +22,7 @@ namespace MyDirectX
 		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
 		virtual void SetHP(double hp) {};
-		virtual double GetHP() { return HitPoint; }
+		virtual double GetHP() { return mHitPoint; }
 	private:
 		DXInput* mDXInput;
 		BulletPool* mBulletPool;
@@ -33,7 +33,7 @@ namespace MyDirectX
 		//’e‚ğ”­Ë‚·‚éƒtƒŒ[ƒ€Š´Šo
 		const int mCoolCount = 7;
 		//‘Ì—Í
-		double HitPoint;
+		double mHitPoint;
 		
 	};
 }

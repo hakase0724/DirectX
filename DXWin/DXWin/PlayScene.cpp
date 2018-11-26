@@ -4,7 +4,6 @@
 #include "DXTexture.h"
 #include "Player.h"
 #include "Mover.h"
-#include "Enemy.h"
 #include "BossEnemy.h"
 #include "NormalEnemy.h"
 #include <sstream>
@@ -14,17 +13,20 @@ using namespace MyDirectX;
 
 void PlayScene::Init()
 {
+	//弾幕管理クラス
 	mBarrageManager = std::make_unique<BarrageManager>();
+	//弾のオブジェクトプール
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
 	mBulletPool->CreatePreBullets(1000);
 
-	auto play = Instantiate();
-	mFPSText = play->AddComponent<DXText>();
-	auto transform = play->GetTransform();
+	//FPS表示テキスト
+	auto fps = Instantiate();
+	mFPSText = fps->AddComponent<DXText>();
+	auto transform = fps->GetTransform();
 	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
-	mAwakeObject.push_back(play);
+	mAwakeObject.push_back(fps);
 
 	//自機
 	mPlayer = Instantiate();
@@ -163,14 +165,17 @@ void PlayScene::SceneStart()
 	//ウェーブ情報リセット
 	mWaveCount = 0;
 	mIsLastWave = false;
+	//全てのオブジェクトの初期化
 	for(auto &game:mGameObjectsList)
 	{
 		game->InitializeComponent();
 	}
+	//最初からいるオブジェクトのアクティブ化
 	for(auto game:mAwakeObject)
 	{
 		game->SetEnable(true);
 	}
+	//曲再生
 	mDXRescourceManager->GetDXSound()->Play();
 }
 
@@ -213,7 +218,7 @@ void PlayScene::SceneUpdate()
 		//最終ウェーブか
 		if (mWaveCount == mEnemyWaveList.size() - 1) mIsLastWave = true;
 		//もしもウェーブ数が用意している数を超えたら処理しない
-		if (mWaveCount >= mEnemyWaveList.size()) return;
+		if (mWaveCount >= (int)mEnemyWaveList.size()) return;
 		//次ウェーブの敵をアクティブ化
 		for (auto game : mEnemyWaveList[mWaveCount])
 		{
@@ -224,10 +229,12 @@ void PlayScene::SceneUpdate()
 
 void PlayScene::SceneEnd()
 {
+	//全てのオブジェクトのアクティブを切る
 	for (auto &game : mGameObjectsList)
 	{
 		game->SetEnable(false);
 	}
+	//曲を止める
 	mDXRescourceManager->GetDXSound()->Stop();
 }
 

@@ -25,12 +25,21 @@ void ShaderFactory::CreateShader(ShaderInfo * info,
 	ID3D11PixelShader ** pixel,
 	ID3D11InputLayout ** inputLayout)
 {
+	HRESULT hr;
 	//シェーダの設定
 	ID3DBlob* compileVS = NULL;
 	ID3DBlob* compilePS = NULL;
 	//シェーダーのコンパイル
-	D3DCompileFromFile(info->shader->PixelName, nullptr, nullptr, info->shader->PixelEntry, info->shader->PixelVersion, 0, 0, &compilePS, NULL);
-	D3DCompileFromFile(info->shader->VertexName, nullptr, nullptr, info->shader->VertexEntry, info->shader->VertexVersion, 0, 0, &compileVS, NULL);
+	hr = D3DCompileFromFile(info->shader->PixelName, nullptr, nullptr, info->shader->PixelEntry, info->shader->PixelVersion, 0, 0, &compilePS, NULL);
+	if(FAILED(hr))
+	{
+		return;
+	}
+	hr = D3DCompileFromFile(info->shader->VertexName, nullptr, nullptr, info->shader->VertexEntry, info->shader->VertexVersion, 0, 0, &compileVS, NULL);
+	if (FAILED(hr))
+	{
+		return;
+	}
 	//デバイスにコンパイルしたシェーダーをあてがう	
 	device->CreateVertexShader(compileVS->GetBufferPointer(), compileVS->GetBufferSize(), NULL, vertex);
 	device->CreatePixelShader(compilePS->GetBufferPointer(), compilePS->GetBufferSize(), NULL, pixel);

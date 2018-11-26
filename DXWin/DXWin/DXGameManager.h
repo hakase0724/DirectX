@@ -12,7 +12,7 @@ namespace MyDirectX
 	{
 	public:
 		DXGameManager(HWND hwnd);
-		~DXGameManager();
+		~DXGameManager() {};
 		//ゲームループを実行
 		//終了時にfalseを返す
 		bool Update();

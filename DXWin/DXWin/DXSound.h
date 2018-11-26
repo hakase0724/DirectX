@@ -9,7 +9,7 @@ namespace MyDirectX
 	{
 	public:
 		DXSound(HWND hwnd);
-		~DXSound();
+		~DXSound() {};
 		void Play();
 		void Stop();
 	private:

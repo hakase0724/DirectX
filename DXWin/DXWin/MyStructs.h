@@ -6,6 +6,7 @@
 #include "Primitive2D.h"
 #include "Primitive3D.h"
 #include "MyEnums.h"
+#include "AlignedAllocationPolicy.h"
 namespace MyDirectX
 {
 	class DXGameObject;
@@ -24,7 +25,7 @@ namespace MyDirectX
 	};
 
 	//定数バッファ
-	struct CONSTANT_BUFFER 
+	struct CONSTANT_BUFFER:public AlignedAllocationPolicy<16> 
 	{
 		DirectX::XMMATRIX mW;
 		DirectX::XMMATRIX mWVP;
@@ -40,7 +41,7 @@ namespace MyDirectX
 	};
 
 	//カメラ情報
-	struct CAMERA_PARAM
+	struct CAMERA_PARAM:public AlignedAllocationPolicy<16>
 	{
 		DirectX::XMVECTOR mPos;
 		DirectX::XMVECTOR mLookup;

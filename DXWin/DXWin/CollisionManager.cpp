@@ -5,6 +5,7 @@ using namespace MyDirectX;
 
 void CollisionManager::SetGameObjects(std::vector<DXGameObject*> gameObjects)
 {
+	//各コライダー配列をクリア
 	mShooterColliderList.clear();
 	mBulletColliderList.clear();
 	for(auto game:gameObjects)

@@ -4,11 +4,6 @@
 using namespace DirectX;
 using namespace MyDirectX;
 
-MeshRenderer::~MeshRenderer()
-{
-	
-}
-
 void MeshRenderer::SetDefaultColor(float r, float g, float b, float a)
 {
 	mDefaultColor.r = r;

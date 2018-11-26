@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "Player.h"
-#include "DXGameObjectManager.h"
 
 using namespace MyDirectX;
 
@@ -15,14 +14,14 @@ void Player::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mGameObject->SetDefaultTransform(transform);
 	mWaitCount = mCoolCount;
-	HitPoint = 4.0;
+	mHitPoint = 4.0;
 }
 
 void Player::Initialize()
 {
 	mGameObject->ResetTransform();
 	mWaitCount = mCoolCount;
-	HitPoint = 4.0f;
+	mHitPoint = 4.0f;
 }
 
 void Player::Update()
@@ -50,15 +49,16 @@ void Player::Update()
 	else if(!mDXInput->GetInputState(DIK_Z))
 	{
 		//発射しなかった場合は発射可能状態にしておく
+		//-1しているのは次の判定では+1して判定するから
 		mWaitCount = mCoolCount - 1;
 	}
 }
 
 void Player::OnCollisionEnter()
 {
-	HitPoint -= 1.0;
+	mHitPoint -= 1.0;
 	//体力がなくなったら自身のアクティブを切る
-	if(HitPoint <= 0)
+	if(mHitPoint <= 0)
 	{
 		mGameObject->SetEnable(false);
 	}

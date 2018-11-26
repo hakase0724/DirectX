@@ -16,6 +16,7 @@ DXResourceManager::DXResourceManager(HWND hwnd)
 DXGameObject * DXResourceManager::Instantiate()
 {
 	DXGameObject* game = new DXGameObject(mDXManager.get());
+	//各オブジェクトにIDを降る
 	game->SetID(mGameObjectCount);
 	mGameObjectCount++;
 	return game;

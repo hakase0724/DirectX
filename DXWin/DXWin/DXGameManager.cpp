@@ -36,11 +36,6 @@ DXGameManager::DXGameManager(HWND hwnd)
 	mDXExcuter->SetScene(mSceneList[mSceneIndex].get());
 }
 
-
-DXGameManager::~DXGameManager()
-{
-}
-
 bool DXGameManager::Update()
 {
 	//–ˆƒtƒŒ[ƒ€s‚¤ˆ—‚ğ‘‚­

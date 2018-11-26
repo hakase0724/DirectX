@@ -15,6 +15,7 @@ namespace MyDirectX
 		void SetDXResourceManager(DXResourceManager* manager) { mDXRescourceManager = manager; }
 		//ゲームループを実行する
 		void Excute();
+		//シーンが終了しているか
 		bool IsSceneEnd() const { return mScene->IsSceneEnd(); }
 	private:
 		//登録シーン

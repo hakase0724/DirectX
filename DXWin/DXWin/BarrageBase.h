@@ -4,7 +4,6 @@
 #include <tuple>
 namespace MyDirectX
 {
-	class BulletManager;
 	class BulletPool;
 	class DXGameObject;
 	class BarrageBase

@@ -92,11 +92,12 @@
       <ConformanceMode>true</ConformanceMode>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <AdditionalIncludeDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\DDSTextureLoader;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\WICTextureLoader</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\Debug</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -123,12 +124,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\DDSTextureLoader;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\WICTextureLoader</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\Release</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,14 +153,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AlignedAllocationPolicy.h" />
     <ClInclude Include="AllDirectionSync.h" />
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="BarrageBase.h" />
     <ClInclude Include="BarrageManager.h" />
     <ClInclude Include="BossEnemy.h" />
-    <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="Bullet.h" />
-    <ClInclude Include="BulletManager.h" />
     <ClInclude Include="BulletPool.h" />
     <ClInclude Include="Collider.h" />
     <ClInclude Include="Collider2D.h" />
@@ -172,7 +174,6 @@
     <ClInclude Include="DXFactory.h" />
     <ClInclude Include="DXGameManager.h" />
     <ClInclude Include="DXGameObject.h" />
-    <ClInclude Include="DXGameObjectManager.h" />
     <ClInclude Include="DXInput.h" />
     <ClInclude Include="DXManager.h" />
     <ClInclude Include="DXRenderDataPool.h" />
@@ -182,11 +183,9 @@
     <ClInclude Include="DXSquare.h" />
     <ClInclude Include="DXText.h" />
     <ClInclude Include="DXWin.h" />
-    <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="EnemyManager.h" />
     <ClInclude Include="FPSCountor.h" />
-    <ClInclude Include="HPView.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="LightingShader.h" />
     <ClInclude Include="MeshAndShader.h" />
@@ -205,7 +204,6 @@
     <ClInclude Include="Primitive3D.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResultScene.h" />
-    <ClInclude Include="Roller.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
@@ -231,12 +229,8 @@
     <ClCompile Include="BarrageBase.cpp" />
     <ClCompile Include="BarrageManager.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
-    <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="Bullet.cpp" />
-    <ClCompile Include="BulletManager.cpp" />
     <ClCompile Include="BulletPool.cpp" />
-    <ClCompile Include="Collider.cpp" />
-    <ClCompile Include="Collider2D.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="CubeMesh.cpp" />
     <ClCompile Include="DXCamera.cpp" />
@@ -245,7 +239,6 @@
     <ClCompile Include="DXFactory.cpp" />
     <ClCompile Include="DXGameManager.cpp" />
     <ClCompile Include="DXGameObject.cpp" />
-    <ClCompile Include="DXGameObjectManager.cpp" />
     <ClCompile Include="DXInput.cpp" />
     <ClCompile Include="DXManager.cpp" />
     <ClCompile Include="DXRenderDataPool.cpp" />
@@ -255,14 +248,11 @@
     <ClCompile Include="DXSquare.cpp" />
     <ClCompile Include="DXText.cpp" />
     <ClCompile Include="DXWin.cpp" />
-    <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="EnemyManager.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
-    <ClCompile Include="HPView.cpp" />
     <ClCompile Include="LightingShader.cpp" />
     <ClCompile Include="MeshFactory.cpp" />
-    <ClCompile Include="MeshInfo.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="NonLightingShader.cpp" />
@@ -271,10 +261,8 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="ResultScene.cpp" />
-    <ClCompile Include="Roller.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
-    <ClCompile Include="ShaderInfo.cpp" />
     <ClCompile Include="SixWayRazerBarrage.cpp" />
     <ClCompile Include="SphereCollider.cpp" />
     <ClCompile Include="SphereMesh.cpp" />

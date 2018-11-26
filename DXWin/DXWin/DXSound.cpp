@@ -40,14 +40,8 @@ DXSound::DXSound(HWND hwnd)
 		memcpy(lpvWrite, pWaveData, dwLength);
 		mDsBuffer->Unlock(lpvWrite, dwLength, NULL, 0);
 	}
-	delete[] pWaveData; // 元音はもういらない
-}
-
-
-DXSound::~DXSound()
-{
-	/*if (mDirectSound)mDirectSound->Release();
-	if (mDsBuffer)mDsBuffer->Release();*/
+	// 元音はもういらない
+	delete[] pWaveData;
 }
 
 void DXSound::Play()
@@ -62,22 +56,34 @@ void DXSound::Stop()
 
 bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** ppData, DWORD & dataSize)
 {
-	if (filepath == 0) return false;
+	if (filepath == 0) 
+	{
+		auto text = _T("Waveファイルパスがない") + *filepath;
+		MessageBox(NULL, text, _T("Init"), MB_OK);
+		return false;
+	} 
 
 	HMMIO hMmio = NULL;
 	MMIOINFO mmioInfo;
 	// Waveファイルオープン
 	memset(&mmioInfo, 0, sizeof(MMIOINFO));
 	hMmio = mmioOpen(filepath, &mmioInfo, MMIO_READ);
-	if (!hMmio)
-		return false; // ファイルオープン失敗
+	if (!hMmio) 
+	{
+		// ファイルオープン失敗
+		MessageBox(NULL, _T("Waveファイルオープン失敗"), _T("Init"), MB_OK);
+		return false; 
+	}
+		
 
 // RIFFチャンク検索
 	MMRESULT mmRes;
 	MMCKINFO riffChunk;
 	riffChunk.fccType = mmioFOURCC('W', 'A', 'V', 'E');
 	mmRes = mmioDescend(hMmio, &riffChunk, NULL, MMIO_FINDRIFF);
-	if (mmRes != MMSYSERR_NOERROR) {
+	if (mmRes != MMSYSERR_NOERROR) 
+	{
+		MessageBox(NULL, _T("RIFFチャンク検索失敗"), _T("Init"), MB_OK);
 		mmioClose(hMmio, 0);
 		return false;
 	}
@@ -86,13 +92,17 @@ bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** pp
 	MMCKINFO formatChunk;
 	formatChunk.ckid = mmioFOURCC('f', 'm', 't', ' ');
 	mmRes = mmioDescend(hMmio, &formatChunk, &riffChunk, MMIO_FINDCHUNK);
-	if (mmRes != MMSYSERR_NOERROR) {
+	if (mmRes != MMSYSERR_NOERROR) 
+	{
+		MessageBox(NULL, _T("フォーマットチャンク検索失敗"), _T("Init"), MB_OK);
 		mmioClose(hMmio, 0);
 		return false;
 	}
 	DWORD fmsize = formatChunk.cksize;
 	DWORD size = mmioRead(hMmio, (HPSTR)&waveFormatEx, fmsize);
-	if (size != fmsize) {
+	if (size != fmsize) 
+	{
+		MessageBox(NULL, _T("サイズ不一致"), _T("Init"), MB_OK);
 		mmioClose(hMmio, 0);
 		return false;
 	}
@@ -103,13 +113,17 @@ bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** pp
 	MMCKINFO dataChunk;
 	dataChunk.ckid = mmioFOURCC('d', 'a', 't', 'a');
 	mmRes = mmioDescend(hMmio, &dataChunk, &riffChunk, MMIO_FINDCHUNK);
-	if (mmRes != MMSYSERR_NOERROR) {
+	if (mmRes != MMSYSERR_NOERROR) 
+	{
+		MessageBox(NULL, _T("データチャンク検索失敗"), _T("Init"), MB_OK);
 		mmioClose(hMmio, 0);
 		return false;
 	}
 	*ppData = new char[dataChunk.cksize];
 	size = mmioRead(hMmio, (HPSTR)*ppData, dataChunk.cksize);
-	if (size != dataChunk.cksize) {
+	if (size != dataChunk.cksize) 
+	{
+		MessageBox(NULL, _T("サイズ不一致"), _T("Init"), MB_OK);
 		delete[] * ppData;
 		return false;
 	}
@@ -117,6 +131,5 @@ bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** pp
 
 	// ハンドルクローズ
 	mmioClose(hMmio, 0);
-
 	return true;
 }

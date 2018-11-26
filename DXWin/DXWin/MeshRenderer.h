@@ -9,11 +9,11 @@
 
 namespace MyDirectX
 {
-	class MeshRenderer :public Component
+	class MeshRenderer :public Component,public AlignedAllocationPolicy<16>
 	{
 	public:
 		MeshRenderer() {};
-		~MeshRenderer();
+		~MeshRenderer() {};
 		//パイプラインの解釈の仕方を変更する
 		void SetTopology(D3D11_PRIMITIVE_TOPOLOGY topology) { mTopology = topology; }
 		void SetDefaultColor(float r, float g, float b, float a);

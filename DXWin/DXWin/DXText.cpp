@@ -13,8 +13,11 @@ void DXText::Initialize(DXGameObject * gameObject)
 
 void DXText::UpdateText(const wchar_t * texts)
 {
-	auto size = wcslen(texts);
+	//表示文字数
+	auto size = (int)wcslen(texts);
+	//各文字の間隔
 	auto offset = mGameObject->GetTransform()->Scale.x;
+	//必要なレンダラー数計算
 	auto addRendererNum = (int)(size - mRenderers.size());
 	//出そうとする文字数が自分の持っている表示コンポーネントの数より多ければ
 	if(addRendererNum > 0)
@@ -38,17 +41,5 @@ void DXText::UpdateText(const wchar_t * texts)
 		{
 			mRenderers[i]->CreateText(L" ", (float)i * offset);
 		}
-	}
-}
-
-void DXText::SetText(const wchar_t* texts)
-{
-	auto size = wcslen(texts);
-	auto offset = mGameObject->GetTransform()->Scale.x;
-	for (int i = 0; i < size; i++)
-	{
-		auto renderer = mGameObject->AddComponent<TextRenderer>();
-		renderer->CreateText(&texts[i], (float)i * offset);
-		mRenderers.push_back(renderer);
 	}
 }

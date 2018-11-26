@@ -9,6 +9,12 @@ namespace MyDirectX
 		TextRenderer();
 		~TextRenderer();
 		virtual void Initialize(DXGameObject* gameObject) override;
+		/*
+		text = 表示文字
+		xOffset = x方向のオフセット
+		yOffset = y方向のオフセット
+		fontName = フォント名　デフォルトMS P明朝
+		*/
 		void CreateText
 		(
 			const wchar_t* text,

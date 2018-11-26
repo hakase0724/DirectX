@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "DXGameObject.h"
-#include "DXGameObjectManager.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -14,32 +13,6 @@ DXGameObject::DXGameObject(DXManager* dxManager)
 	mDXManager = dxManager;
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
-	mName = "GameObject";
-}
-
-DXGameObject::DXGameObject(DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
-{
-	mTransform = std::make_unique<TRANSFORM>();
-	mTransform->Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform->Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	mTransform->Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	mDXManager = dxManager;
-	mDXInput = mDXManager->GetDXInput();
-	mDXCamera = mDXManager->GetDXCamera();
-	mDXGameObjectManager = dxGameObjectManager;
-	mName = "GameObject";
-}
-
-DXGameObject::DXGameObject(TRANSFORM * transform, DXManager * dxManager, DXGameObjectManager * dxGameObjectManager)
-{
-	mTransform = std::make_unique<TRANSFORM>();
-	mTransform->Position = transform->Position;
-	mTransform->Rotation = transform->Rotation;
-	mTransform->Scale = transform->Scale;
-	mDXManager = dxManager;
-	mDXInput = mDXManager->GetDXInput();
-	mDXCamera = mDXManager->GetDXCamera();
-	mDXGameObjectManager = dxGameObjectManager;
 	mName = "GameObject";
 }
 
