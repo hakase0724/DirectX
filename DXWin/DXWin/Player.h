@@ -21,8 +21,9 @@ namespace MyDirectX
 		//XVˆ—
 		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
-		virtual void SetHP(double hp) {};
-		virtual double GetHP() { return mHitPoint; }
+		virtual void SetHP(double hp) { mDefaultHitPoint = hp; }
+		virtual double GetMaxHP() override { return mDefaultHitPoint; }
+		virtual double GetHP() override { return mHitPoint; }
 	private:
 		DXInput* mDXInput;
 		BulletPool* mBulletPool;
@@ -34,6 +35,7 @@ namespace MyDirectX
 		const int mCoolCount = 7;
 		//‘Ì—Í
 		double mHitPoint;
+		double mDefaultHitPoint = 1.0;
 		
 	};
 }

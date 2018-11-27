@@ -32,6 +32,7 @@ namespace MyDirectX
 	public:
 		virtual void SetHP(double hp) = 0;
 		virtual double GetHP() = 0;
+		virtual double GetMaxHP() = 0;
 	};
 
 	//コンポーネントクラス

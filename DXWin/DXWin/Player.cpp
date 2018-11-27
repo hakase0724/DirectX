@@ -14,14 +14,14 @@ void Player::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mGameObject->SetDefaultTransform(transform);
 	mWaitCount = mCoolCount;
-	mHitPoint = 4.0;
+	mHitPoint = 1.0;
 }
 
 void Player::Initialize()
 {
 	mGameObject->ResetTransform();
 	mWaitCount = mCoolCount;
-	mHitPoint = 4.0f;
+	mHitPoint = mDefaultHitPoint;
 }
 
 void Player::Update()

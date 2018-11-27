@@ -26,6 +26,7 @@ namespace MyDirectX
 		void SetBarrageManager(BarrageManager* manager) { mBarrageManager = manager; }
 		//体力のインターフェース
 		virtual void SetHP(double hp) override { mDefaultHitPoint = hp; }
+		virtual double GetMaxHP() override { return mDefaultHitPoint; }
 		virtual double GetHP() override { return mHitPoint; }
 	protected:
 		//弾のオブジェクトプール
@@ -35,9 +36,9 @@ namespace MyDirectX
 		//弾を発射するフレーム間隔
 		int mCoolCount = 60;
 		//体力
-		double mHitPoint = 1;
+		double mHitPoint = 1.0;
 		//初期体力
-		double mDefaultHitPoint;
+		double mDefaultHitPoint = 1.0;
 		//プレイヤー
 		DXGameObject* mPlayer;
 		//今セットされている弾幕

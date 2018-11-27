@@ -222,6 +222,12 @@
     <ClInclude Include="AlignedAllocationPolicy.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="TestScene.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="HPGauge.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -383,6 +389,12 @@
     <ClCompile Include="NormalEnemy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="TestScene.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="HPGauge.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXWin.rc">
@@ -398,9 +410,9 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <None Include="shader.hlsl" />
-    <None Include="shader2.hlsl" />
-    <None Include="NonLightingShader.hlsl" />
-    <None Include="TextureShader.hlsl" />
+    <FxCompile Include="Shader\NonLightingShader.hlsl" />
+    <FxCompile Include="Shader\shader.hlsl" />
+    <FxCompile Include="Shader\shader2.hlsl" />
+    <FxCompile Include="Shader\TextureShader.hlsl" />
   </ItemGroup>
 </Project>

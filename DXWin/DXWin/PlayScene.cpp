@@ -6,6 +6,7 @@
 #include "Mover.h"
 #include "BossEnemy.h"
 #include "NormalEnemy.h"
+#include "HPGauge.h"
 #include <sstream>
 
 using namespace DirectX;
@@ -96,6 +97,20 @@ void PlayScene::Init()
 	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
 	secondWave.push_back(mEnemy);
+
+	auto gauge = Instantiate();
+	auto renderer = gauge->AddComponent<TextureRenderer>();
+	auto gaugeTex = gauge->AddComponent<DXTexture>();
+	auto gaugeCom =  gauge->AddComponent<HPGauge>();
+	gaugeCom->SetHPViewObject(enemy);
+	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.0f);
+	gaugeTex->SetTexture(_T("Texture/Square.png"));
+	auto gaugeTransform = gauge->GetTransform();
+	gaugeTransform->Position.y = 1.3f;
+	gaugeTransform->Position.z = -0.1f;
+	gaugeTransform->Scale.y = 0.1f;
+	gaugeTransform->Scale.x = 3.0f;
+	secondWave.push_back(gauge);
 	
 	//”wŒi—p‰æ‘œ1
 	auto back = Instantiate();

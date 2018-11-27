@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "TitleScene.h"
 #include "DXText.h"
+#include "DXTexture.h"
 
 using namespace DirectX;
 using namespace MyDirectX;

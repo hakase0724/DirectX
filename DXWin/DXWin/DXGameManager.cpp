@@ -11,6 +11,11 @@ DXGameManager::DXGameManager(HWND hwnd)
 	//ゲームループを実行する
 	mDXExcuter = std::make_unique<DXExcuter>();
 	mDXExcuter->SetDXResourceManager(mDXResourceManager.get());
+	/*auto test = new TestScene();
+	test->SetDXResourceManager(mDXResourceManager.get());
+	test->Init();
+	scene.reset(test);
+	mSceneList.push_back(std::move(scene));*/
 	//タイトルシーン生成
 	auto title = new TitleScene();
 	title->SetDXResourceManager(mDXResourceManager.get());
