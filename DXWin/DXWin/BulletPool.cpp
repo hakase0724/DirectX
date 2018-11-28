@@ -2,6 +2,7 @@
 #include "BulletPool.h"
 #include "MeshRenderer.h"
 #include "DXTexture.h"
+
 using namespace MyDirectX;
 
 void BulletPool::CreatePreBullets(int preNum)

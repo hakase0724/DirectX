@@ -5,7 +5,6 @@
 #include "PlayScene.h"
 #include "ResultScene.h"
 #include "BulletPool.h"
-#include "TestScene.h"
 
 namespace MyDirectX
 {

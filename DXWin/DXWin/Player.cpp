@@ -45,12 +45,16 @@ void Player::Update()
 			auto offset = gameTransform->Scale.x;
 			gameTransform->Position.x += offset * (i - (float)bulletNum / 3.0f);
 		}
+		mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
+		mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
 	}	
 	else if(!mDXInput->GetInputState(DIK_Z))
 	{
 		//発射しなかった場合は発射可能状態にしておく
 		//-1しているのは次の判定では+1して判定するから
 		mWaitCount = mCoolCount - 1;
+		//SEをリセットしておく
+		mGameObject->GetDXResourceManager()->GetSEDXSound()->Stop();
 	}
 }
 

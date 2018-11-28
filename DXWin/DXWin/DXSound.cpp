@@ -44,14 +44,59 @@ DXSound::DXSound(HWND hwnd)
 	delete[] pWaveData;
 }
 
+DXSound::DXSound(HWND hwnd, LPWSTR sourcePath)
+{
+	// Waveファイルオープン
+	WAVEFORMATEX wFmt;
+	char *pWaveData = 0;
+	DWORD waveSize = 0;
+	auto open = OpenWave(sourcePath, wFmt, &pWaveData, waveSize);
+
+	HRESULT hr = DirectSoundCreate8(NULL, &mDirectSound, NULL);
+
+	mDirectSound->SetCooperativeLevel(hwnd, DSSCL_NORMAL);
+
+	DSBUFFERDESC dsBufferDesc;
+	dsBufferDesc.dwSize = sizeof(DSBUFFERDESC);
+	dsBufferDesc.dwFlags = DSBCAPS_CTRLVOLUME;
+	dsBufferDesc.dwBufferBytes = waveSize;
+	dsBufferDesc.dwReserved = 0;
+	dsBufferDesc.lpwfxFormat = &wFmt;
+	dsBufferDesc.guid3DAlgorithm = GUID_NULL;
+
+	IDirectSoundBuffer* tmpBuffer = 0;
+	hr = mDirectSound->CreateSoundBuffer(&dsBufferDesc, &tmpBuffer, NULL);
+	tmpBuffer->QueryInterface(IID_IDirectSoundBuffer8, (void**)&mDsBuffer);
+	tmpBuffer->Release();
+
+	// セカンダリバッファにWaveデータ書き込み
+	LPVOID lpvWrite = 0;
+	DWORD dwLength = 0;
+	if (DS_OK == mDsBuffer->Lock(0, 0, &lpvWrite, &dwLength, NULL, NULL, DSBLOCK_ENTIREBUFFER))
+	{
+		memcpy(lpvWrite, pWaveData, dwLength);
+		mDsBuffer->Unlock(lpvWrite, dwLength, NULL, 0);
+	}
+	// 元音はもういらない
+	delete[] pWaveData;
+}
+
+void DXSound::ResetSound()
+{
+	mDsBuffer->SetCurrentPosition(0);
+}
+
 void DXSound::Play()
 {
-	mDsBuffer->Play(0, 0, 0);
+	//ループ再生
+	mDsBuffer->Play(0, 0, DSBPLAY_LOOPING);
 }
 
 void DXSound::Stop()
 {
 	mDsBuffer->Stop();
+	//再生位置を先頭に戻す
+	mDsBuffer->SetCurrentPosition(0);
 }
 
 bool DXSound::OpenWave(TCHAR * filepath, WAVEFORMATEX & waveFormatEx, char ** ppData, DWORD & dataSize)

@@ -169,6 +169,7 @@ void PlayScene::Init()
 	mEnemyWaveList.push_back(secondWave);
 
 	mFrameCount = FPS_CHEACK_FRAME_COUNT;
+
 	for(auto &game: mGameObjectsList)
 	{
 		game->SetDefaultTransform();
@@ -191,7 +192,7 @@ void PlayScene::SceneStart()
 		game->SetEnable(true);
 	}
 	//曲再生
-	mDXRescourceManager->GetDXSound()->Play();
+	mDXRescourceManager->GetBGMDXSound()->Play();
 }
 
 void PlayScene::SceneUpdate()
@@ -250,14 +251,22 @@ void PlayScene::SceneEnd()
 		game->SetEnable(false);
 	}
 	//曲を止める
-	mDXRescourceManager->GetDXSound()->Stop();
+	mDXRescourceManager->GetBGMDXSound()->Stop();
 }
 
 bool PlayScene::IsSceneEnd()
 {
 	//自機がしんだら
-	if (!mPlayer->GetEnable()) return true;
+	if (!mPlayer->GetEnable()) 
+	{
+		mDXRescourceManager->GetSEDXSound()->Stop();
+		return true;
+	}
 	//最終ウェーブで指定敵がしんだら
-	if (mIsLastWave) if (!mEnemy->GetEnable()) return true;
+	if (mIsLastWave) if (!mEnemy->GetEnable()) 
+	{
+		mDXRescourceManager->GetSEDXSound()->Stop();
+		return true;
+	}
 	return false;
 }

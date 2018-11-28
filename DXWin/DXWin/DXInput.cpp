@@ -53,7 +53,11 @@ HRESULT DXInput::InitDirectInput(HWND hwnd)
 
 void DXInput::SetInputState()
 {
-	mInputDevice->GetDeviceState(sizeof(mInputBuffer), (LPVOID)&mInputBuffer);
+	if(FAILED(mInputDevice->GetDeviceState(sizeof(mInputBuffer), (LPVOID)&mInputBuffer)))
+	{
+		//“ü—ÍŽó•t
+		mInputDevice->Acquire();
+	}
 }
 
 void DXInput::SetPreBuffer()

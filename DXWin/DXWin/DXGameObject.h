@@ -8,17 +8,17 @@
 #include "IComponent.h"
 #include "MyEnums.h"
 #include "AlignedAllocationPolicy.h"
+#include "DXResourceManager.h"
 
 namespace MyDirectX
 {
-	class DXGameObjectManager;
 	class Scene;
 	//このプロジェクトの核となるクラス
 	//このクラスにComponentクラスを継承したクラスを追加していく
 	class DXGameObject :public AlignedAllocationPolicy<16>
 	{
 	public:
-		DXGameObject(DXManager* dxManager);
+		DXGameObject(DXResourceManager* manager);
 		virtual ~DXGameObject();
 		//自身のtransform情報を公開
 		TRANSFORM* GetTransform() const { return mTransform.get(); }
@@ -105,6 +105,9 @@ namespace MyDirectX
 		//シーン情報
 		Scene* GetScene() const { return mScene; }
 		void SetScene(Scene* scene) { mScene = scene; }
+		//機能クラス
+		void SetDXResourceManager(DXResourceManager* manager) { mDXResourceManager = manager; }
+		DXResourceManager* GetDXResourceManager() const { return mDXResourceManager; }
 	protected:
 		//自身の座標回転スケール
 		std::unique_ptr<TRANSFORM> mTransform;
@@ -114,6 +117,7 @@ namespace MyDirectX
 		DXInput* mDXInput;
 		//カメラ情報
 		DXCamera* mDXCamera;
+		DXResourceManager* mDXResourceManager;
 		//自身が持つコンポーネントのリスト
 		std::vector<Component*> mComponentsList;
 		std::string mName;

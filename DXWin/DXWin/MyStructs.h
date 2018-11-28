@@ -4,7 +4,6 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "Primitive2D.h"
-#include "Primitive3D.h"
 #include "MyEnums.h"
 #include "AlignedAllocationPolicy.h"
 namespace MyDirectX

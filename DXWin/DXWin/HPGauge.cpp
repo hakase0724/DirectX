@@ -25,8 +25,8 @@ void HPGauge::Update()
 	auto hpRate = mHPViewObject->GetHP() / mMaxHitPoint;
 	//バーのサイズ変更
 	auto scalex = mDefaultScaleX * hpRate;
-	mTransform->Scale.x = scalex;
+	mTransform->Scale.x = (float)scalex;
 	//サイズ変更に合わせて場所を移動
 	auto positionx = mDefaultPositionX - mDefaultScaleX * (1 - hpRate) * 0.5;
-	mTransform->Position.x = positionx;
+	mTransform->Position.x = (float)positionx;
 }

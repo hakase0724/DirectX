@@ -16,7 +16,7 @@ namespace MyDirectX
 		void SetScene(Scene* scene) { mScene = scene; }
 		//オブジェクトプールに予め弾を格納しておく
 		//preNum = 事前に生成しておく弾の数
-		void CreatePreBullets(int preNum = 500);
+		void CreatePreBullets(int preNum);
 		//弾を取得する
 		DXGameObject* GetBullet(TRANSFORM* transform, Tag tag);
 		DXGameObject* GetBullet(TRANSFORM* transform, Tag tag, float x, float y);

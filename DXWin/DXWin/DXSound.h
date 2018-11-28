@@ -9,7 +9,10 @@ namespace MyDirectX
 	{
 	public:
 		DXSound(HWND hwnd);
+		DXSound(HWND hwnd, LPWSTR sourcePath);
 		~DXSound() {};
+		void SetVolume(LONG volume) { mDsBuffer->SetVolume(volume); }
+		void ResetSound();
 		void Play();
 		void Stop();
 	private:

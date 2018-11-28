@@ -3,10 +3,11 @@
 #include "DXManager.h"
 #include "DXSound.h"
 #include "FPSCountor.h"
-#include "DXGameObject.h"
 
 namespace MyDirectX
 {
+	class DXGameObject;
+
 	class DXResourceManager
 	{
 	public:
@@ -21,7 +22,8 @@ namespace MyDirectX
 		//指定したキーが入力されているか
 		bool GetKey(int key) { return mDXManager->GetDXInput()->GetInputState(key); }
 		//音管理クラスを返す
-		DXSound* GetDXSound() const { return mDXSound.get(); }
+		DXSound* GetBGMDXSound() const { return mBGMDXSound.get(); }
+		DXSound* GetSEDXSound() const { return mSEDXSound.get(); }
 		//FPSを返す
 		double GetFPS() const { return mFPS; }
 		//現在の入力状況を取得
@@ -38,7 +40,8 @@ namespace MyDirectX
 		//各種機能クラス
 		std::unique_ptr<FPSCountor> mFPSCountor;
 		std::unique_ptr<DXManager> mDXManager;
-		std::unique_ptr<DXSound> mDXSound;
+		std::unique_ptr<DXSound> mBGMDXSound;
+		std::unique_ptr<DXSound> mSEDXSound;
 	};
 }
 

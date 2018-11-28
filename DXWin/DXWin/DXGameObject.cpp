@@ -4,13 +4,14 @@
 using namespace DirectX;
 using namespace MyDirectX;
 
-DXGameObject::DXGameObject(DXManager* dxManager)
+DXGameObject::DXGameObject(DXResourceManager* manager)
 {
 	mTransform = std::make_unique<TRANSFORM>();
 	mTransform->Position = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform->Rotation = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	mTransform->Scale = XMFLOAT3(1.0f, 1.0f, 1.0f);
-	mDXManager = dxManager;
+	mDXResourceManager = manager;
+	mDXManager = mDXResourceManager->GetDXManager();
 	mDXInput = mDXManager->GetDXInput();
 	mDXCamera = mDXManager->GetDXCamera();
 	mName = "GameObject";
