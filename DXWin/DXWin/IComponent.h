@@ -61,12 +61,14 @@ namespace MyDirectX
 		Tag GetTag() const { return mTag; }
 		void SetTag(Tag tag) { mTag = tag; }
 		DXGameObject* GetGameObject() const { return mGameObject; }
+		void SetEnable(bool enable) { mEnable = enable; }
+		bool GetEnable() const { return mEnable; }
 		virtual ~Component() {};
 	protected:
 		DXGameObject* mGameObject;
 		std::string mName;
 		UINT mId;
 		Tag mTag;
-		bool mEnable;
+		bool mEnable = true;
 	};
 }

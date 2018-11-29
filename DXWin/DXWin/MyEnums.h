@@ -37,4 +37,11 @@ namespace MyDirectX
 		Play = 1,
 		Result = 2,
 	};
+
+	enum BossState
+	{
+		Entry = 0,
+		Battle = 1,
+		BossDie = 3
+	};
 }

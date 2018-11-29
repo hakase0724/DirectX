@@ -15,7 +15,8 @@ namespace MyDirectX
 		DXTexture() {};
 		~DXTexture() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
-		void SetTexture(const wchar_t* fileName = _T("Texture/Player3_alpha.png"));
+		void SetTexture(const wchar_t* fileName);
+		void SetTexture(wchar_t* fileName);
 	private:
 		TextureRenderer* mRenderer;
 	};

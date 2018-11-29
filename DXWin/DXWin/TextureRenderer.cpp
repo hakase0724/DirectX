@@ -18,15 +18,7 @@ void TextureRenderer::Initialize(DXGameObject * gameObject)
 	mDefaultColor.b = 1;
 	mDefaultColor.a = 1;
 	mColor = mDefaultColor;
-}
 
-void TextureRenderer::LoadTexture(wchar_t * fileName)
-{
-	//テクスチャの読み込み
-	CoInitialize(NULL);
-	auto textureData = mDXManager->GetDXRenderDataPool()->GetTexture(fileName);
-	mTexture = textureData->texture;
-	mShaderResourceView = textureData->shaderView;
 	//サンプラーデスク作成
 	D3D11_SAMPLER_DESC smpDesc;
 	::ZeroMemory(&smpDesc, sizeof(D3D11_SAMPLER_DESC));
@@ -44,6 +36,15 @@ void TextureRenderer::LoadTexture(wchar_t * fileName)
 	smpDesc.MinLOD = 0;
 	smpDesc.MaxLOD = D3D11_FLOAT32_MAX;
 	mDevice->CreateSamplerState(&smpDesc, &mSampler);
+}
+
+void TextureRenderer::LoadTexture(wchar_t * fileName)
+{
+	//テクスチャの読み込み
+	CoInitialize(NULL);
+	auto textureData = mDXManager->GetDXRenderDataPool()->GetTexture(fileName);
+	mTexture = textureData->texture;
+	mShaderResourceView = textureData->shaderView;
 	CoUninitialize();
 }
 

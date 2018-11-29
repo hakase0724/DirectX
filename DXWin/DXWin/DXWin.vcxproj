@@ -167,6 +167,7 @@
     <ClInclude Include="CollisionManager.h" />
     <ClInclude Include="CommonValues.h" />
     <ClInclude Include="dinputex.h" />
+    <ClInclude Include="DXAnimation.h" />
     <ClInclude Include="DXCamera.h" />
     <ClInclude Include="DXCube.h" />
     <ClInclude Include="DXExcuter.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletPool.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
+    <ClCompile Include="DXAnimation.cpp" />
     <ClCompile Include="DXCamera.cpp" />
     <ClCompile Include="DXExcuter.cpp" />
     <ClCompile Include="DXFactory.cpp" />

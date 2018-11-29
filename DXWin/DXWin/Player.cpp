@@ -8,9 +8,9 @@ void Player::Initialize(DXGameObject * gameObject)
 	mGameObject = gameObject;
 	mDXInput = mGameObject->GetDXInput();
 	auto transform = mGameObject->GetTransform();
-	transform->Scale.x /= 2.0f;
-	transform->Scale.y /= 2.0f;
-	transform->Scale.z /= 2.0f;
+	transform->Scale.x /= 3.0f;
+	transform->Scale.y /= 3.0f;
+	transform->Scale.z /= 3.0f;
 	mId = mGameObject->GetID();
 	mGameObject->SetDefaultTransform(transform);
 	mWaitCount = mCoolCount;

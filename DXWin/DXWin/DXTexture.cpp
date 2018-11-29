@@ -13,11 +13,16 @@ void DXTexture::Initialize(DXGameObject * gameObject)
 	{
 		mRenderer = gameObject->AddComponent<TextureRenderer>();
 	}
+	mRenderer->CreateMesh<TextureMesh>();
+	mRenderer->CreateShader<TextureShader>();
 }
 
 void DXTexture::SetTexture(const wchar_t * fileName)
 {
-	mRenderer->CreateMesh<TextureMesh>();
-	mRenderer->CreateShader<TextureShader>();
 	mRenderer->LoadTexture(const_cast<wchar_t*>(fileName));
+}
+
+void DXTexture::SetTexture(wchar_t * fileName)
+{
+	mRenderer->LoadTexture(fileName);
 }

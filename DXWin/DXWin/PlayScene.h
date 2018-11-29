@@ -4,6 +4,7 @@
 #include "BulletPool.h"
 #include "BarrageManager.h"
 #include "DXText.h"
+#include "DXTexture.h"
 
 namespace MyDirectX
 {

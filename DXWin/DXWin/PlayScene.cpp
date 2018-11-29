@@ -1,12 +1,12 @@
 #include "stdafx.h"
 #include "PlayScene.h"
 #include <DirectXMath.h>
-#include "DXTexture.h"
 #include "Player.h"
 #include "Mover.h"
 #include "BossEnemy.h"
 #include "NormalEnemy.h"
 #include "HPGauge.h"
+#include "DXAnimation.h"
 #include <sstream>
 
 using namespace DirectX;
@@ -31,8 +31,12 @@ void PlayScene::Init()
 
 	//Ž©‹@
 	mPlayer = Instantiate();
-	auto playerTex = mPlayer->AddComponent<DXTexture>();
-	playerTex->SetTexture();
+	auto texture = mPlayer->AddComponent<DXTexture>();
+	auto anim = mPlayer->AddComponent<DXAnimation>();
+	anim->SetAnimationTexture(texture);
+	anim->SetAnimationFile(_T("Texture/Player1.png"));
+	anim->SetAnimationFile(_T("Texture/Player2.png"));
+	//mPlayerTexture->SetTexture(_T("Texture/Player1.png"));
 	mPlayer->SetTag(Tag::PlayerTag);
 	mPlayer->AddComponent<Mover>();
 	auto player = mPlayer->AddComponent<Player>();
@@ -88,14 +92,16 @@ void PlayScene::Init()
 	auto enemyTex = mEnemy->AddComponent<DXTexture>();
 	enemyTex->SetTexture(_T("Texture/Enemy.png"));
 	auto texPos = mEnemy->GetTransform();
-	texPos->Position = XMFLOAT3(0.0f, 1.0f, 0.0f);
+	texPos->Position = XMFLOAT3(0.0f, 2.0f, 0.0f);
 	auto enemy = mEnemy->AddComponent<BossEnemy>();
 	enemy->SetBulletPool(mBulletPool.get());
 	enemy->SetPlayer(mPlayer);
 	enemy->SetBarrageManager(mBarrageManager.get());
 	enemy->SetHP(1000);
+	enemy->SetBattleStartPos(XMFLOAT3(0.0f, 1.0f, 0.0f));
 	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
 	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
+	enemy->SetCollider(enemyCol);
 	secondWave.push_back(mEnemy);
 
 	auto gauge = Instantiate();
@@ -215,7 +221,6 @@ void PlayScene::SceneUpdate()
 		//’†g‚ðƒNƒŠƒA‚·‚é
 		ws.clear();
 	}
-
 	//”wŒi‚ð“®‚©‚·
 	mBackGround->UpdateBackGrounds();
 

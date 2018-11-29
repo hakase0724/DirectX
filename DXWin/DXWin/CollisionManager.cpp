@@ -14,6 +14,7 @@ void CollisionManager::SetGameObjects(std::vector<DXGameObject*> gameObjects)
 		auto com = game->GetComponent<Collider2D>();
 		//コライダーがなければ無視する
 		if (com == nullptr) continue;
+		if (!com->GetEnable()) continue;
 		auto tag = game->GetTag();
 		//キャラクター
 		if (tag == Tag::PlayerTag || tag == Tag::EnemyTag)
