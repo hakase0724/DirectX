@@ -14,6 +14,7 @@ DXResourceManager::DXResourceManager(HWND hwnd)
 	mDXManager = std::make_unique<DXManager>(hwnd);
 	//FPSカウンターを生成
 	mFPSCountor = std::make_unique<FPSCountor>();
+	mCSVLoader = std::make_unique<CSVLoader>();
 }
 
 DXGameObject * DXResourceManager::Instantiate()

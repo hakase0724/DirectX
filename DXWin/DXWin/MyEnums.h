@@ -10,6 +10,13 @@ namespace MyDirectX
 		EnemyBullet = 3,
 	};
 
+	enum Category
+	{
+		CategoryPlayer = 0,
+		CategoryBossEnemy = 1,
+		CategoryNormalEnemy = 2,
+	};
+
 	//ŒÄ‚Ño‚·Õ“Ë‰“š‚ğ¦‚·
 	enum CollisionType
 	{

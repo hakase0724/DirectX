@@ -3,6 +3,7 @@
 #include "DXManager.h"
 #include "DXSound.h"
 #include "FPSCountor.h"
+#include "CSVLoader.h"
 
 namespace MyDirectX
 {
@@ -32,6 +33,7 @@ namespace MyDirectX
 		void SetPreBuffer() { mDXManager->GetDXInput()->SetPreBuffer(); }
 		//FPS‚ğŒvZ‚·‚é
 		void UpdateFPS() { mFPS = mFPSCountor->GetFPS(); }
+		std::vector<DATA> LoadData(const char* filePath) { return mCSVLoader->LoadData(filePath); }
 	private:
 		//FPSŒvZŒ‹‰Ê‚ğ•Û
 		double mFPS;
@@ -42,6 +44,7 @@ namespace MyDirectX
 		std::unique_ptr<DXManager> mDXManager;
 		std::unique_ptr<DXSound> mBGMDXSound;
 		std::unique_ptr<DXSound> mSEDXSound;
+		std::unique_ptr<CSVLoader> mCSVLoader;
 	};
 }
 

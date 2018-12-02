@@ -16,108 +16,66 @@ void PlayScene::Init()
 {
 	//弾幕管理クラス
 	mBarrageManager = std::make_unique<BarrageManager>();
+	auto dataTable = mDXRescourceManager->LoadData("Data/Data.csv");
 	//弾のオブジェクトプール
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
+	//予め1000発用意しておく
 	mBulletPool->CreatePreBullets(1000);
 
 	//FPS表示テキスト
 	auto fps = Instantiate();
 	mFPSText = fps->AddComponent<DXText>();
 	auto transform = fps->GetTransform();
+	//位置と大きさ
 	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
 	mAwakeObject.push_back(fps);
 
-	//自機
-	mPlayer = Instantiate();
-	auto texture = mPlayer->AddComponent<DXTexture>();
-	auto anim = mPlayer->AddComponent<DXAnimation>();
-	anim->SetAnimationTexture(texture);
-	anim->SetAnimationFile(_T("Texture/Player1.png"));
-	anim->SetAnimationFile(_T("Texture/Player2.png"));
-	//mPlayerTexture->SetTexture(_T("Texture/Player1.png"));
-	mPlayer->SetTag(Tag::PlayerTag);
-	mPlayer->AddComponent<Mover>();
-	auto player = mPlayer->AddComponent<Player>();
-	player->SetBulletPool(mBulletPool.get());
-	auto playerCol = mPlayer->AddComponent<SquareCollider2D>();
-	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
-	mAwakeObject.push_back(mPlayer);
+	//何ウェーブまであるのか
+	int maxWave = 0;
+	for(auto data:dataTable)
+	{
+		if (data.Wave > maxWave) maxWave = data.Wave;
+	}
 
-	//第一陣
-	std::vector<DXGameObject*> firstWave;
-	//第二陣
-	std::vector<DXGameObject*> secondWave;
+	//ウェーブ分配列を用意する
+	for(int i = 0;i < maxWave;i++)
+	{
+		std::vector<DXGameObject*> enemyList;
+		mEnemyWaveList.push_back(enemyList);
+	}
 
-	//雑魚敵
-	auto normalEnemy = Instantiate();
-	normalEnemy->SetTag(EnemyTag);
-	auto normalEnemyTex = normalEnemy->AddComponent<DXTexture>();
-	normalEnemyTex->SetTexture(_T("Texture/NormalEnemy.png"));
-	auto normalEnemyTexPos = normalEnemy->GetTransform();
-	normalEnemyTexPos->Position = XMFLOAT3(1.0f, 1.0f, 0.0f);
-	normalEnemyTexPos->Scale.x /= 2;
-	normalEnemyTexPos->Scale.y /= 2;
-	normalEnemyTexPos->Scale.z /= 2;
-	auto normaEenemyCom = normalEnemy->AddComponent<NormalEnemy>();
-	normaEenemyCom->SetBulletPool(mBulletPool.get());
-	normaEenemyCom->SetPlayer(mPlayer);
-	normaEenemyCom->SetBarrageManager(mBarrageManager.get());
-	auto normalEnemyCol = normalEnemy->AddComponent<SquareCollider2D>();
-	normalEnemyCol->SetOneSide(normalEnemyCol->GetOneSide() / 2.0f);
-	firstWave.push_back(normalEnemy);
+	//読み込んだデータに従って自機と敵を作る
+	for(auto data:dataTable)
+	{
+		switch (data.Category)
+		{
+		case CategoryPlayer:
+			CreatePlayer(data);
+			break;
+		case CategoryBossEnemy:
+			CreateBossEnemy(data);
+			break;
+		case CategoryNormalEnemy:
+			CreateNormalEnemy(data);
+			break;
+		default:
+			break;
+		}
+	}
 
-	//雑魚敵
-	auto normalEnemy2 = Instantiate();
-	normalEnemy2->SetTag(EnemyTag);
-	auto normalEnemyTex2 = normalEnemy2->AddComponent<DXTexture>();
-	normalEnemyTex2->SetTexture(_T("Texture/NormalEnemy.png"));
-	auto normalEnemyTexPos2 = normalEnemy2->GetTransform();
-	normalEnemyTexPos2->Position = XMFLOAT3(-1.0f, 1.0f, 0.0f);
-	normalEnemyTexPos2->Scale.x /= 2;
-	normalEnemyTexPos2->Scale.y /= 2;
-	normalEnemyTexPos2->Scale.z /= 2;
-	auto normaEenemyCom2 = normalEnemy2->AddComponent<NormalEnemy>();
-	normaEenemyCom2->SetBulletPool(mBulletPool.get());
-	normaEenemyCom2->SetPlayer(mPlayer);
-	normaEenemyCom2->SetBarrageManager(mBarrageManager.get());
-	auto normalEnemyCol2 = normalEnemy2->AddComponent<SquareCollider2D>();
-	normalEnemyCol2->SetOneSide(normalEnemyCol2->GetOneSide() / 2.0f);
-	firstWave.push_back(normalEnemy2);
+	/*
+	背景を動かすイメージ
 
-	//ボス敵
-	mEnemy = Instantiate();
-	mEnemy->SetTag(Tag::EnemyTag);
-	auto enemyTex = mEnemy->AddComponent<DXTexture>();
-	enemyTex->SetTexture(_T("Texture/Enemy.png"));
-	auto texPos = mEnemy->GetTransform();
-	texPos->Position = XMFLOAT3(0.0f, 2.0f, 0.0f);
-	auto enemy = mEnemy->AddComponent<BossEnemy>();
-	enemy->SetBulletPool(mBulletPool.get());
-	enemy->SetPlayer(mPlayer);
-	enemy->SetBarrageManager(mBarrageManager.get());
-	enemy->SetHP(1000);
-	enemy->SetBattleStartPos(XMFLOAT3(0.0f, 1.0f, 0.0f));
-	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
-	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
-	enemy->SetCollider(enemyCol);
-	secondWave.push_back(mEnemy);
+	　　　　　　 ←
+		背 景 2　↑
+		   ↓　　↑
+		背 景 1　↑
+		   ↓　　↑
+		   →→→→
+	*/
 
-	auto gauge = Instantiate();
-	auto renderer = gauge->AddComponent<TextureRenderer>();
-	auto gaugeTex = gauge->AddComponent<DXTexture>();
-	auto gaugeCom =  gauge->AddComponent<HPGauge>();
-	gaugeCom->SetHPViewObject(enemy);
-	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.0f);
-	gaugeTex->SetTexture(_T("Texture/Square.png"));
-	auto gaugeTransform = gauge->GetTransform();
-	gaugeTransform->Position.y = 1.3f;
-	gaugeTransform->Position.z = -0.1f;
-	gaugeTransform->Scale.y = 0.1f;
-	gaugeTransform->Scale.x = 3.0f;
-	secondWave.push_back(gauge);
-	
 	//背景用画像1
 	auto back = Instantiate();
 	auto texBack = back->AddComponent<DXTexture>();
@@ -143,6 +101,17 @@ void PlayScene::Init()
 	mBackGround = std::make_unique<BackGround>();
 	mBackGround->SetBackGrounds(back,back2);
 
+	/*
+
+	黒帯　　　 黒帯
+	 ↓　　　　 ↓
+	*** 背　景 ***
+	*** 背　景 ***
+	*** 背　景 ***
+	*** 背　景 ***
+
+	*/
+
 	//右の黒帯
 	auto black = Instantiate();
 	auto blackBack = black->AddComponent<DXTexture>();
@@ -166,16 +135,14 @@ void PlayScene::Init()
 	mWaveCount = 0;
 	
 	//第一陣を初期リストに追加
-	for(auto game:firstWave)
+	for(auto game:mEnemyWaveList[0])
 	{
 		mAwakeObject.push_back(game);
 	}
-	//それぞれのウェーブ配列を管理配列に追加
-	mEnemyWaveList.push_back(firstWave);
-	mEnemyWaveList.push_back(secondWave);
 
 	mFrameCount = FPS_CHEACK_FRAME_COUNT;
 
+	//全てのオブジェクトの初期位置を設定する
 	for(auto &game: mGameObjectsList)
 	{
 		game->SetDefaultTransform();
@@ -224,7 +191,6 @@ void PlayScene::SceneUpdate()
 	//背景を動かす
 	mBackGround->UpdateBackGrounds();
 
-	/*ウェーブ処理*/
 	//次のウェーブへ行くか
 	bool isNext = true;
 	//現在ウェーブの敵が一体でも生存していたら次ウェーブへ行かない
@@ -274,4 +240,95 @@ bool PlayScene::IsSceneEnd()
 		return true;
 	}
 	return false;
+}
+
+void PlayScene::CreatePlayer(DATA data)
+{
+	//自機
+	mPlayer = Instantiate();
+	mPlayer->SetName(data.Name);
+	auto transform = mPlayer->GetTransform();
+	transform->Position = data.StartPos;
+	auto texture = mPlayer->AddComponent<DXTexture>();
+	auto anim = mPlayer->AddComponent<DXAnimation>();
+	anim->SetAnimationTexture(texture);
+	anim->SetAnimationFile(_T("Texture/Player1.png"));
+	anim->SetAnimationFile(_T("Texture/Player2.png"));
+	mPlayer->SetTag(data.Tag);
+	mPlayer->AddComponent<Mover>();
+	auto player = mPlayer->AddComponent<Player>();
+	player->SetBulletPool(mBulletPool.get());
+	player->SetHP(data.HP);
+	auto playerCol = mPlayer->AddComponent<SquareCollider2D>();
+	//自機のコライダーは30分の1
+	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
+	mAwakeObject.push_back(mPlayer);
+}
+
+void PlayScene::CreateBossEnemy(DATA data)
+{
+	//ボス敵
+	mEnemy = Instantiate();
+	mEnemy->SetName(data.Name);
+	mEnemy->SetTag(data.Tag);
+	auto enemyTex = mEnemy->AddComponent<DXTexture>();
+	enemyTex->SetTexture(_T("Texture/Enemy.png"));
+	auto texPos = mEnemy->GetTransform();
+	texPos->Position = data.StartPos;
+	auto enemy = mEnemy->AddComponent<BossEnemy>();
+	enemy->SetBulletPool(mBulletPool.get());
+	enemy->SetPlayer(mPlayer);
+	enemy->SetBarrageManager(mBarrageManager.get());
+	enemy->SetHP(data.HP);
+	auto battleStartPos = data.StartPos;
+	battleStartPos.y -= 1;
+	enemy->SetBattleStartPos(battleStartPos);
+	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
+	//ボスのコライダーは2分の1に
+	enemyCol->SetOneSide(enemyCol->GetOneSide() / 2.0f);
+	enemy->SetCollider(enemyCol);
+
+	//体力ゲージ
+	auto gauge = Instantiate();
+	auto renderer = gauge->AddComponent<TextureRenderer>();
+	auto gaugeTex = gauge->AddComponent<DXTexture>();
+	auto gaugeCom = gauge->AddComponent<HPGauge>();
+	gaugeCom->SetHPViewObject(enemy);
+	//ゲージの色
+	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.0f);
+	gaugeTex->SetTexture(_T("Texture/Square.png"));
+	auto gaugeTransform = gauge->GetTransform();
+	//ゲージの位置と長さ
+	gaugeTransform->Position.y = 1.3f;
+	gaugeTransform->Position.z = -0.1f;
+	gaugeTransform->Scale.y = 0.1f;
+	gaugeTransform->Scale.x = 3.0f;
+
+	mEnemyWaveList[data.Wave - 1].push_back(mEnemy);
+	mEnemyWaveList[data.Wave - 1].push_back(gauge);
+}
+
+void PlayScene::CreateNormalEnemy(DATA data)
+{
+	auto normalEnemy = Instantiate();
+	normalEnemy->SetName(data.Name);
+	normalEnemy->SetTag(data.Tag);
+	auto normalEnemyTex = normalEnemy->AddComponent<DXTexture>();
+	normalEnemyTex->SetTexture(_T("Texture/NormalEnemy.png"));
+	auto normalEnemyTexPos = normalEnemy->GetTransform();
+	normalEnemyTexPos->Position = data.StartPos;
+	//サイズを半分に
+	normalEnemyTexPos->Scale.x /= 2;
+	normalEnemyTexPos->Scale.y /= 2;
+	normalEnemyTexPos->Scale.z /= 2;
+	auto normaEenemyCom = normalEnemy->AddComponent<NormalEnemy>();
+	normaEenemyCom->SetHP(data.HP);
+	normaEenemyCom->SetBulletPool(mBulletPool.get());
+	normaEenemyCom->SetPlayer(mPlayer);
+	normaEenemyCom->SetBarrageManager(mBarrageManager.get());
+	auto normalEnemyCol = normalEnemy->AddComponent<SquareCollider2D>();
+	//敵のコライダーは2分の1に
+	normalEnemyCol->SetOneSide(normalEnemyCol->GetOneSide() / 2.0f);
+
+	mEnemyWaveList[data.Wave - 1].push_back(normalEnemy);
 }

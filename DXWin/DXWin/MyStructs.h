@@ -156,4 +156,15 @@ namespace MyDirectX
 		}
 	};
 
+	//外部データ管理用構造体
+	struct DATA
+	{
+		std::string Name;
+		DirectX::XMFLOAT3 StartPos;
+		double HP;
+		Tag Tag;
+		int Wave;
+		Category Category;
+	};
+
 }
