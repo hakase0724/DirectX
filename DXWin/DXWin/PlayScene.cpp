@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "PlayScene.h"
 #include <DirectXMath.h>
-#include "Player.h"
 #include "Mover.h"
 #include "BossEnemy.h"
 #include "NormalEnemy.h"
@@ -31,6 +30,15 @@ void PlayScene::Init()
 	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
 	mAwakeObject.push_back(fps);
+
+	//FPS表示テキスト
+	auto pHP = Instantiate();
+	mHPText = pHP->AddComponent<DXText>();
+	auto transform2 = pHP->GetTransform();
+	//位置と大きさ
+	transform2->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	transform2->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
+	mAwakeObject.push_back(pHP);
 
 	//何ウェーブまであるのか
 	int maxWave = 0;
@@ -256,9 +264,9 @@ void PlayScene::CreatePlayer(DATA data)
 	anim->SetAnimationFile(_T("Texture/Player2.png"));
 	mPlayer->SetTag(data.Tag);
 	mPlayer->AddComponent<Mover>();
-	auto player = mPlayer->AddComponent<Player>();
-	player->SetBulletPool(mBulletPool.get());
-	player->SetHP(data.HP);
+	mPlayerCom = mPlayer->AddComponent<Player>();
+	mPlayerCom->SetBulletPool(mBulletPool.get());
+	mPlayerCom->SetHP(data.HP);
 	auto playerCol = mPlayer->AddComponent<SquareCollider2D>();
 	//自機のコライダーは30分の1
 	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);

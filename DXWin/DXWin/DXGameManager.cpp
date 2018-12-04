@@ -31,9 +31,18 @@ DXGameManager::DXGameManager(HWND hwnd)
 	scene.reset(result);
 	mSceneList.push_back(std::move(scene));
 
+	auto hdc = GetDC(hwnd);
+	auto rate = GetDeviceCaps(hdc, VREFRESH);
+	int intarval = 0;
+	if (rate <= 60) intarval = 1;
+	if (rate >= 120) intarval = 2;
+	SetVsyncIntarval(intarval);
+}
+
+void DXGameManager::Initialize()
+{
 	mSceneIndex = 0;
 	mSceneCount = mSceneList.size();
-
 	mDXExcuter->SetScene(mSceneList[mSceneIndex].get());
 }
 

@@ -54,6 +54,7 @@ namespace MyDirectX
 		DXCamera* GetDXCamera() const { return mDXCamera.get(); }
 		DXFactory* GetDXFactory() const { return mDXFactory.get(); }
 		DXRenderDataPool* GetDXRenderDataPool() const { return mDXRenderDataPool.get(); }
+		void SetVsyncIntarval(int intarval) { mVsyncIntarval = intarval; }
 	private:
 		ID3D11Debug* mD3dDebug;
 		//ウィンドルのハンドル
@@ -83,6 +84,7 @@ namespace MyDirectX
 		std::unique_ptr<DXCamera> mDXCamera;
 		std::unique_ptr<DXFactory> mDXFactory;
 		std::unique_ptr<DXRenderDataPool> mDXRenderDataPool;
+		int mVsyncIntarval = 1;
 		
 	};
 }

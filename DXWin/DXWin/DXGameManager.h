@@ -13,9 +13,11 @@ namespace MyDirectX
 	public:
 		DXGameManager(HWND hwnd);
 		~DXGameManager() {};
+		void Initialize();
 		//ゲームループを実行
 		//終了時にfalseを返す
 		bool Update();
+		void SetVsyncIntarval(int intarval) { mDXResourceManager->SetVsyncIntarval(intarval); }
 	private:
 		//シーン切り替え
 		void SceneChange();

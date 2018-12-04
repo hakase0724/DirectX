@@ -34,6 +34,7 @@ namespace MyDirectX
 		//FPS‚ğŒvZ‚·‚é
 		void UpdateFPS() { mFPS = mFPSCountor->GetFPS(); }
 		std::vector<DATA> LoadData(const char* filePath) { return mCSVLoader->LoadData(filePath); }
+		void SetVsyncIntarval(int intarval) { mDXManager->SetVsyncIntarval(intarval); }
 	private:
 		//FPSŒvZŒ‹‰Ê‚ğ•Û
 		double mFPS;

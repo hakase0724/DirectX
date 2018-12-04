@@ -5,6 +5,7 @@
 #include "BarrageManager.h"
 #include "DXText.h"
 #include "DXTexture.h"
+#include "Player.h"
 
 namespace MyDirectX
 {
@@ -34,10 +35,12 @@ namespace MyDirectX
 		const int FPS_CHEACK_FRAME_COUNT = 60;
 		//FPS表示テキスト
 		DXText* mFPSText;
+		DXText* mHPText;
 		//シーン開始時にアクティブにするオブジェクト
 		std::vector<DXGameObject*> mAwakeObject;
 		//自機
 		DXGameObject* mPlayer;
+		Player* mPlayerCom;
 		//ボス敵
 		DXGameObject* mEnemy;
 		//ウェーブを管理する配列

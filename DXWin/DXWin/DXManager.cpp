@@ -186,7 +186,7 @@ void DXManager::EndScene()
 	if(mIsVsyncEnable)
 	{
 		//VSync—L
-		mSwapChain->Present(1, 0);
+		mSwapChain->Present(mVsyncIntarval, 0);
 	}
 	else
 	{
