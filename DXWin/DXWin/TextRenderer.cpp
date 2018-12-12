@@ -3,14 +3,6 @@
 
 using namespace DirectX;
 using namespace MyDirectX;
-TextRenderer::TextRenderer()
-{
-}
-
-
-TextRenderer::~TextRenderer()
-{
-}
 
 void TextRenderer::Initialize(DXGameObject * gameObject)
 {

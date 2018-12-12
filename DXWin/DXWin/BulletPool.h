@@ -20,6 +20,7 @@ namespace MyDirectX
 		//弾を取得する
 		DXGameObject* GetBullet(TRANSFORM* transform, Tag tag);
 		DXGameObject* GetBullet(TRANSFORM* transform, Tag tag, float x, float y);
+		DXGameObject* GetBullet(BULLET_SETTING_DATA data);
 		//弾をオブジェクトプールに格納する
 		void ReturnBullet(DXGameObject* bullet);
 	private:

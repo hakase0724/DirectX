@@ -6,8 +6,8 @@ namespace MyDirectX
 	class TextRenderer :public MeshRenderer
 	{
 	public:
-		TextRenderer();
-		~TextRenderer();
+		TextRenderer() {};
+		~TextRenderer() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
 		/*
 		text = •\Ž¦•¶Žš

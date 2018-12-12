@@ -39,7 +39,14 @@ void Player::Update()
 		auto bulletNum = 4;
 		for(int i = 0;i < bulletNum;i++)
 		{
-			auto game = mBulletPool->GetBullet(mGameObject->GetTransform(), Tag::PlayerBullet);
+			BULLET_SETTING_DATA data;
+			data.transform = mGameObject->GetTransform();
+			data.tag = PlayerBullet;
+			data.xVectol = 0.0f;
+			data.yVectol = 0.05f;
+			data.texturePath = _T("Texture/Bullet3.png");
+			//’e‚ðo‚·
+			auto game = mBulletPool->GetBullet(data);
 			auto gameTransform = game->GetTransform();
 			//Še’e“¯Žm‚ÌŠÔŠu
 			auto offset = gameTransform->Scale.x;
@@ -56,6 +63,14 @@ void Player::Update()
 		//SE‚ðƒŠƒZƒbƒg‚µ‚Ä‚¨‚­
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->Stop();
 	}
+
+#if _DEBUG
+	if(mDXInput->GetKeyDown(DIK_RETURN))
+	{
+		mWaitCount = mCoolCount - 1;
+	}
+#endif
+
 }
 
 void Player::OnCollisionEnter()

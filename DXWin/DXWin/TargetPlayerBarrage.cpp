@@ -28,8 +28,14 @@ void TargetPlayerBarrage::CreateBarrage(BulletPool * pool, DXGameObject * player
 	//’e‚Ì‘¬“x‚ðÝ’è
 	vecX *= mBulletSpeed;
 	vecY *= mBulletSpeed;
+	BULLET_SETTING_DATA data;
+	data.transform = enemy->GetTransform();
+	data.tag = EnemyBullet;
+	data.xVectol = vecX;
+	data.yVectol = vecY;
+	data.texturePath = _T("Texture/BulletL2.png");
 	//’e‚ðo‚·
-	auto game = pool->GetBullet(enemy->GetTransform(), Tag::EnemyBullet, vecX, vecY);
+	auto game = pool->GetBullet(data);
 	auto gameTransform = game->GetTransform();
 	gameTransform->Scale.x /= 2.0f;
 	gameTransform->Scale.y /= 2.0f;

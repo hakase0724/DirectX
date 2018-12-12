@@ -23,6 +23,15 @@ void PlayScene::Init()
 	mBulletPool->CreatePreBullets(1000);
 
 	//FPS表示テキスト
+	auto hp = Instantiate();
+	mHPText = hp->AddComponent<DXText>();
+	auto hptransform = hp->GetTransform();
+	//位置と大きさ
+	hptransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	hptransform->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
+	mAwakeObject.push_back(hp);
+
+	//FPS表示テキスト
 	auto fps = Instantiate();
 	mFPSText = fps->AddComponent<DXText>();
 	auto transform = fps->GetTransform();
@@ -173,13 +182,20 @@ void PlayScene::SceneStart()
 		game->SetEnable(true);
 	}
 	//曲再生
-	mDXRescourceManager->GetBGMDXSound()->Play();
+	//mDXRescourceManager->GetBGMDXSound()->Play();
 }
 
 void PlayScene::SceneUpdate()
 {
 	auto fps = mDXRescourceManager->GetFPS();
 	mFrameCount++;
+	std::wstringstream hp;
+	hp.precision(6);
+	hp << mPlayerCom->GetHP();
+	auto hpt = hp.str();
+	auto hpptr = hpt.c_str();
+	mHPText->UpdateText(hpptr);
+	hp.clear();
 	//FPSを計算し出力する
 	//毎フレーム出すと変化が激しすぎるので一定間隔で更新
 	if (mFrameCount % FPS_CHEACK_FRAME_COUNT == 0)
@@ -244,7 +260,7 @@ bool PlayScene::IsSceneEnd()
 	//最終ウェーブで指定敵がしんだら
 	if (mIsLastWave) if (!mEnemy->GetEnable()) 
 	{
-		mDXRescourceManager->GetSEDXSound()->Stop();
+		//mDXRescourceManager->GetSEDXSound()->Stop();
 		return true;
 	}
 	return false;
@@ -303,7 +319,7 @@ void PlayScene::CreateBossEnemy(DATA data)
 	auto gaugeCom = gauge->AddComponent<HPGauge>();
 	gaugeCom->SetHPViewObject(enemy);
 	//ゲージの色
-	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.0f);
+	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.5f);
 	gaugeTex->SetTexture(_T("Texture/Square.png"));
 	auto gaugeTransform = gauge->GetTransform();
 	//ゲージの位置と長さ

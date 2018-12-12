@@ -195,6 +195,9 @@
     <ClInclude Include="CSVLoader.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="DirLoder.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -332,6 +335,9 @@
     <ClCompile Include="CSVLoader.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="DirLoder.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DXWin.rc">
@@ -351,5 +357,6 @@
     <None Include="Shader\shader.hlsl" />
     <None Include="Shader\shader2.hlsl" />
     <None Include="Shader\TextureShader.hlsl" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
 </Project>

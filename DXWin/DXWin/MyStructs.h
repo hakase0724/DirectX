@@ -9,7 +9,7 @@
 namespace MyDirectX
 {
 	class DXGameObject;
-
+	class Bullet;
 	//色情報を保持する構造体
 	struct COLOR
 	{
@@ -146,7 +146,7 @@ namespace MyDirectX
 	//テクスチャ情報を保持
 	struct TEXTURE_DATA
 	{
-		wchar_t* fileName;
+		std::wstring fileName;
 		ID3D11Resource* texture;
 		ID3D11ShaderResourceView* shaderView;
 		~TEXTURE_DATA()
@@ -154,6 +154,12 @@ namespace MyDirectX
 			if(texture)texture->Release();
 			if(shaderView)shaderView->Release();
 		}
+	};
+
+	struct  BULLET_OBJECT
+	{
+		DXGameObject* object;
+		Bullet* bullet;
 	};
 
 	//外部データ管理用構造体
@@ -167,4 +173,12 @@ namespace MyDirectX
 		Category Category;
 	};
 
+	struct BULLET_SETTING_DATA
+	{
+		TRANSFORM* transform;
+		Tag tag;
+		float xVectol;
+		float yVectol;
+		std::wstring texturePath;
+	};
 }

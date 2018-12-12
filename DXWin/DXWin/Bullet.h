@@ -1,6 +1,7 @@
 #pragma once
 #include "IComponent.h"
 #include "DXGameObject.h"
+#include "DXTexture.h"
 
 namespace MyDirectX
 {
@@ -32,6 +33,8 @@ namespace MyDirectX
 		virtual void Update() override;
 		virtual void OnCollisionEnter() override;
 		virtual void OnDisable() override;
+		void SetTextureComponent(DXTexture* renderer) { mRenderer = renderer; }
+		void SetTexture(const wchar_t* fileName) { mRenderer->SetTexture(fileName); }
 		void ReturnPool();
 	private:
 		DXInput* mDXInput;
@@ -39,6 +42,7 @@ namespace MyDirectX
 		TRANSFORM* mTransform;
 		Vec2* mMoveVectol;
 		BulletPool* mBulletPool;
+		DXTexture* mRenderer;
 	};
 }
 

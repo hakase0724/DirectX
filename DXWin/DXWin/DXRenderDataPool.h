@@ -3,6 +3,7 @@
 #include <vector>
 #include <memory>
 #include <typeinfo>
+#include "DirLoder.h"
 
 namespace MyDirectX
 {
@@ -21,14 +22,19 @@ namespace MyDirectX
 		//fileName = テクスチャのファイルパス
 		TEXTURE_DATA* GetTexture(wchar_t* fileName);
 		//文字のテクスチャを取得　なければnullptrを返す
-		TEXTURE_DATA* GetFontTexture(wchar_t* text, WCHAR* fontName = (WCHAR*)"ＭＳ Ｐ明朝");
+		TEXTURE_DATA* GetFontTexture(wchar_t* text, WCHAR* fontName = (WCHAR*)L"ＭＳ Ｐ明朝");
 		
 	private:
 		//テクスチャデータを探す見つからなければnullptrを返す
 		//text = 探すデータの名前
 		TEXTURE_DATA* FindTextureData(wchar_t* text);
+		//テクスチャを作る
+		//filePath = 読み込むファイルパス
+		TEXTURE_DATA* CreateTexture(std::wstring filePath);
+		void LoadTextureInDir();
 		ID3D11Device* mDevice;
 		ID3D11DeviceContext* mDeviceContext;
+		std::unique_ptr<DirLoder> mDirLoder;
 		std::vector<std::unique_ptr<MeshInfo>> mMeshInfoList;
 		std::vector<std::unique_ptr<ShaderInfo>> mShaderInfoList;
 		std::vector<std::unique_ptr<TEXTURE_DATA>> mTextureList;

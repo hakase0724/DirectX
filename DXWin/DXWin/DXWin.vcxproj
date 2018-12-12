@@ -168,6 +168,7 @@
     <ClInclude Include="CommonValues.h" />
     <ClInclude Include="CSVLoader.h" />
     <ClInclude Include="dinputex.h" />
+    <ClInclude Include="DirLoder.h" />
     <ClInclude Include="DXAnimation.h" />
     <ClInclude Include="DXCamera.h" />
     <ClInclude Include="DXCube.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="BulletPool.cpp" />
     <ClCompile Include="CollisionManager.cpp" />
     <ClCompile Include="CSVLoader.cpp" />
+    <ClCompile Include="DirLoder.cpp" />
     <ClCompile Include="DXAnimation.cpp" />
     <ClCompile Include="DXCamera.cpp" />
     <ClCompile Include="DXExcuter.cpp" />
@@ -275,6 +277,7 @@
     <Image Include="small.ico" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClassDiagram.cd" />
     <None Include="Shader\NonLightingShader.hlsl">
       <FileType>Document</FileType>
     </None>

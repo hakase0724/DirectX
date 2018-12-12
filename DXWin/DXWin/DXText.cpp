@@ -32,7 +32,8 @@ void DXText::UpdateText(const wchar_t * texts)
 	//文字更新
 	for (int i = 0; i < size; i++)
 	{
-		mRenderers[i]->CreateText(&texts[i], (float)i * offset);
+		mRenderers[i]->CreateText(texts, (float)i * offset);
+		texts++;
 	}
 	//余ってるコンポーネントを空白にする
 	if(addRendererNum < 0)

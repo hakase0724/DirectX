@@ -8,7 +8,7 @@ DXGameManager::DXGameManager(HWND hwnd)
 	std::unique_ptr<Scene> scene;
 	//機能クラスをまとめたもの
 	mDXResourceManager = std::make_unique<DXResourceManager>(hwnd);
-	//ゲームループを実行する
+	//ゲームループを実行するクラス
 	mDXExcuter = std::make_unique<DXExcuter>();
 	mDXExcuter->SetDXResourceManager(mDXResourceManager.get());
 	
@@ -30,7 +30,7 @@ DXGameManager::DXGameManager(HWND hwnd)
 	result->Init();
 	scene.reset(result);
 	mSceneList.push_back(std::move(scene));
-
+	//リフレッシュレートに応じて垂直同期間隔を設定する
 	auto hdc = GetDC(hwnd);
 	auto rate = GetDeviceCaps(hdc, VREFRESH);
 	int intarval = 0;

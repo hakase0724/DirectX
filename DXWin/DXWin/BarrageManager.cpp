@@ -12,11 +12,6 @@ BarrageManager::BarrageManager()
 	SetBarrage<SixWayRazerBarrage>();
 }
 
-
-BarrageManager::~BarrageManager()
-{
-}
-
 BarrageBase * BarrageManager::GetBarrage(BarrageName name)
 {
 	BarrageBase* pReturn = nullptr;

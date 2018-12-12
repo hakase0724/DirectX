@@ -8,7 +8,7 @@ namespace MyDirectX
 	{
 	public:
 		BarrageManager();
-		~BarrageManager();
+		~BarrageManager() {};
 		template<typename T>
 		BarrageBase* SetBarrage();
 		BarrageBase* GetBarrage(BarrageName name);
