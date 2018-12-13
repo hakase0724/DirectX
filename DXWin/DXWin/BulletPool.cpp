@@ -2,6 +2,8 @@
 #include "BulletPool.h"
 #include "MeshRenderer.h"
 #include "DXTexture.h"
+#include <algorithm>
+#include <ppl.h>
 
 using namespace MyDirectX;
 
@@ -13,72 +15,9 @@ void BulletPool::CreatePreBullets(int preNum)
 	}
 }
 
-DXGameObject * BulletPool::GetBullet(TRANSFORM * transform, Tag tag)
+void BulletPool::CreatePreBulletsParallel(int preNum)
 {
-	DXGameObject* pGame;
-	//オブジェクトがあれば使いまわす
-	//なければ新しく作る
-	if (mBulletList.size() <= 0)
-	{
-		pGame = CreateBullet();
-	}
-	else
-	{
-		pGame = mBulletList.back();
-		mBulletList.pop_back();
-	}
-	auto pGameTransform = pGame->GetTransform();
-	auto scale = transform->Scale;
-	auto pBullet = pGame->GetComponent<Bullet>();
-	pBullet->SetVectol(0, 0.05f);
-	//自機の大きさを1として弾の比率を決定する
-	auto scaleRatio = 0.3f;
-	scale.x *= scaleRatio;
-	scale.y *= scaleRatio;
-	scale.z *= scaleRatio;
-	pGameTransform->Position = transform->Position;
-	//自機分上にズラす
-	pGameTransform->Position.y = transform->Position.y + scale.y;
-	pGameTransform->Scale = scale;
-	pGameTransform->Rotation = transform->Rotation;
-	pGame->GetComponent<MeshRenderer>()->SetColor();
-	pGame->SetTag(tag);
-	pGame->SetEnable(true);
-	pGame->InitializeComponent();
-	return pGame;
-}
-
-DXGameObject * BulletPool::GetBullet(TRANSFORM * transform, Tag tag, float x, float y)
-{
-	DXGameObject* pGame;
-	//オブジェクトがあれば使いまわす
-	//なければ新しく作る
-	if (mBulletList.size() <= 0)
-	{
-		pGame = CreateBullet();
-	}
-	else
-	{
-		pGame = mBulletList.back();
-		mBulletList.pop_back();
-	}
-	auto pGameTransform = pGame->GetTransform();
-	auto scale = transform->Scale;
-	auto pBullet = pGame->GetComponent<Bullet>();
-	pBullet->SetVectol(x, y);
-	//自機の大きさを1として弾の比率を決定する
-	auto scaleRatio = 0.3f;
-	scale.x *= scaleRatio;
-	scale.y *= scaleRatio;
-	scale.z *= scaleRatio;
-	pGameTransform->Position = transform->Position;
-	pGameTransform->Scale = scale;
-	pGameTransform->Rotation = transform->Rotation;
-	pGame->GetComponent<MeshRenderer>()->SetColor();
-	pGame->SetTag(tag);
-	pGame->SetEnable(true);
-	pGame->InitializeComponent();
-	return pGame;
+	
 }
 
 DXGameObject * BulletPool::GetBullet(BULLET_SETTING_DATA data)
@@ -98,16 +37,19 @@ DXGameObject * BulletPool::GetBullet(BULLET_SETTING_DATA data)
 	auto pGameTransform = pGame->GetTransform();
 	auto scale = data.transform->Scale;
 	auto pBullet = pGame->GetComponent<Bullet>();
+	//進行ベクトル設定
 	pBullet->SetVectol(data.xVectol, data.yVectol);
+	//表示する画像設定
 	pBullet->SetTexture(data.texturePath.c_str());
-	//自機の大きさを1として弾の比率を決定する
-	auto scaleRatio = 0.3f;
-	scale.x *= scaleRatio;
-	scale.y *= scaleRatio;
-	scale.z *= scaleRatio;
+	//大きさ設定
+	scale.x *= data.scaleRatio;
+	scale.y *= data.scaleRatio;
+	scale.z *= data.scaleRatio;
+	//適用
 	pGameTransform->Position = data.transform->Position;
 	pGameTransform->Scale = scale;
 	pGameTransform->Rotation = data.transform->Rotation;
+	//初期化
 	pGame->GetComponent<MeshRenderer>()->SetColor();
 	pGame->SetTag(data.tag);
 	pGame->SetEnable(true);

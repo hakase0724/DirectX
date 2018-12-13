@@ -45,6 +45,7 @@ void Player::Update()
 			data.xVectol = 0.0f;
 			data.yVectol = 0.05f;
 			data.texturePath = _T("Texture/Bullet3.png");
+			data.scaleRatio = 0.3f;
 			//弾を出す
 			auto game = mBulletPool->GetBullet(data);
 			auto gameTransform = game->GetTransform();
@@ -64,7 +65,13 @@ void Player::Update()
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->Stop();
 	}
 
+	if(mDXInput->GetKeyDown(DIK_X))
+	{
+		Bomb();
+	}
+
 #if _DEBUG
+	//エンターキーでブレークポイント
 	if(mDXInput->GetKeyDown(DIK_RETURN))
 	{
 		mWaitCount = mCoolCount - 1;
@@ -75,11 +82,43 @@ void Player::Update()
 
 void Player::OnCollisionEnter()
 {
-	mHitPoint -= 1.0;
+	Damage(1.0);
+}
+
+void Player::Damage(double damage)
+{
+	mHitPoint -= damage;
 	//体力がなくなったら自身のアクティブを切る
-	if(mHitPoint <= 0)
+	if (mHitPoint <= 0)
 	{
 		mGameObject->SetEnable(false);
+	}
+}
+
+void Player::Bomb()
+{
+	//シーンに登録されているオブジェクトを取得
+	auto gameObjects = mGameObject->GetScene()->GetGameObjects();
+	for (auto game : gameObjects)
+	{
+		//非アクティブなら無視
+		if (!game->GetEnable()) continue;
+		auto tag = game->GetTag();
+		//自機もしくは自弾なら無視
+		if (tag == PlayerTag) continue;
+		if (tag == PlayerBullet) continue;
+		//HPをもっているコンポーネントを取得
+		auto gameHaveHP = game->GetComponent<IHP>();
+		//HPがあるならダメージを与える
+		if (gameHaveHP != nullptr)
+		{
+			gameHaveHP->Damage(10.0);
+		}
+		//なければアクティブを切る
+		else
+		{
+			game->SetEnable(false);
+		}
 	}
 }
 

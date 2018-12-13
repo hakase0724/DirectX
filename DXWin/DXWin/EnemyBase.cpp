@@ -23,7 +23,12 @@ bool EnemyBase::IsBarrageEnd()
 
 void EnemyBase::OnCollisionEnter()
 {
-	mHitPoint -= 1.0;
+	Damage(1.0);
+}
+
+void EnemyBase::Damage(double damage)
+{
+	mHitPoint -= damage;
 	//体力がなくなったら自身のアクティブを切る
 	if (mHitPoint <= 0)
 	{

@@ -14,8 +14,6 @@ namespace MyDirectX
 		Scene() {};
 		virtual ~Scene() {};
 		void SetDXResourceManager(DXResourceManager* manager) { mDXRescourceManager = manager; }
-		//自身のシーンを表すシーンステートを返す
-		SceneState GetSceneState() const { return mSceneState; }
 		//シーンに最初から存在するゲームオブジェクトを渡す
 		std::vector<DXGameObject*> GetGameObjects() const
 		{ 
@@ -45,8 +43,6 @@ namespace MyDirectX
 	protected:
 		//このシーンに最初から存在するゲームオブジェクトのリスト
 		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
-		//自身のシーンを表す
-		SceneState mSceneState;
 		//全体リソース管理クラスへの参照
 		DXResourceManager* mDXRescourceManager;
 	};

@@ -36,6 +36,7 @@ void SixWayRazerBarrage::CreateBarrage(BulletPool * pool, DXGameObject * player,
 		data.xVectol = vecX;
 		data.yVectol = vecY;
 		data.texturePath = _T("Texture/BulletL2.png");
+		data.scaleRatio = 0.3f;
 		//’e‚ðo‚·
 		auto game = pool->GetBullet(data);
 		auto gameTransform = game->GetTransform();

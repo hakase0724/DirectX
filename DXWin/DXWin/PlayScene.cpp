@@ -7,6 +7,7 @@
 #include "HPGauge.h"
 #include "DXAnimation.h"
 #include <sstream>
+#include <future>
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -182,7 +183,7 @@ void PlayScene::SceneStart()
 		game->SetEnable(true);
 	}
 	//‹ÈÄ¶
-	//mDXRescourceManager->GetBGMDXSound()->Play();
+	mDXRescourceManager->GetBGMDXSound()->Play();
 }
 
 void PlayScene::SceneUpdate()

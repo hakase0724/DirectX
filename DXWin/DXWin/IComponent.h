@@ -33,6 +33,7 @@ namespace MyDirectX
 		virtual void SetHP(double hp) = 0;
 		virtual double GetHP() = 0;
 		virtual double GetMaxHP() = 0;
+		virtual void Damage(double damage) = 0;
 	};
 
 	//コンポーネントクラス

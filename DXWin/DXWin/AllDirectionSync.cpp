@@ -47,6 +47,7 @@ void AllDirectionSync::CreateBarrage(BulletPool * pool, DXGameObject * player, D
 		data.xVectol = vecX;
 		data.yVectol = vecY;
 		data.texturePath = _T("Texture/BulletS2.png");
+		data.scaleRatio = 0.3f;
 		//’e‚ðo‚·
 		auto game = pool->GetBullet(data);
 		auto gameTransform = game->GetTransform();

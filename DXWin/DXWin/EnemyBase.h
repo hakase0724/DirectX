@@ -28,6 +28,7 @@ namespace MyDirectX
 		virtual void SetHP(double hp) override { mDefaultHitPoint = hp; }
 		virtual double GetMaxHP() override { return mDefaultHitPoint; }
 		virtual double GetHP() override { return mHitPoint; }
+		virtual void Damage(double damage) override;
 	protected:
 		//弾のオブジェクトプール
 		BulletPool* mBulletPool;
