@@ -31,7 +31,7 @@ namespace MyDirectX
 		}
 		//XVˆ—1
 		virtual void Update() override;
-		virtual void OnCollisionEnter() override;
+		virtual void OnCollisionEnter2D(Collider2D* col) override;
 		virtual void OnDisable() override;
 		void SetTextureComponent(DXTexture* renderer) { mRenderer = renderer; }
 		void SetTexture(const wchar_t* fileName) { mRenderer->SetTexture(fileName); }

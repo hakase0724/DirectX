@@ -159,6 +159,7 @@
     <ClInclude Include="BackGround.h" />
     <ClInclude Include="BarrageBase.h" />
     <ClInclude Include="BarrageManager.h" />
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletPool.h" />
@@ -198,6 +199,7 @@
     <ClInclude Include="NormalEnemy.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="PowerUpItem.h" />
     <ClInclude Include="Primitive2D.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResultScene.h" />
@@ -221,6 +223,7 @@
     <ClCompile Include="BackGround.cpp" />
     <ClCompile Include="BarrageBase.cpp" />
     <ClCompile Include="BarrageManager.cpp" />
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletPool.cpp" />
@@ -250,6 +253,7 @@
     <ClCompile Include="NormalEnemy.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="PowerUpItem.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />

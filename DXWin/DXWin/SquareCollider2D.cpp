@@ -5,8 +5,6 @@
 using namespace DirectX;
 using namespace MyDirectX;
 
-
-
 void SquareCollider2D::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
@@ -21,7 +19,6 @@ void SquareCollider2D::Initialize(DXGameObject * gameObject)
 	mOneSide = cMyOneSide;
 	mOneSideHarf = mOneSide / 2.0f;
 	mName = mGameObject->GetName();
-	mCollisionNum = 0;
 }
 
 void SquareCollider2D::Initialize()
@@ -53,9 +50,9 @@ bool SquareCollider2D::IsCollision(Collider2D* otherCollider)
 	auto isCollision = IsSquareCollision(square);
 	if(isCollision)
 	{
-		mCollisionNum++;
+		mCollisionList.push_back(otherCollider);
 	}
-	if(mCollisionNum != 0)
+	if(!mCollisionList.empty())
 	{
 		mIsCollided = true;
 	}
@@ -64,17 +61,24 @@ bool SquareCollider2D::IsCollision(Collider2D* otherCollider)
 
 void SquareCollider2D::OnCollision()
 {
-	for(int i = 0;i < mCollisionNum;i++)
+	for(auto col:mCollisionList)
 	{
-		mGameObject->OnCollisionEnter();
+		mGameObject->OnCollisionEnter2D(col);
 	}
-	for(int i = 0;i < mPreCollisionNum;i++)
+	for (auto col : mPreCollisionList)
 	{
-		mGameObject->OnCollisionExit();
+		mGameObject->OnCollisionExit2D(col);
 	}
-	mPreCollisionNum = mCollisionNum;
-	mCollisionNum = 0;
-	if(mPreCollisionNum == 0)mIsCollided = false;
+	mPreCollisionList.clear();
+	auto size = (int)mCollisionList.size();
+	for(int i = 0;i < size;i++)
+	{
+		auto col = mCollisionList.back();
+		mCollisionList.pop_back();
+		mPreCollisionList.push_back(col);
+	}
+	mCollisionList.clear();
+	if(mPreCollisionList.empty())mIsCollided = false;
 }
 
 void SquareCollider2D::CalcPos()

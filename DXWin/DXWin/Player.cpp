@@ -22,6 +22,9 @@ void Player::Initialize()
 	mGameObject->ResetTransform();
 	mWaitCount = mCoolCount;
 	mHitPoint = mDefaultHitPoint;
+	mMaxBombNum = 3;
+	mPower = 1;
+	mMaxPower = 4;
 }
 
 void Player::Update()
@@ -35,9 +38,7 @@ void Player::Update()
 	}
 	else if (mDXInput->GetInputState(DIK_Z))
 	{
-		//複数発射する用テストコード
-		auto bulletNum = 4;
-		for(int i = 0;i < bulletNum;i++)
+		for(int i = 0;i < mPower;i++)
 		{
 			BULLET_SETTING_DATA data;
 			data.transform = mGameObject->GetTransform();
@@ -51,7 +52,8 @@ void Player::Update()
 			auto gameTransform = game->GetTransform();
 			//各弾同士の間隔
 			auto offset = gameTransform->Scale.x;
-			gameTransform->Position.x += offset * (i - (float)bulletNum / 3.0f);
+			//弾同士のオフセット計算
+			gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
 		}
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
@@ -80,8 +82,11 @@ void Player::Update()
 
 }
 
-void Player::OnCollisionEnter()
+void Player::OnCollisionEnter2D(Collider2D* col)
 {
+	auto game = col->GetGameObject();
+	//アイテムとの衝突ではダメージを受けない
+	if (game->GetTag() == Item) return;
 	Damage(1.0);
 }
 
@@ -97,6 +102,8 @@ void Player::Damage(double damage)
 
 void Player::Bomb()
 {
+	//ボムを持っていなければ何もしない
+	if (mBombNum <= 0) return;
 	//シーンに登録されているオブジェクトを取得
 	auto gameObjects = mGameObject->GetScene()->GetGameObjects();
 	for (auto game : gameObjects)
@@ -120,6 +127,14 @@ void Player::Bomb()
 			game->SetEnable(false);
 		}
 	}
+	mUsedBombNum++;
+	//使用回数が最大所有数を超えたら最大所有数を更新
+	if(mUsedBombNum >= mMaxBombNum)
+	{
+		mUsedBombNum = 0;
+		mMaxBombNum++;
+	}
+	mBombNum--;
 }
 
 bool Player::isCoolTime()

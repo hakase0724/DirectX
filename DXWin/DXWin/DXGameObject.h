@@ -52,9 +52,9 @@ namespace MyDirectX
 		//©g‚Ì‰ğ•ú
 		virtual void Exit();
 		//Õ“Ë‚µ‚½‚Ìˆ—
-		virtual void OnCollisionEnter();
+		virtual void OnCollisionEnter2D(Collider2D* col);
 		//Õ“Ë‚ªI‚í‚Á‚½‚Ìˆ—
-		virtual void OnCollisionExit();
+		virtual void OnCollisionExit2D(Collider2D* col);
 		virtual void OnEnable();
 		virtual void OnDisable();
 		//‰ŠúˆÊ’u‚ğİ’è‚·‚é

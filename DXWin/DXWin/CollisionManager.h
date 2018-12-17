@@ -21,6 +21,8 @@ namespace MyDirectX
 		std::vector<Collider2D*> mShooterColliderList;
 		//弾のコライダー
 		std::vector<Collider2D*> mBulletColliderList;
+		//アイテムのコライダー
+		std::vector<Collider2D*> mItemColliderList;
 	};
 }
 

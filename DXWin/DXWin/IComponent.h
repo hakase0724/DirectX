@@ -7,7 +7,7 @@
 namespace MyDirectX
 {
 	class DXGameObject;
-
+	class Collider2D;
 	//コンポーネントのインターフェイス
 	class IComponent
 	{
@@ -18,8 +18,8 @@ namespace MyDirectX
 		virtual void LateUpdate() = 0;
 		virtual void Render() = 0;
 		virtual void Exit() = 0;
-		virtual void OnCollisionEnter() = 0;
-		virtual void OnCollisionExit() = 0;
+		virtual void OnCollisionEnter2D(Collider2D* col) = 0;
+		virtual void OnCollisionExit2D(Collider2D* col) = 0;
 		virtual void OnEnable() = 0;
 		virtual void OnDisable() = 0;
 		virtual std::string GetName() = 0;
@@ -53,8 +53,8 @@ namespace MyDirectX
 		//解放処理
 		virtual void Exit() {};
 		//衝突の処理
-		virtual void OnCollisionEnter() {};
-		virtual void OnCollisionExit() {};
+		virtual void OnCollisionEnter2D(Collider2D* col) {};
+		virtual void OnCollisionExit2D(Collider2D* col) {};
 		virtual void OnEnable() {};
 		virtual void OnDisable() {};
 		std::string GetName() { return mName; }

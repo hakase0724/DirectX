@@ -21,7 +21,7 @@ bool EnemyBase::IsBarrageEnd()
 	else return false;
 }
 
-void EnemyBase::OnCollisionEnter()
+void EnemyBase::OnCollisionEnter2D(Collider2D* col)
 {
 	Damage(1.0);
 }

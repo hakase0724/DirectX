@@ -22,8 +22,8 @@ namespace MyDirectX
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Render() override;
 		virtual void Exit() override;
-		virtual void OnCollisionEnter() override;
-		virtual void OnCollisionExit() override;
+		virtual void OnCollisionEnter2D(Collider2D* col) override;
+		virtual void OnCollisionExit2D(Collider2D* col) override;
 		//ƒƒbƒVƒ…‚ğì‚é
 		template <typename T>
 		void CreateMesh();

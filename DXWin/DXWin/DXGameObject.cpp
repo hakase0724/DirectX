@@ -92,22 +92,22 @@ void DXGameObject::Exit()
 }
 
 //Õ“Ë‚µ‚½Žž‚Ìˆ—
-void DXGameObject::OnCollisionEnter()
+void DXGameObject::OnCollisionEnter2D(Collider2D* col)
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
-		pItr->OnCollisionEnter();
+		pItr->OnCollisionEnter2D(col);
 	}
 }
 
 //Õ“Ë‚ªI‚í‚Á‚½Žž‚Ìˆ—
-void DXGameObject::OnCollisionExit()
+void DXGameObject::OnCollisionExit2D(Collider2D* col)
 {
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
-		pItr->OnCollisionExit();
+		pItr->OnCollisionExit2D(col);
 	}
 }
 

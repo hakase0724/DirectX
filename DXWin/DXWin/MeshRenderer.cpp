@@ -91,12 +91,12 @@ void MeshRenderer::Exit()
 	if (mRasterizerState)mRasterizerState->Release();
 }
 
-void MeshRenderer::OnCollisionEnter()
+void MeshRenderer::OnCollisionEnter2D(Collider2D* col)
 {
 	SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-void MeshRenderer::OnCollisionExit()
+void MeshRenderer::OnCollisionExit2D(Collider2D* col)
 {
 	SetColor();
 }

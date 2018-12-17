@@ -16,6 +16,8 @@ namespace MyDirectX
 		virtual bool IsCollided() const { return mIsCollided; }
 		virtual void OnCollision() {};
 	protected:
+		std::vector<Collider2D*> mCollisionList;
+		std::vector<Collider2D*> mPreCollisionList;
 		//è’ìÀÇµÇƒÇ¢ÇÈÇ©
 		bool mIsCollided;
 	};

@@ -35,10 +35,6 @@ namespace MyDirectX
 	private:
 		float mOneSide;
 		float mOneSideHarf;
-		//今のフレームでの衝突回数
-		int mCollisionNum;
-		//前のフレームでの衝突回数
-		int mPreCollisionNum;
 		Point2D* mPos;
 		Point2D* mRightTop;
 		Point2D* mLeftTop;

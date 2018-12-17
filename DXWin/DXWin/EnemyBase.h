@@ -19,7 +19,7 @@ namespace MyDirectX
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Initialize() override {};
 		virtual void Update() override {};
-		virtual void OnCollisionEnter() override;
+		virtual void OnCollisionEnter2D(Collider2D* col) override;
 		//セッター
 		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }

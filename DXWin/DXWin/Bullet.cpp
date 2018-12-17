@@ -52,7 +52,7 @@ void Bullet::Update()
 	
 }
 
-void Bullet::OnCollisionEnter()
+void Bullet::OnCollisionEnter2D(Collider2D* col)
 {
 	mGameObject->SetEnable(false);
 }

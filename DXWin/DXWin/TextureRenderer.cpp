@@ -98,7 +98,7 @@ void TextureRenderer::Exit()
 	if (mSampler)mSampler->Release();
 }
 
-void TextureRenderer::OnCollisionEnter()
+void TextureRenderer::OnCollisionEnter2D(Collider2D* col)
 {
 	mColor.r = 0;
 	mColor.g = 0;

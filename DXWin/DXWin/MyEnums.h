@@ -8,6 +8,7 @@ namespace MyDirectX
 		EnemyTag = 1,
 		PlayerBullet = 2,
 		EnemyBullet = 3,
+		Item = 4,
 	};
 
 	enum Category

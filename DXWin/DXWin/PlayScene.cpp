@@ -8,6 +8,8 @@
 #include "DXAnimation.h"
 #include <sstream>
 #include <future>
+#include "Bomb.h"
+#include "PowerUpItem.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -49,6 +51,30 @@ void PlayScene::Init()
 	transform2->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform2->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
 	mAwakeObject.push_back(pHP);
+
+	auto bomb = Instantiate();
+	auto bombTex = bomb->AddComponent<DXTexture>();
+	bombTex->SetTexture(L"Texture/Bomb.png");
+	auto bombTransform = bomb->GetTransform();
+	bombTransform->Position = XMFLOAT3(0.0f, 0.3f, -1.0f);
+	bombTransform->Scale = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	bomb->AddComponent<Bomb>();
+	auto bombCol = bomb->AddComponent<SquareCollider2D>();
+	//コライダーは2分の1に
+	bombCol->SetOneSide(bombCol->GetOneSide() / 3.0f);
+	mAwakeObject.push_back(bomb);
+
+	auto powerUp = Instantiate();
+	auto powerUpTex = powerUp->AddComponent<DXTexture>();
+	powerUpTex->SetTexture(L"Texture/Power.png");
+	auto powerUpTransform = powerUp->GetTransform();
+	powerUpTransform->Position = XMFLOAT3(0.3f, 0.3f, -1.0f);
+	powerUpTransform->Scale = XMFLOAT3(0.1f, 0.1f, 0.1f);
+	powerUp->AddComponent<PowerUpItem>();
+	auto powerUpCol = powerUp->AddComponent<SquareCollider2D>();
+	//コライダーは2分の1に
+	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
+	mAwakeObject.push_back(powerUp);
 
 	//何ウェーブまであるのか
 	int maxWave = 0;
