@@ -156,14 +156,8 @@ namespace MyDirectX
 		}
 	};
 
-	struct  BULLET_OBJECT
-	{
-		DXGameObject* object;
-		Bullet* bullet;
-	};
-
 	//外部データ管理用構造体
-	struct DATA
+	struct LOAD_FROM_CSV_DATA
 	{
 		std::string Name;
 		DirectX::XMFLOAT3 StartPos;

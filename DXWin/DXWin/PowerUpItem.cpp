@@ -16,7 +16,6 @@ void PowerUpItem::Initialize(DXGameObject * gameObject)
 
 void PowerUpItem::OnCollisionEnter2D(Collider2D * col)
 {
-	//if (!mGameObject->GetEnable()) return;
 	auto game = col->GetGameObject();
 	auto player = game->GetComponent<Player>();
 	if (player == nullptr) return;

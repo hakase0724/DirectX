@@ -7,10 +7,10 @@
 using namespace MyDirectX;
 using namespace std;
 
-vector<DATA> CSVLoader::LoadData(const char * filePath)
+vector<LOAD_FROM_CSV_DATA> CSVLoader::LoadData(const char * filePath)
 {
 	//返す配列
-	vector<DATA> dataTable;
+	vector<LOAD_FROM_CSV_DATA> dataTable;
 
 	//ファイルオープン
 	ifstream fileStream(filePath);
@@ -42,7 +42,7 @@ vector<DATA> CSVLoader::LoadData(const char * filePath)
 			datas.push_back(tmp);
 		}
 		//切り分けたデータを構造体に格納
-		DATA data;
+		LOAD_FROM_CSV_DATA data;
 		data.Name = datas[0];
 		data.StartPos.x = strtof(datas[1].c_str(), NULL);
 		data.StartPos.y = strtof(datas[2].c_str(), NULL);

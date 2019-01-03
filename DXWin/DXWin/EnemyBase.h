@@ -20,6 +20,7 @@ namespace MyDirectX
 		virtual void Initialize() override {};
 		virtual void Update() override {};
 		virtual void OnCollisionEnter2D(Collider2D* col) override;
+		virtual void OnDisable() override;
 		//セッター
 		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
@@ -54,6 +55,7 @@ namespace MyDirectX
 		virtual void ChangeBarrageName() {};
 		//弾幕終了判定
 		virtual bool IsBarrageEnd();
+		double mScore;
 	};
 }
 

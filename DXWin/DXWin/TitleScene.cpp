@@ -40,6 +40,7 @@ void TitleScene::Init()
 bool TitleScene::IsSceneEnd()
 {
 	//ƒGƒ“ƒ^[‰Ÿ‚³‚ê‚½‚ç
-	if (mDXRescourceManager->GetKeyDown(DIK_RETURN))return true;
+	if (mDXRescourceManager->GetKeyDown(DIK_RETURN))
+		return true;
 	return false;
 }

@@ -23,6 +23,7 @@ void BossEnemy::Initialize()
 	mMoveVecX *= MOVESPPED;
 	mMoveVecY *= MOVESPPED;
 	mHitPoint = 0;
+	mScore = 100.0;
 }
 
 void BossEnemy::Update()

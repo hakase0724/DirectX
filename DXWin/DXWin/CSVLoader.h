@@ -9,7 +9,7 @@ namespace MyDirectX
 	public:
 		CSVLoader() {};
 		~CSVLoader() {};
-		std::vector<DATA> LoadData(const char* filePath);
+		std::vector<LOAD_FROM_CSV_DATA> LoadData(const char* filePath);
 	};
 }
 

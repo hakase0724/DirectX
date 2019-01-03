@@ -52,7 +52,8 @@ bool DXGameManager::Update()
 	mDXResourceManager->SetInputState();
 	mDXResourceManager->UpdateFPS();
 	mDXExcuter->Excute();
-	if (mDXResourceManager->GetKey(DIK_ESCAPE))return false;
+	if (mDXResourceManager->GetKey(DIK_ESCAPE))
+		return false;
 	if (mDXExcuter->IsSceneEnd()) SceneChange();
 	mDXResourceManager->SetPreBuffer();
 	return true;

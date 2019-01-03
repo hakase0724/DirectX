@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "EnemyBase.h"
+#include "PlayScene.h"
 
 using namespace MyDirectX;
 
@@ -24,6 +25,13 @@ bool EnemyBase::IsBarrageEnd()
 void EnemyBase::OnCollisionEnter2D(Collider2D* col)
 {
 	Damage(1.0);
+}
+
+void EnemyBase::OnDisable()
+{
+	auto scene = mGameObject->GetScene();
+	auto playScene = dynamic_cast<PlayScene*>(scene);
+	playScene->AddScore(mScore);
 }
 
 void EnemyBase::Damage(double damage)

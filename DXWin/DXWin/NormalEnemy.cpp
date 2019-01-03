@@ -11,6 +11,7 @@ void NormalEnemy::Initialize()
 	mBarrageName = BarrageName::TargetPlayer;
 	mBarrage = mBarrageManager->GetBarrage(mBarrageName);
 	mBarrage->Init();
+	mScore = 10.0;
 }
 
 void NormalEnemy::Update()
@@ -25,3 +26,4 @@ void NormalEnemy::Update()
 		mBarrage->CreateBarrage(mBulletPool, mPlayer, mGameObject);
 	}
 }
+
