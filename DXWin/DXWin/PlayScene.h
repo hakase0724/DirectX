@@ -22,10 +22,7 @@ namespace MyDirectX
 		virtual void SceneUpdate() override;
 		virtual void SceneEnd() override;
 		virtual bool IsSceneEnd() override;
-		void AddScore(double score)
-		{
-			*mScoreRP + score;
-		}
+		void AddScore(double score){ *mScoreRP + score; }
 	private:
 		//é©ã@ê∂ê¨
 		void CreatePlayer(LOAD_FROM_CSV_DATA data);

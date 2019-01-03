@@ -387,7 +387,7 @@ void PlayScene::CreateUIItem()
 	}
 	);
 
-	// HP表示に使う変数
+	// Score表示に使う変数
 	mScoreRP =
 		std::unique_ptr<Property, Deleter>
 		(new Property(), Deleter());
@@ -397,13 +397,13 @@ void PlayScene::CreateUIItem()
 	(
 	[&](double value)->void
 	{
-		std::wstringstream hp;
-		hp.precision(6);
-		hp << value;
-		auto hpt = hp.str();
-		auto hpptr = hpt.c_str();
-		mScoreText->UpdateText(hpptr);
-		hp.clear();
+		std::wstringstream score;
+		score.precision(6);
+		score << value;
+		auto scoret = score.str();
+		auto scoreptr = scoret.c_str();
+		mScoreText->UpdateText(scoreptr);
+		score.clear();
 	}
 	);
 
