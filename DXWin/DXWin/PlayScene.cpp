@@ -67,7 +67,6 @@ void PlayScene::SceneUpdate()
 	mFrameCount++;
 	*mHpRP = mPlayerCom->GetHP();
 	
-	//*mScoreRP + 1;
 	//FPSを計算し出力する
 	//毎フレーム出すと変化が激しすぎるので一定間隔で更新
 	if (mFrameCount % FPS_CHEACK_FRAME_COUNT == 0)

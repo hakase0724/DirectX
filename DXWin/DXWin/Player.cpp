@@ -25,51 +25,85 @@ void Player::Initialize()
 	mMaxBombNum = 3;
 	mPower = 1;
 	mMaxPower = 4;
+	mIsLongPush = false;
 }
 
 void Player::Update()
 {
 	//–ˆƒtƒŒ[ƒ€ƒJƒEƒ“ƒg‚ðs‚¤
 	mWaitCount++;
-	
-	if(!isCoolTime())
+
+	//ƒ{ƒ€
+	if (mDXInput->GetKeyDown(DIK_X))
 	{
-		//”­ŽË‚µ‚È‚¢
+		Bomb();
 	}
-	else if (mDXInput->GetInputState(DIK_Z))
+
+	//ƒVƒ‡ƒbƒgƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©
+	if(mDXInput->GetInputState(DIK_Z))
 	{
-		for(int i = 0;i < mPower;i++)
+		//’·‰Ÿ‚µ‚µ‚Ä‚¢‚é‚©
+		if(mIsLongPush)
 		{
-			BULLET_SETTING_DATA data;
-			data.transform = mGameObject->GetTransform();
-			data.tag = PlayerBullet;
-			data.xVectol = 0.0f;
-			data.yVectol = 0.05f;
-			data.texturePath = _T("Texture/Bullet3.png");
-			data.scaleRatio = 0.3f;
-			//’e‚ðo‚·
-			auto game = mBulletPool->GetBullet(data);
-			auto gameTransform = game->GetTransform();
-			//Še’e“¯Žm‚ÌŠÔŠu
-			auto offset = gameTransform->Scale.x;
-			//’e“¯Žm‚ÌƒIƒtƒZƒbƒgŒvŽZ
-			gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
+			//‘Å‚Ä‚é‚©
+			if (CanShot()) 
+			{
+				for (int i = 0; i < mPower; i++)
+				{
+					BULLET_SETTING_DATA data;
+					data.transform = mGameObject->GetTransform();
+					data.tag = PlayerBullet;
+					data.xVectol = 0.0f;
+					data.yVectol = 0.05f;
+					data.texturePath = _T("Texture/BulletL2.png");
+					data.scaleRatio = 0.3f;
+					//’e‚ðo‚·
+					auto game = mBulletPool->GetBullet(data);
+					auto gameTransform = game->GetTransform();
+					//Še’e“¯Žm‚ÌŠÔŠu
+					auto offset = gameTransform->Scale.x;
+					//’e“¯Žm‚ÌƒIƒtƒZƒbƒgŒvŽZ
+					gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
+				}
+				mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
+				mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+			}
 		}
-		mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
-		mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
-	}	
-	else if(!mDXInput->GetInputState(DIK_Z))
+		//’·‰Ÿ‚µ‚µ‚Ä‚¢‚È‚¢
+		else
+		{
+			//’·‰Ÿ‚µƒtƒ‰ƒO‚ð—§‚Ä‚Ä‚¨‚­
+			mIsLongPush = true;
+
+			for (int i = 0; i < mPower; i++)
+			{
+				BULLET_SETTING_DATA data;
+				data.transform = mGameObject->GetTransform();
+				data.tag = PlayerBullet;
+				data.xVectol = 0.0f;
+				data.yVectol = 0.05f;
+				data.texturePath = _T("Texture/Bullet3.png");
+				data.scaleRatio = 0.3f;
+				//’e‚ðo‚·
+				auto game = mBulletPool->GetBullet(data);
+				auto gameTransform = game->GetTransform();
+				//Še’e“¯Žm‚ÌŠÔŠu
+				auto offset = gameTransform->Scale.x;
+				//’e“¯Žm‚ÌƒIƒtƒZƒbƒgŒvŽZ
+				gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
+			}
+			mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
+			mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+		}
+	}
+	else
 	{
+		mIsLongPush = false;
 		//”­ŽË‚µ‚È‚©‚Á‚½ê‡‚Í”­ŽË‰Â”\ó‘Ô‚É‚µ‚Ä‚¨‚­
 		//-1‚µ‚Ä‚¢‚é‚Ì‚ÍŽŸ‚Ì”»’è‚Å‚Í+1‚µ‚Ä”»’è‚·‚é‚©‚ç
 		mWaitCount = mCoolCount - 1;
 		//SE‚ðƒŠƒZƒbƒg‚µ‚Ä‚¨‚­
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->Stop();
-	}
-
-	if(mDXInput->GetKeyDown(DIK_X))
-	{
-		Bomb();
 	}
 
 #if _DEBUG
@@ -137,7 +171,7 @@ void Player::Bomb()
 	mBombNum--;
 }
 
-bool Player::isCoolTime()
+bool Player::CanShot()
 {
 	if(mWaitCount % mCoolCount == 0)
 	{

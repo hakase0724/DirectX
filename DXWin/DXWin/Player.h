@@ -48,7 +48,7 @@ namespace MyDirectX
 		//ボム使用回数
 		int mUsedBombNum;
 		//発射可能かどうか
-		bool isCoolTime();
+		bool CanShot();
 		//何フレーム経過したか
 		int mWaitCount;
 		//弾を発射するフレーム感覚
@@ -60,6 +60,8 @@ namespace MyDirectX
 		int mPower;
 		//最大パワー
 		int mMaxPower;
+		//長押し判定フラグ
+		bool mIsLongPush;
 		
 	};
 }
