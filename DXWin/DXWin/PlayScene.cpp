@@ -9,6 +9,7 @@
 #include <sstream>
 #include "Bomb.h"
 #include "PowerUpItem.h"
+#include "OptionUnit.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -148,6 +149,24 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	//自機のコライダーは30分の1
 	playerCol->SetOneSide(playerCol->GetOneSide() / 30.0f);
 	mAwakeObject.push_back(mPlayer);
+
+	auto rightOptionUnit = Instantiate();
+	auto rightOptionCom = rightOptionUnit->AddComponent<OptionUnit>();
+	rightOptionCom->SetPlayer(mPlayer);
+	rightOptionCom->SetXOffset(0.3f);
+	rightOptionCom->SetBulletPool(mBulletPool.get());
+	auto rightOptionTex = rightOptionUnit->AddComponent<DXTexture>();
+	rightOptionTex->SetTexture(L"Texture/Square.png");
+	mAwakeObject.push_back(rightOptionUnit);
+
+	auto leftOptionUnit = Instantiate();
+	auto leftOptionCom =leftOptionUnit->AddComponent<OptionUnit>();
+	leftOptionCom->SetPlayer(mPlayer);
+	leftOptionCom->SetXOffset(-0.3f);
+	leftOptionCom->SetBulletPool(mBulletPool.get());
+	auto leftOptionTex = leftOptionUnit->AddComponent<DXTexture>();
+	leftOptionTex->SetTexture(L"Texture/Square.png");
+	mAwakeObject.push_back(leftOptionUnit);
 }
 
 void PlayScene::CreateBossEnemy(LOAD_FROM_CSV_DATA data)

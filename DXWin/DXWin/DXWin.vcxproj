@@ -199,6 +199,7 @@
     <ClInclude Include="MyEnums.h" />
     <ClInclude Include="MyStructs.h" />
     <ClInclude Include="NormalEnemy.h" />
+    <ClInclude Include="OptionUnit.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PowerUpItem.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="NormalEnemy.cpp" />
+    <ClCompile Include="OptionUnit.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PowerUpItem.cpp" />

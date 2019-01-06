@@ -25,6 +25,8 @@ namespace MyDirectX
 		virtual double GetMaxHP() override { return mDefaultHitPoint; }
 		virtual double GetHP() override { return mHitPoint; }
 		virtual void Damage(double damage) override;
+		bool IsShot() const { return mIsShot; };
+		bool IsLongPush() const { return mIsLongPush; };
 		//ƒ{ƒ€‚ð’Ç‰Á
 		void AddBomb() 
 		{
@@ -62,7 +64,8 @@ namespace MyDirectX
 		int mMaxPower;
 		//’·‰Ÿ‚µ”»’èƒtƒ‰ƒO
 		bool mIsLongPush;
-		
+		//”­ŽË‚µ‚Ä‚¢‚é‚©
+		bool mIsShot;
 	};
 }
  

@@ -30,6 +30,7 @@ void Player::Initialize()
 
 void Player::Update()
 {
+	mIsShot = false;
 	//毎フレームカウントを行う
 	mWaitCount++;
 
@@ -48,6 +49,7 @@ void Player::Update()
 			//打てるか
 			if (CanShot()) 
 			{
+				mIsShot = true;
 				for (int i = 0; i < mPower; i++)
 				{
 					BULLET_SETTING_DATA data;
@@ -74,7 +76,7 @@ void Player::Update()
 		{
 			//長押しフラグを立てておく
 			mIsLongPush = true;
-
+			mIsShot = true;
 			for (int i = 0; i < mPower; i++)
 			{
 				BULLET_SETTING_DATA data;
