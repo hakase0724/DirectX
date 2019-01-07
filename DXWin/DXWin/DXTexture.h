@@ -17,6 +17,7 @@ namespace MyDirectX
 		virtual void Initialize(DXGameObject* gameObject) override;
 		void SetTexture(const wchar_t* fileName);
 		void SetTexture(wchar_t* fileName);
+		void SetColor(float r, float g, float b, float a);
 	private:
 		TextureRenderer* mRenderer;
 	};

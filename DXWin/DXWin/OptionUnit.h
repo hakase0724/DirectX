@@ -1,6 +1,5 @@
 #pragma once
 #include "IComponent.h"
-#include "AlignedAllocationPolicy.h"
 #include "Bullet.h"
 #include "BulletPool.h"
 #include "Player.h"
@@ -9,7 +8,7 @@ namespace MyDirectX
 {
 	//class Player {};
 
-	class OptionUnit :public Component,public AlignedAllocationPolicy<16>
+	class OptionUnit :public Component
 	{
 	public:
 		OptionUnit() {};
@@ -20,13 +19,16 @@ namespace MyDirectX
 		virtual void Update() override;
 		void SetPlayer(DXGameObject* player);
 		void SetBulletPool(BulletPool* bulletPool) { mBulletPool = bulletPool; };
-		void SetXOffset(float xoffset) { mOffset.x = xoffset; };
-		void SetYOffset(float yoffset) { mOffset.y = yoffset; };
+		void SetXOffset(float xoffset) { mXOffset = xoffset; };
+		void SetYOffset(float yoffset) { mYOffset = yoffset; };
 	private:
 		DXGameObject* mPlayerGameObject;
 		BulletPool* mBulletPool;
 		Player* mPlayerCom;
-		DirectX::XMFLOAT3 mOffset;
+		TRANSFORM* mTransform;
+		TRANSFORM* mPlayerTransform;
+		float mXOffset;
+		float mYOffset;
 	};
 }
 

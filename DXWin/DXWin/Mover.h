@@ -12,6 +12,7 @@ namespace MyDirectX
 		~Mover() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
 		virtual void Update() override;
+		void SetSpeed(float speed) { mMoveSpeed = speed; }
 	private:
 		DXInput* mDXInput;
 		//ˆÚ“®‘¬“x

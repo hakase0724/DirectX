@@ -8,24 +8,37 @@ using namespace MyDirectX;
 void OptionUnit::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
-	mOffset = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f);
+	mTransform = mGameObject->GetTransform();
+	mTransform->Scale.x /= 5;
+	mTransform->Scale.y /= 5;
+	mTransform->Scale.z /= 5;
 }
 
 void OptionUnit::Initialize()
 {
-	auto transform = mGameObject->GetTransform();
-	transform->Scale.x /= 5;
-	transform->Scale.y /= 5;
-	transform->Scale.z /= 5;
+	if (mPlayerTransform == nullptr) 
+	{
+		mPlayerTransform = mPlayerGameObject->GetTransform(); 
+	}
 }
 
 void OptionUnit::Update()
 {
-	auto playerTransform = mPlayerGameObject->GetTransform();
-	auto transform = mGameObject->GetTransform();
-	transform->Position.x = playerTransform->Position.x + mOffset.x;
-	transform->Position.y = playerTransform->Position.y + mOffset.y;
-	transform->Position.z = playerTransform->Position.z + mOffset.z;
+	mTransform->Position = mPlayerTransform->Position;
+
+	//長押しされているか
+	if(mPlayerCom->IsLongPush())
+	{
+		//されていたら前方に
+		mTransform->Position.y += mYOffset;
+	}
+	else
+	{
+		//されていなければ横に
+		mTransform->Position.x += mXOffset;
+	}
+
+	//プレイヤーが打っていたら一緒に打つ
 	if(mPlayerCom->IsShot())
 	{
 		BULLET_SETTING_DATA data;
@@ -36,7 +49,7 @@ void OptionUnit::Update()
 		data.texturePath = _T("Texture/Bullet3.png");
 		data.scaleRatio = 0.3f;
 		//弾を出す
-		auto game = mBulletPool->GetBullet(data);
+		mBulletPool->GetBullet(data);
 	}
 }
 

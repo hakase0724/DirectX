@@ -26,3 +26,8 @@ void DXTexture::SetTexture(wchar_t * fileName)
 {
 	mRenderer->LoadTexture(fileName);
 }
+
+void DXTexture::SetColor(float r, float g, float b, float a)
+{
+	mRenderer->SetColor(r, g, b, a);
+}

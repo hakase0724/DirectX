@@ -154,18 +154,22 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	auto rightOptionCom = rightOptionUnit->AddComponent<OptionUnit>();
 	rightOptionCom->SetPlayer(mPlayer);
 	rightOptionCom->SetXOffset(0.3f);
+	rightOptionCom->SetYOffset(0.3f);
 	rightOptionCom->SetBulletPool(mBulletPool.get());
 	auto rightOptionTex = rightOptionUnit->AddComponent<DXTexture>();
 	rightOptionTex->SetTexture(L"Texture/Square.png");
+	rightOptionTex->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 	mAwakeObject.push_back(rightOptionUnit);
 
 	auto leftOptionUnit = Instantiate();
 	auto leftOptionCom =leftOptionUnit->AddComponent<OptionUnit>();
 	leftOptionCom->SetPlayer(mPlayer);
 	leftOptionCom->SetXOffset(-0.3f);
+	leftOptionCom->SetYOffset(0.3f);
 	leftOptionCom->SetBulletPool(mBulletPool.get());
 	auto leftOptionTex = leftOptionUnit->AddComponent<DXTexture>();
 	leftOptionTex->SetTexture(L"Texture/Square.png");
+	leftOptionTex->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
 	mAwakeObject.push_back(leftOptionUnit);
 }
 

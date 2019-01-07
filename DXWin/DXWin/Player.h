@@ -9,6 +9,8 @@
 
 namespace MyDirectX
 {
+	class Mover;
+
 	class Player :public Component,public IHP
 	{
 	public:
@@ -41,8 +43,11 @@ namespace MyDirectX
 		}
 	private:
 		void Bomb();
+		void Shot();
+		bool IsMyLongPush();
 		DXInput* mDXInput;
 		BulletPool* mBulletPool;
+		Mover* mMover;
 		//今所持しているボム数
 		int mBombNum;
 		//保有可能なボムの最大値　首領蜂シリーズは3回ボムを使うたびに最大数が上昇し最大7個まで増加する
@@ -66,6 +71,8 @@ namespace MyDirectX
 		bool mIsLongPush;
 		//発射しているか
 		bool mIsShot;
+		int mPushFrame;
+		int mJudgeLongPushFrame = 10;
 	};
 }
  

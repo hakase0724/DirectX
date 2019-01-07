@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Player.h"
+#include "Mover.h"
 
 using namespace MyDirectX;
 
@@ -26,13 +27,24 @@ void Player::Initialize()
 	mPower = 1;
 	mMaxPower = 4;
 	mIsLongPush = false;
+	//移動コンポーネント取得
+	if (mMover == nullptr) mMover = mGameObject->GetComponent<Mover>();
 }
 
 void Player::Update()
 {
-	mIsShot = false;
+#if _DEBUG
+	//エンターキーでブレークポイント
+	if (mDXInput->GetKeyDown(DIK_RETURN))
+	{
+		mWaitCount = mCoolCount - 1;
+	}
+#endif
+
 	//毎フレームカウントを行う
 	mWaitCount++;
+	//打てるフレームか
+	mIsShot = false;
 
 	//ボム
 	if (mDXInput->GetKeyDown(DIK_X))
@@ -41,65 +53,25 @@ void Player::Update()
 	}
 
 	//ショットボタンが押されているか
-	if(mDXInput->GetInputState(DIK_Z))
+	if (mDXInput->GetInputState(DIK_Z))
 	{
-		//長押ししているか
+		//発射判定
+		mIsShot = CanShot();
+		//長押し判定
+		mIsLongPush = IsMyLongPush();
 		if(mIsLongPush)
 		{
-			//打てるか
-			if (CanShot()) 
-			{
-				mIsShot = true;
-				for (int i = 0; i < mPower; i++)
-				{
-					BULLET_SETTING_DATA data;
-					data.transform = mGameObject->GetTransform();
-					data.tag = PlayerBullet;
-					data.xVectol = 0.0f;
-					data.yVectol = 0.05f;
-					data.texturePath = _T("Texture/BulletL2.png");
-					data.scaleRatio = 0.3f;
-					//弾を出す
-					auto game = mBulletPool->GetBullet(data);
-					auto gameTransform = game->GetTransform();
-					//各弾同士の間隔
-					auto offset = gameTransform->Scale.x;
-					//弾同士のオフセット計算
-					gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
-				}
-				mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
-				mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
-			}
+			mMover->SetSpeed(0.01f);
 		}
-		//長押ししていない
 		else
 		{
-			//長押しフラグを立てておく
-			mIsLongPush = true;
-			mIsShot = true;
-			for (int i = 0; i < mPower; i++)
-			{
-				BULLET_SETTING_DATA data;
-				data.transform = mGameObject->GetTransform();
-				data.tag = PlayerBullet;
-				data.xVectol = 0.0f;
-				data.yVectol = 0.05f;
-				data.texturePath = _T("Texture/Bullet3.png");
-				data.scaleRatio = 0.3f;
-				//弾を出す
-				auto game = mBulletPool->GetBullet(data);
-				auto gameTransform = game->GetTransform();
-				//各弾同士の間隔
-				auto offset = gameTransform->Scale.x;
-				//弾同士のオフセット計算
-				gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
-			}
-			mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
-			mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+			mMover->SetSpeed(0.02f);
 		}
 	}
 	else
 	{
+		mMover->SetSpeed(0.02f);
+		//押されていないなら長押しされていない
 		mIsLongPush = false;
 		//発射しなかった場合は発射可能状態にしておく
 		//-1しているのは次の判定では+1して判定するから
@@ -108,14 +80,7 @@ void Player::Update()
 		mGameObject->GetDXResourceManager()->GetSEDXSound()->Stop();
 	}
 
-#if _DEBUG
-	//エンターキーでブレークポイント
-	if(mDXInput->GetKeyDown(DIK_RETURN))
-	{
-		mWaitCount = mCoolCount - 1;
-	}
-#endif
-
+	if (mIsShot) Shot();
 }
 
 void Player::OnCollisionEnter2D(Collider2D* col)
@@ -165,7 +130,7 @@ void Player::Bomb()
 	}
 	mUsedBombNum++;
 	//使用回数が最大所有数を超えたら最大所有数を更新
-	if(mUsedBombNum >= mMaxBombNum)
+	if (mUsedBombNum >= mMaxBombNum)
 	{
 		mUsedBombNum = 0;
 		mMaxBombNum++;
@@ -173,9 +138,73 @@ void Player::Bomb()
 	mBombNum--;
 }
 
+void Player::Shot()
+{
+	//弾データ
+	BULLET_SETTING_DATA data;
+	data.transform = mGameObject->GetTransform();
+	data.tag = PlayerBullet;
+	data.xVectol = 0.0f;
+	data.yVectol = 0.05f;
+	data.scaleRatio = 0.3f;
+
+	//長押ししているか
+	if (mIsLongPush)
+	{
+		//弾画像
+		data.texturePath = _T("Texture/BulletL2.png");
+	}
+	//長押ししていない
+	else
+	{
+		//弾画像
+		data.texturePath = _T("Texture/Bullet3.png");
+	}
+	//弾を打つ
+	for (int i = 0; i < mPower; i++)
+	{
+		//弾を出す
+		auto game = mBulletPool->GetBullet(data);
+		auto gameTransform = game->GetTransform();
+		//各弾同士の間隔
+		auto offset = gameTransform->Scale.x;
+		//弾同士のオフセット計算
+		gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
+	}
+	mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
+	mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+}
+
+bool Player::IsMyLongPush()
+{
+	//既に長押し判定済みなら判定しない
+	if (mIsLongPush) return true;
+	//押し始めのフレームか
+	if (mDXInput->GetKeyDown(DIK_Z))
+	{
+		//カウントリセット
+		mPushFrame = 0;
+		return false;
+	}
+	else
+	{
+		//カウントアップ
+		mPushFrame++;
+		//長押し判定フレーム数より長い間押してたら
+		if(mPushFrame > mJudgeLongPushFrame)
+		{
+			//カウントリセット
+			mPushFrame = 0;
+			return true;
+		}
+	}
+	//押されていない
+	return false;
+}
+
 bool Player::CanShot()
 {
-	if(mWaitCount % mCoolCount == 0)
+	if (mWaitCount % mCoolCount == 0)
 	{
 		mWaitCount = 0;
 		return true;
