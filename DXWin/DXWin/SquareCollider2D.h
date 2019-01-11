@@ -23,7 +23,7 @@ namespace MyDirectX
 		float GetTopY() const { return mPos->y + mOneSideHarf; }
 		float GetBottomY() const { return mPos->y - mOneSideHarf; }
 		virtual void Initialize(DXGameObject* gameObject) override;
-		virtual void Initialize();
+		virtual void Initialize() override;
 		virtual void LateUpdate() override;
 		virtual void Exit() override;
 		//è’ìÀîªíË

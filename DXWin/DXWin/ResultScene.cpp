@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "ResultScene.h"
-#include "DXText.h"
+#include <sstream>
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -9,11 +9,10 @@ void ResultScene::Init()
 {
 	//リザルト
 	auto result = Instantiate();
-	auto text = result->AddComponent<DXText>();
+	mResultText = result->AddComponent<DXText>();
 	auto transform = result->GetTransform();
 	transform->Scale = XMFLOAT3(0.5f, 0.5f, 0.5f);
 	transform->Position.x -= 1.0f;
-	text->UpdateText(L"RESULT");
 	result->SetEnable(true);
 
 	//説明テキスト
@@ -34,6 +33,19 @@ void ResultScene::Init()
 	transform3->Position.y -= 0.6f;
 	message2->UpdateText(L"PRESS ESC: GAME END");
 	endMessage->SetEnable(true);
+}
+
+void ResultScene::SceneStart()
+{
+	mDXRescourceManager->GetBGMDXSound()->Stop();
+	mDXRescourceManager->GetSEDXSound()->Stop();
+	std::wstringstream resultScore;
+	resultScore.precision(6);
+	resultScore << mDXRescourceManager->GetScore();
+	auto resultScoret = resultScore.str();
+	auto resultScoreptr = resultScoret.c_str();
+	mResultText->UpdateText(resultScoreptr);
+	resultScore.clear();
 }
 
 bool ResultScene::IsSceneEnd()

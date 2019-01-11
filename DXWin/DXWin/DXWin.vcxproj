@@ -204,11 +204,13 @@
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PowerUpItem.h" />
     <ClInclude Include="Primitive2D.h" />
+    <ClInclude Include="Razer.h" />
     <ClInclude Include="ReactiveProperty.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="ReturnCoroutineValues.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SixWayRazerBarrage.h" />
@@ -263,8 +265,10 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PowerUpItem.cpp" />
+    <ClCompile Include="Razer.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="SixWayRazerBarrage.cpp" />
     <ClCompile Include="SquareCollider2D.cpp" />

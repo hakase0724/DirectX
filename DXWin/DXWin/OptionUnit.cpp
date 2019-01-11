@@ -31,6 +31,7 @@ void OptionUnit::Update()
 	{
 		//‚³‚ê‚Ä‚¢‚½‚ç‘O•û‚É
 		mTransform->Position.y += mYOffset;
+		return;
 	}
 	else
 	{
@@ -42,12 +43,12 @@ void OptionUnit::Update()
 	if(mPlayerCom->IsShot())
 	{
 		BULLET_SETTING_DATA data;
-		data.transform = mGameObject->GetTransform();
+		data.transform = *mGameObject->GetTransform();
 		data.tag = PlayerBullet;
 		data.xVectol = 0.0f;
 		data.yVectol = 0.05f;
 		data.texturePath = _T("Texture/Bullet3.png");
-		data.scaleRatio = 0.3f;
+		data.ScaleRatio(0.3f);
 		//’e‚ðo‚·
 		mBulletPool->GetBullet(data);
 	}

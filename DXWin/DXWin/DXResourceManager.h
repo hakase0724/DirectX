@@ -35,9 +35,12 @@ namespace MyDirectX
 		void UpdateFPS() { mFPS = mFPSCountor->GetFPS(); }
 		std::vector<LOAD_FROM_CSV_DATA> LoadData(const char* filePath) { return mCSVLoader->LoadData(filePath); }
 		void SetVsyncIntarval(int intarval) { mDXManager->SetVsyncIntarval(intarval); }
+		void SetScore(float score) { mScore = score; }
+		float GetScore() const { return mScore; }
 	private:
 		//FPS計算結果を保持
 		double mFPS;
+		float mScore;
 		//生成したオブジェクト数
 		UINT mGameObjectCount;
 		//各種機能クラス

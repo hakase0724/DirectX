@@ -109,6 +109,7 @@ void PlayScene::SceneEnd()
 	}
 	//‹È‚ðŽ~‚ß‚é
 	mDXRescourceManager->GetBGMDXSound()->Stop();
+	mDXRescourceManager->SetScore(mScoreRP->GetValue());
 }
 
 bool PlayScene::IsSceneEnd()

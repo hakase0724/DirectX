@@ -18,6 +18,10 @@ void Bullet::Initialize()
 {
 	mId = mGameObject->GetID();
 	mTag = mGameObject->GetTag();
+	mFixedXAxiz = nullptr;
+	mFixedYAxiz = nullptr;
+	isXFixed = false;
+	isYFixed = false;
 }
 
 void Bullet::Update()
@@ -25,6 +29,14 @@ void Bullet::Update()
 	auto transform = mGameObject->GetTransform();
 	transform->Position.x += mMoveVectol->x;
 	transform->Position.y += mMoveVectol->y;
+	if(isXFixed)
+	{
+		transform->Position.x = *mFixedXAxiz;
+	}
+	if(isYFixed)
+	{
+		transform->Position.y = *mFixedYAxiz;
+	}
 	//スクリーン座標取得
 	auto screenPos = mDXCamera->WorldToScreenPoint(transform);
 	//返ってきた行列の中から座標を取得
@@ -54,6 +66,7 @@ void Bullet::Update()
 
 void Bullet::OnCollisionEnter2D(Collider2D* col)
 {
+	//SetTexture(L"Texture/HitEffect.png");
 	mGameObject->SetEnable(false);
 }
 

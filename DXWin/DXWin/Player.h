@@ -44,6 +44,8 @@ namespace MyDirectX
 	private:
 		void Bomb();
 		void Shot();
+		void ShotBullet();
+		void ShotRazer();
 		bool IsMyLongPush();
 		DXInput* mDXInput;
 		BulletPool* mBulletPool;
@@ -59,7 +61,9 @@ namespace MyDirectX
 		//何フレーム経過したか
 		int mWaitCount;
 		//弾を発射するフレーム感覚
-		const int mCoolCount = 7;
+		int mCoolCount = 7;
+		const int BULLET_COOL_COUNT = 7;
+		const int RAZER_COOL_COUNT = 1;
 		//体力
 		double mHitPoint;
 		double mDefaultHitPoint = 1.0;
@@ -73,6 +77,8 @@ namespace MyDirectX
 		bool mIsShot;
 		int mPushFrame;
 		int mJudgeLongPushFrame = 10;
+		float mRazerWidth;
+		float mAddValue = 0.01f;
 	};
 }
  

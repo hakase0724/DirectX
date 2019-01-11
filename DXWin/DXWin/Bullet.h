@@ -33,6 +33,16 @@ namespace MyDirectX
 		virtual void Update() override;
 		virtual void OnCollisionEnter2D(Collider2D* col) override;
 		virtual void OnDisable() override;
+		void FixedXAxiz(float* axiz) 
+		{
+			isXFixed = true;
+			mFixedXAxiz = axiz;
+		}
+		void FixedYAxiz(float* axiz) 
+		{
+			isYFixed = true;
+			mFixedYAxiz = axiz;
+		}
 		void SetTextureComponent(DXTexture* renderer) { mRenderer = renderer; }
 		void SetTexture(const wchar_t* fileName) { mRenderer->SetTexture(fileName); }
 		void ReturnPool();
@@ -43,6 +53,10 @@ namespace MyDirectX
 		Vec2* mMoveVectol;
 		BulletPool* mBulletPool;
 		DXTexture* mRenderer;
+		float* mFixedXAxiz;
+		float* mFixedYAxiz;
+		bool isXFixed = false;
+		bool isYFixed = false;
 	};
 }
 

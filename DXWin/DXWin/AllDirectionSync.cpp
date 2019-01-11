@@ -34,6 +34,12 @@ void AllDirectionSync::CreateBarrage(BulletPool * pool, DXGameObject * player, D
 	//弾の速度を設定
 	vecX *= mBulletSpeed;
 	vecY *= mBulletSpeed;
+	BULLET_SETTING_DATA data;
+	data.transform = *enemy->GetTransform();
+	data.transform.Position.z = -0.01f;
+	data.tag = EnemyBullet;
+	data.texturePath = _T("Texture/BulletS2.png");
+	data.ScaleRatio(0.3f);
 	//複数発射する用テストコード
 	for (int i = 0; i < mBulletNum; i++)
 	{
@@ -41,13 +47,8 @@ void AllDirectionSync::CreateBarrage(BulletPool * pool, DXGameObject * player, D
 		auto vecY2 = vecX * mSinAngle + vecY * mCosAngle;
 		vecX = vecX2;
 		vecY = vecY2;
-		BULLET_SETTING_DATA data;
-		data.transform = enemy->GetTransform();
-		data.tag = EnemyBullet;
 		data.xVectol = vecX;
 		data.yVectol = vecY;
-		data.texturePath = _T("Texture/BulletS2.png");
-		data.scaleRatio = 0.3f;
 		//弾を出す
 		auto game = pool->GetBullet(data);
 		auto gameTransform = game->GetTransform();

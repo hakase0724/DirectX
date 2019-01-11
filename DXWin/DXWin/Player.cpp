@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "Mover.h"
+#include <math.h>
+#include "DXAnimation.h"
 
 using namespace MyDirectX;
 
@@ -29,6 +31,7 @@ void Player::Initialize()
 	mIsLongPush = false;
 	//移動コンポーネント取得
 	if (mMover == nullptr) mMover = mGameObject->GetComponent<Mover>();
+	mRazerWidth = 0.8f;
 }
 
 void Player::Update()
@@ -140,26 +143,34 @@ void Player::Bomb()
 
 void Player::Shot()
 {
-	//弾データ
-	BULLET_SETTING_DATA data;
-	data.transform = mGameObject->GetTransform();
-	data.tag = PlayerBullet;
-	data.xVectol = 0.0f;
-	data.yVectol = 0.05f;
-	data.scaleRatio = 0.3f;
 
 	//長押ししているか
 	if (mIsLongPush)
 	{
-		//弾画像
-		data.texturePath = _T("Texture/BulletL2.png");
+		ShotRazer();	
 	}
 	//長押ししていない
 	else
 	{
-		//弾画像
-		data.texturePath = _T("Texture/Bullet3.png");
+		ShotBullet();
 	}
+	
+	mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
+	mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+}
+
+void Player::ShotBullet()
+{
+	mCoolCount = BULLET_COOL_COUNT;
+	//弾データ
+	BULLET_SETTING_DATA data;
+	data.transform = *mGameObject->GetTransform();
+	data.tag = PlayerBullet;
+	data.xVectol = 0.0f;
+	data.yVectol = 0.05f;
+	data.ScaleRatio(0.3f);
+	// 弾画像
+	data.texturePath = _T("Texture/Bullet3.png");
 	//弾を打つ
 	for (int i = 0; i < mPower; i++)
 	{
@@ -171,8 +182,34 @@ void Player::Shot()
 		//弾同士のオフセット計算
 		gameTransform->Position.x += offset * (i - (float)mPower / 3.0f);
 	}
-	mGameObject->GetDXResourceManager()->GetSEDXSound()->ResetSound();
-	mGameObject->GetDXResourceManager()->GetSEDXSound()->Play();
+}
+
+void Player::ShotRazer()
+{
+	mCoolCount = RAZER_COOL_COUNT;
+	mRazerWidth += mAddValue;
+	//弾データ
+	BULLET_SETTING_DATA data;
+	data.pTransform = mGameObject->GetTransform();
+	data.transform = *mGameObject->GetTransform();
+	data.transform.Position.y += 0.3f;
+	data.tag = PlayerBullet;
+	data.xVectol = 0.0f;
+	data.yVectol = 0.05f;
+	data.isXFixed = true;
+	//横幅を動かせばレーザー打ってるぽくならないかな・・？
+	if (mRazerWidth < 0.8f) mAddValue = 0.01f;
+	if (mRazerWidth > 1.0f) mAddValue = -0.01f;
+	//if (mRazerWidth < 0.8f || mRazerWidth > 1.0f) mAddValue *= -1.0f;
+	data.scaleXRatio = mRazerWidth;
+	// 弾画像
+	data.texturePath = _T("Texture/TestRazer5.png");
+	//弾を打つ
+	for (int i = 0; i < mPower; i++)
+	{
+		//弾を出す
+		mBulletPool->GetBullet(data);
+	}
 }
 
 bool Player::IsMyLongPush()

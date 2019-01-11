@@ -2,6 +2,7 @@
 #include "TitleScene.h"
 #include "DXText.h"
 #include "DXTexture.h"
+#include "Razer.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -14,7 +15,7 @@ void TitleScene::Init()
 	auto transform = title->GetTransform();
 	transform->Scale = XMFLOAT3(0.5f, 0.5f, 0.5f);
 	transform->Position.x -= 1.0f;
-	text->UpdateText(L"TITLE");
+	text->UpdateText(L"“{Žñ—Ì–I");
 	title->SetEnable(true);
 
 	//à–¾ƒeƒLƒXƒg
@@ -35,6 +36,17 @@ void TitleScene::Init()
 	transform3->Position.y -= 0.6f;
 	message2->UpdateText(L"PRESS ESC: GAME END");
 	endMessage->SetEnable(true);
+
+	/*auto razer = Instantiate();
+	auto razerTransform = razer->GetTransform();
+	razerTransform->Position.z = -1.0f;
+	razerTransform->Position.y = -1.0f;
+	razer->SetDefaultTransform();
+	auto razerTex = razer->AddComponent<DXTexture>();
+	auto razerCom = razer->AddComponent<Razer>();
+	razerCom->Initialize();
+	razerTex->SetTexture(L"Texture/TestRazer.png");
+	razer->SetEnable(true);*/
 }
 
 bool TitleScene::IsSceneEnd()

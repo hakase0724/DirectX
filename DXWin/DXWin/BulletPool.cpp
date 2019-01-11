@@ -35,25 +35,34 @@ DXGameObject * BulletPool::GetBullet(BULLET_SETTING_DATA data)
 		mBulletList.pop_back();
 	}
 	auto pGameTransform = pGame->GetTransform();
-	auto scale = data.transform->Scale;
-	auto pBullet = pGame->GetComponent<Bullet>();
-	//進行ベクトル設定
-	pBullet->SetVectol(data.xVectol, data.yVectol);
-	//表示する画像設定
-	pBullet->SetTexture(data.texturePath.c_str());
+	auto scale = data.transform.Scale;
 	//大きさ設定
-	scale.x *= data.scaleRatio;
-	scale.y *= data.scaleRatio;
-	scale.z *= data.scaleRatio;
+	scale.x *= data.scaleXRatio;
+	scale.y *= data.scaleYRatio;
+	scale.z *= data.scaleZRatio;
 	//適用
-	pGameTransform->Position = data.transform->Position;
+	pGameTransform->Position = data.transform.Position;
 	pGameTransform->Scale = scale;
-	pGameTransform->Rotation = data.transform->Rotation;
+	pGameTransform->Rotation = data.transform.Rotation;
 	//初期化
 	pGame->GetComponent<MeshRenderer>()->SetColor();
 	pGame->SetTag(data.tag);
 	pGame->SetEnable(true);
 	pGame->InitializeComponent();
+	auto pBullet = pGame->GetComponent<Bullet>();
+	//進行ベクトル設定
+	pBullet->SetVectol(data.xVectol, data.yVectol);
+	//表示する画像設定
+	pBullet->SetTexture(data.texturePath.c_str());
+	
+	if (data.isXFixed)
+	{
+		pBullet->FixedXAxiz(&data.pTransform->Position.x);
+	}
+	if (data.isYFixed)
+	{
+		pBullet->FixedYAxiz(&data.pTransform->Position.y);
+	}	
 	return pGame;
 }
 

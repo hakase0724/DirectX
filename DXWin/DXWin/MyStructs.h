@@ -170,7 +170,8 @@ namespace MyDirectX
 	struct BULLET_SETTING_DATA
 	{
 		//位置情報
-		TRANSFORM* transform;
+		TRANSFORM* pTransform;
+		TRANSFORM transform;
 		//弾に設定するタグ
 		Tag tag;
 		//x方向にかける力
@@ -179,7 +180,17 @@ namespace MyDirectX
 		float yVectol;
 		//読み込む画像のパス
 		std::wstring texturePath;
+		void ScaleRatio(float ratio)
+		{
+			scaleXRatio = ratio;
+			scaleYRatio = ratio;
+			scaleZRatio = ratio;
+		}
 		//自身のスケールを1とした時の弾の大きさの割合
-		float scaleRatio;
+		float scaleXRatio = 1.0f;
+		float scaleYRatio = 1.0f;
+		float scaleZRatio = 1.0f;
+		bool isXFixed = false;
+		bool isYFixed = false;
 	};
 }

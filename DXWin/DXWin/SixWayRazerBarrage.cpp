@@ -28,23 +28,24 @@ void SixWayRazerBarrage::CreateBarrage(BulletPool * pool, DXGameObject * player,
 	//’e‚Ì‘¬“x‚ðÝ’è
 	vecX *= mBulletSpeed;
 	vecY *= mBulletSpeed;
+	BULLET_SETTING_DATA data;
+	data.transform = *enemy->GetTransform();
+	data.transform.Position.z = -0.01f;
+	data.tag = EnemyBullet;
+	data.texturePath = _T("Texture/BulletL2.png");
+	data.ScaleRatio(0.3f);
 	for (int i = 0; i < mBulletNum; i++)
 	{
-		BULLET_SETTING_DATA data;
-		data.transform = enemy->GetTransform();
-		data.tag = EnemyBullet;
+		auto vecX2 = vecX * mCosAngle - vecY * mSinAngle;
+		auto vecY2 = vecX * mSinAngle + vecY * mCosAngle;
+		vecX = vecX2;
+		vecY = vecY2;
 		data.xVectol = vecX;
 		data.yVectol = vecY;
-		data.texturePath = _T("Texture/BulletL2.png");
-		data.scaleRatio = 0.3f;
 		//’e‚ðo‚·
 		auto game = pool->GetBullet(data);
 		auto gameTransform = game->GetTransform();
 		gameTransform->Scale.x /= 2.0f;
 		gameTransform->Scale.y /= 2.0f;
-		auto vecX2 = vecX * mCosAngle - vecY * mSinAngle;
-		auto vecY2 = vecX * mSinAngle + vecY * mCosAngle;
-		vecX = vecX2;
-		vecY = vecY2;
 	}
 }
