@@ -15,14 +15,9 @@ namespace MyDirectX
 		virtual ~Scene() {};
 		void SetDXResourceManager(DXResourceManager* manager) { mDXRescourceManager = manager; }
 		//シーンに最初から存在するゲームオブジェクトを渡す
-		std::vector<DXGameObject*> GetGameObjects() const
+		std::list<std::unique_ptr<DXGameObject>>* GetGameObjects() 
 		{ 
-			std::vector<DXGameObject*> games;
-			for(auto& game:mGameObjectsList)
-			{
-				games.push_back(game.get());
-			}
-			return games;
+			return &mGameObjectsList;
 		}
 		//ゲームオブジェクトをシーンに登録し参照を渡す
 		virtual DXGameObject* Instantiate();
@@ -42,7 +37,7 @@ namespace MyDirectX
 		virtual bool IsSceneEnd() { return false; }
 	protected:
 		//このシーンに最初から存在するゲームオブジェクトのリスト
-		std::vector<std::unique_ptr<DXGameObject>> mGameObjectsList;
+		std::list<std::unique_ptr<DXGameObject>> mGameObjectsList;
 		//全体リソース管理クラスへの参照
 		DXResourceManager* mDXRescourceManager;
 	};

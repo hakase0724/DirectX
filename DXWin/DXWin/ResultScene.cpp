@@ -37,8 +37,10 @@ void ResultScene::Init()
 
 void ResultScene::SceneStart()
 {
+	//音を止める
 	mDXRescourceManager->GetBGMDXSound()->Stop();
 	mDXRescourceManager->GetSEDXSound()->Stop();
+	//リザルトスコアを表示
 	std::wstringstream resultScore;
 	resultScore.precision(6);
 	resultScore << mDXRescourceManager->GetScore();

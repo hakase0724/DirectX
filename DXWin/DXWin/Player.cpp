@@ -11,11 +11,9 @@ void Player::Initialize(DXGameObject * gameObject)
 	mGameObject = gameObject;
 	mDXInput = mGameObject->GetDXInput();
 	auto transform = mGameObject->GetTransform();
-	transform->Scale.x /= 3.0f;
-	transform->Scale.y /= 3.0f;
-	transform->Scale.z /= 3.0f;
 	mId = mGameObject->GetID();
 	mGameObject->SetDefaultTransform(transform);
+	mCoolCount = BULLET_COOL_COUNT;
 	mWaitCount = mCoolCount;
 	mHitPoint = 1.0;
 }
@@ -23,6 +21,7 @@ void Player::Initialize(DXGameObject * gameObject)
 void Player::Initialize()
 {
 	mGameObject->ResetTransform();
+	mCoolCount = BULLET_COOL_COUNT;
 	mWaitCount = mCoolCount;
 	mHitPoint = mDefaultHitPoint;
 	mMaxBombNum = 3;
@@ -110,7 +109,7 @@ void Player::Bomb()
 	if (mBombNum <= 0) return;
 	//シーンに登録されているオブジェクトを取得
 	auto gameObjects = mGameObject->GetScene()->GetGameObjects();
-	for (auto game : gameObjects)
+	for (auto &game : *gameObjects)
 	{
 		//非アクティブなら無視
 		if (!game->GetEnable()) continue;

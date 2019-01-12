@@ -210,7 +210,6 @@
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="ReturnCoroutineValues.h" />
     <ClInclude Include="Scene.h" />
-    <ClInclude Include="ScoreManager.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SixWayRazerBarrage.h" />
@@ -268,7 +267,6 @@
     <ClCompile Include="Razer.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
-    <ClCompile Include="ScoreManager.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="SixWayRazerBarrage.cpp" />
     <ClCompile Include="SquareCollider2D.cpp" />

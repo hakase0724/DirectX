@@ -21,7 +21,7 @@ void PlayScene::Init()
 
 	CreateBulletPool();
 	CreateUIItem();
-	CreateItem();
+	//CreateItem();
 	CreateFromCSVData();
 	CreateBackGround();
 
@@ -48,6 +48,16 @@ void PlayScene::SceneStart()
 	mWaveCount = 0;
 	mIsLastWave = false;
 	*mScoreRP = 0;
+	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();)
+	{
+		if(itr->get()->GetTag() == Item)
+		{
+			itr->reset();
+			itr = mGameObjectsList.erase(itr);
+			continue;
+		}
+		else ++itr;
+	}
 	//全てのオブジェクトの初期化
 	for(auto &game:mGameObjectsList)
 	{
@@ -102,6 +112,7 @@ void PlayScene::SceneUpdate()
 
 void PlayScene::SceneEnd()
 {
+	mDXRescourceManager->SetScore(mScoreRP->GetValue());
 	//全てのオブジェクトのアクティブを切る
 	for (auto &game : mGameObjectsList)
 	{
@@ -109,7 +120,6 @@ void PlayScene::SceneEnd()
 	}
 	//曲を止める
 	mDXRescourceManager->GetBGMDXSound()->Stop();
-	mDXRescourceManager->SetScore(mScoreRP->GetValue());
 }
 
 bool PlayScene::IsSceneEnd()
@@ -123,10 +133,44 @@ bool PlayScene::IsSceneEnd()
 	//最終ウェーブで指定敵がしんだら
 	if (mIsLastWave) if (!mEnemy->GetEnable()) 
 	{
-		//mDXRescourceManager->GetSEDXSound()->Stop();
+		mDXRescourceManager->GetSEDXSound()->Stop();
 		return true;
 	}
 	return false;
+}
+
+void PlayScene::CreateBomb(TRANSFORM transform)
+{
+	//ボム
+	auto bomb = Instantiate();
+	bomb->SetTag(Item);
+	auto bombTransform = bomb->GetTransform();
+	bombTransform->Position = transform.Position;
+	bombTransform->Scale = transform.Scale;
+	auto bombTex = bomb->AddComponent<DXTexture>();
+	bombTex->SetTexture(L"Texture/Bomb.png");
+	bomb->AddComponent<Bomb>();
+	auto bombCol = bomb->AddComponent<SquareCollider2D>();
+	//コライダーは3分の1に
+	bombCol->SetOneSide(bombCol->GetOneSide() / 3.0f);
+	bomb->SetEnable(true);
+}
+
+void PlayScene::CreatePowerUp(TRANSFORM transform)
+{
+	//パワーアップ
+	auto powerUp = Instantiate();
+	powerUp->SetTag(Item);
+	auto powerUpTransform = powerUp->GetTransform();
+	powerUpTransform->Position = transform.Position;
+	powerUpTransform->Scale = transform.Scale;
+	auto powerUpTex = powerUp->AddComponent<DXTexture>();
+	powerUpTex->SetTexture(L"Texture/Power.png");
+	powerUp->AddComponent<PowerUpItem>();
+	auto powerUpCol = powerUp->AddComponent<SquareCollider2D>();
+	//コライダーは3分の1に
+	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
+	powerUp->SetEnable(true);
 }
 
 void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
@@ -136,6 +180,9 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	mPlayer->SetName(data.Name);
 	auto transform = mPlayer->GetTransform();
 	transform->Position = data.StartPos;
+	transform->Scale.x /= 3.0f;
+	transform->Scale.y /= 3.0f;
+	transform->Scale.z /= 3.0f;
 	auto texture = mPlayer->AddComponent<DXTexture>();
 	auto anim = mPlayer->AddComponent<DXAnimation>();
 	anim->SetAnimationTexture(texture);
@@ -490,6 +537,6 @@ void PlayScene::CreateBulletPool()
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
 	//予め1000発用意しておく
-	mBulletPool->CreatePreBullets(1000);
+	mBulletPool->CreatePreBullets(600);
 }
 

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "NormalEnemy.h"
+#include "PowerUpItem.h"
 
 using namespace MyDirectX;
 
@@ -25,5 +26,10 @@ void NormalEnemy::Update()
 		//’e–‹‚ð¶¬‚·‚é
 		mBarrage->CreateBarrage(mBulletPool, mPlayer, mGameObject);
 	}
+}
+
+void NormalEnemy::OnDisable()
+{
+	EnemyBase::OnDisable();
 }
 

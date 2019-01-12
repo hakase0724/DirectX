@@ -11,6 +11,7 @@ namespace MyDirectX
 		virtual void Initialize(DXGameObject* gameObject) override { EnemyBase::Initialize(gameObject); }
 		virtual void Initialize() override;
 		virtual void Update() override;
+		virtual void OnDisable() override;
 	};
 }
 

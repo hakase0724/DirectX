@@ -23,6 +23,8 @@ namespace MyDirectX
 		virtual void SceneEnd() override;
 		virtual bool IsSceneEnd() override;
 		void AddScore(double score){ *mScoreRP + score; }
+		void CreateBomb(TRANSFORM transform);
+		void CreatePowerUp(TRANSFORM transform);
 	private:
 		//é©ã@ê∂ê¨
 		void CreatePlayer(LOAD_FROM_CSV_DATA data);
@@ -77,6 +79,8 @@ namespace MyDirectX
 		std::unique_ptr<Property, Deleter> mFPSRP;
 		//Scoreï\é¶Ç…égÇ§ïœêî
 		std::unique_ptr<Property, Deleter> mScoreRP;
+		std::vector<DXGameObject*> mBombPool;
+		std::vector<DXGameObject*> mPowerUpPool;
 	};
 }
 

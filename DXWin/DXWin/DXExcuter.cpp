@@ -18,8 +18,6 @@ void DXExcuter::SetScene(Scene * scene)
 	mScene = scene;
 	//登録シーンの開始メソッドを呼ぶ
 	mScene->SceneStart();
-	//実行ゲームオブジェクト管理配列をクリアする
-	mExcuteObjectsList.clear();
 	//実行ゲームオブジェクト管理配列にシーン上のゲームオブジェクトを追加する
 	mExcuteObjectsList = mScene->GetGameObjects();
 }
@@ -50,7 +48,7 @@ void DXExcuter::Excute()
 
 void DXExcuter::Update()
 {
-	for(auto game:mExcuteObjectsList)
+	for(auto &game:*mExcuteObjectsList)
 	{
 		if (!game->GetEnable()) continue;
 		game->Update();
@@ -59,7 +57,7 @@ void DXExcuter::Update()
 
 void DXExcuter::LateUpdate()
 {
-	for (auto game : mExcuteObjectsList)
+	for (auto &game : *mExcuteObjectsList)
 	{
 		if (!game->GetEnable()) continue;
 		game->LateUpdate();
@@ -69,7 +67,7 @@ void DXExcuter::LateUpdate()
 void DXExcuter::Render()
 {
 	mDXRescourceManager->GetDXManager()->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
-	for (auto game : mExcuteObjectsList)
+	for (auto &game : *mExcuteObjectsList)
 	{
 		if (!game->GetEnable()) continue;
 		game->Render();

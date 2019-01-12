@@ -32,6 +32,7 @@ void EnemyBase::OnDisable()
 	auto scene = mGameObject->GetScene();
 	auto playScene = dynamic_cast<PlayScene*>(scene);
 	playScene->AddScore(mScore);
+	playScene->CreatePowerUp(*mGameObject->GetTransform());
 }
 
 void EnemyBase::Damage(double damage)

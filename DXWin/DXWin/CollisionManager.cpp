@@ -3,13 +3,13 @@
 
 using namespace MyDirectX;
 
-void CollisionManager::SetGameObjects(std::vector<DXGameObject*> gameObjects)
+void CollisionManager::SetGameObjects(std::list<std::unique_ptr<DXGameObject>>* gameObjects)
 {
 	//各コライダー配列をクリア
 	mShooterColliderList.clear();
 	mItemColliderList.clear();
 	mBulletColliderList.clear();
-	for(auto game:gameObjects)
+	for(auto &game:*gameObjects)
 	{
 		//アクティブでなければ無視
 		if (!game->GetEnable()) continue;
@@ -102,6 +102,8 @@ bool CollisionManager::IsCollisionJudge(Tag shooter, Tag tag2)
 	//アイテムと敵は判定しない
 	if (shooter == Item && tag2 == EnemyTag) return false;
 	if (shooter == Item && tag2 == EnemyBullet) return false;
+	if (shooter == EnemyTag && tag2 == Item) return false;
+	if (shooter == EnemyBullet && tag2 == Item) return false;
 	//弾同士は判定しない
 	if (shooter == PlayerBullet && tag2 == EnemyBullet) return false;
 	return true;

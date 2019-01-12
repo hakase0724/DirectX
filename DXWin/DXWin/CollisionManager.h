@@ -11,7 +11,7 @@ namespace MyDirectX
 		CollisionManager() {};
 		~CollisionManager() {};
 		//コライダーをセットする
-		void SetGameObjects(std::vector<DXGameObject*> gameObjects);
+		void SetGameObjects(std::list<std::unique_ptr<DXGameObject>>* gameObjects);
 		//衝突処理
 		void Collision();
 	private:

@@ -27,7 +27,7 @@ namespace MyDirectX
 		//登録されているゲームオブジェクトのRenderを呼ぶ
 		void Render();
 		//処理を動かすゲームオブジェクトの参照リスト
-		std::vector<DXGameObject*> mExcuteObjectsList;
+		std::list<std::unique_ptr<DXGameObject>>* mExcuteObjectsList;
 		//衝突管理クラス
 		std::unique_ptr<CollisionManager> mCollisionManager;
 		//機能クラスの参照
