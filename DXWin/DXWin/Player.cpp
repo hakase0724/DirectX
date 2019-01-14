@@ -162,7 +162,7 @@ void Player::ShotBullet()
 {
 	mCoolCount = BULLET_COOL_COUNT;
 	//’eƒf[ƒ^
-	BULLET_SETTING_DATA data;
+	BULLET_SETTING_DATA data = BULLET_SETTING_DATA();
 	data.transform = *mGameObject->GetTransform();
 	data.tag = PlayerBullet;
 	data.xVectol = 0.0f;

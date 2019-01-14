@@ -537,6 +537,6 @@ void PlayScene::CreateBulletPool()
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
 	//—\‚ß1000”­—pˆÓ‚µ‚Ä‚¨‚­
-	mBulletPool->CreatePreBullets(600);
+	mBulletPool->CreatePreBullets(1000);
 }
 

@@ -61,7 +61,7 @@ TEXTURE_DATA * DXRenderDataPool::GetTexture(wchar_t * fileName)
 
 TEXTURE_DATA * DXRenderDataPool::GetFontTexture(wchar_t * text, WCHAR* fontName)
 {
-	TEXTURE_DATA* pReturn = FindTextureData(text);
+	TEXTURE_DATA* pReturn = FindTextureData(*text);
 	if (pReturn != nullptr) return pReturn;
 
 	auto pData = std::make_unique<TEXTURE_DATA>();
@@ -202,6 +202,22 @@ TEXTURE_DATA * DXRenderDataPool::FindTextureData(wchar_t * text)
 	for (auto &tex : mTextureList)
 	{
 		if (text == tex.get()->fileName)
+		{
+			pReturn = tex.get();
+			break;
+		}
+	}
+	return pReturn;
+}
+
+TEXTURE_DATA * DXRenderDataPool::FindTextureData(wchar_t text)
+{
+	std::wstring str = &text;
+	TEXTURE_DATA* pReturn = nullptr;
+	//テクスチャ情報のキャッシュがあるか
+	for (auto &tex : mTextureList)
+	{
+		if (str == tex.get()->fileName)
 		{
 			pReturn = tex.get();
 			break;

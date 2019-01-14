@@ -28,6 +28,7 @@ namespace MyDirectX
 		//テクスチャデータを探す見つからなければnullptrを返す
 		//text = 探すデータの名前
 		TEXTURE_DATA* FindTextureData(wchar_t* text);
+		TEXTURE_DATA* FindTextureData(wchar_t text);
 		//テクスチャを作る
 		//filePath = 読み込むファイルパス
 		TEXTURE_DATA* CreateTexture(std::wstring filePath);
