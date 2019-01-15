@@ -50,6 +50,14 @@ namespace MyDirectX
 	{
 		Entry = 0,
 		Battle = 1,
-		BossDie = 3
+		BossDie = 2
+	};
+
+	enum ItemType
+	{
+		NoDrop = -1,
+		Score = 0,
+		PowerUp = 1,
+		BombItem = 2,
 	};
 }

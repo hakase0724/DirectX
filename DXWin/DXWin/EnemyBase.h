@@ -25,6 +25,7 @@ namespace MyDirectX
 		void SetBulletPool(BulletPool* pool) { mBulletPool = pool; }
 		void SetPlayer(DXGameObject* player) { mPlayer = player; }
 		void SetBarrageManager(BarrageManager* manager) { mBarrageManager = manager; }
+		void SetDropItemType(ItemType type) { mDropItemType = type; }
 		//体力のインターフェース
 		virtual void SetHP(double hp) override { mDefaultHitPoint = hp; }
 		virtual double GetMaxHP() override { return mDefaultHitPoint; }
@@ -56,6 +57,7 @@ namespace MyDirectX
 		//弾幕終了判定
 		virtual bool IsBarrageEnd();
 		double mScore;
+		ItemType mDropItemType = PowerUp;
 	};
 }
 

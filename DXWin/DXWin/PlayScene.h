@@ -22,7 +22,16 @@ namespace MyDirectX
 		virtual void SceneUpdate() override;
 		virtual void SceneEnd() override;
 		virtual bool IsSceneEnd() override;
-		void AddScore(double score){ *mScoreRP + score; }
+		void AddScore(double score)
+		{ 
+			if(mIsCombo)
+			{
+				mComboScore += score;
+				mComboCountFrame = 0;
+			}
+			else mIsCombo = true;
+			*mScoreRP + score; 
+		}
 		void CreateBomb(TRANSFORM transform);
 		void CreatePowerUp(TRANSFORM transform);
 	private:
@@ -38,10 +47,10 @@ namespace MyDirectX
 		void CreateFromCSVData();
 		//UI要素生成
 		void CreateUIItem();
-		//アイテム生成
-		void CreateItem();
 		//弾幕管理クラス生成
 		void CreateBulletPool();
+		//コンボ処理
+		void ComboAction();
 		//背景管理クラス　2つの画像を循環移動させる
 		std::unique_ptr<BackGround> mBackGround;
 		//弾のオブジェクトプール
@@ -58,6 +67,8 @@ namespace MyDirectX
 		DXText* mHPText;
 		//Score表示テキスト
 		DXText* mScoreText;
+		//Combo用テキスト
+		DXText* mComboText;
 		//シーン開始時にアクティブにするオブジェクト
 		std::vector<DXGameObject*> mAwakeObject;
 		//自機
@@ -79,8 +90,14 @@ namespace MyDirectX
 		std::unique_ptr<Property, Deleter> mFPSRP;
 		//Score表示に使う変数
 		std::unique_ptr<Property, Deleter> mScoreRP;
-		std::vector<DXGameObject*> mBombPool;
-		std::vector<DXGameObject*> mPowerUpPool;
+		//コンボ中のスコア
+		double mComboScore = 0.0;
+		//コンボ中か
+		bool mIsCombo = false;
+		//コンボ中の経過フレーム数
+		int mComboCountFrame = 0;
+		//コンボ継続フレーム数
+		const int COMBO_LIMIT_FRAME = 30;
 	};
 }
 

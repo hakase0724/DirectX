@@ -192,17 +192,6 @@ namespace MyDirectX
 		float scaleZRatio = 1.0f;
 		bool isXFixed = false;
 		bool isYFixed = false;
-		BULLET_SETTING_DATA()
-		{
-			scaleXRatio = 1.0f;
-			scaleYRatio = 1.0f;
-			scaleZRatio = 1.0f;
-		}
-		~BULLET_SETTING_DATA()
-		{
-			scaleXRatio = 0.0f;
-			pTransform = nullptr;
-		}
 	};
 
 }

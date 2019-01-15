@@ -10,6 +10,7 @@
 #include "Bomb.h"
 #include "PowerUpItem.h"
 #include "OptionUnit.h"
+#include "ItemMover.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -47,6 +48,9 @@ void PlayScene::SceneStart()
 	//ウェーブ情報リセット
 	mWaveCount = 0;
 	mIsLastWave = false;
+	mComboScore = 0.0;
+	mComboCountFrame = 0;
+	mIsCombo = false;
 	*mScoreRP = 0;
 	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();)
 	{
@@ -77,7 +81,7 @@ void PlayScene::SceneUpdate()
 	auto fps = mDXRescourceManager->GetFPS();
 	mFrameCount++;
 	*mHpRP = mPlayerCom->GetHP();
-	
+	ComboAction();
 	//FPSを計算し出力する
 	//毎フレーム出すと変化が激しすぎるので一定間隔で更新
 	if (mFrameCount % FPS_CHEACK_FRAME_COUNT == 0)
@@ -153,6 +157,7 @@ void PlayScene::CreateBomb(TRANSFORM transform)
 	auto bombCol = bomb->AddComponent<SquareCollider2D>();
 	//コライダーは3分の1に
 	bombCol->SetOneSide(bombCol->GetOneSide() / 3.0f);
+	bomb->AddComponent<ItemMover>();
 	bomb->SetEnable(true);
 }
 
@@ -170,6 +175,7 @@ void PlayScene::CreatePowerUp(TRANSFORM transform)
 	auto powerUpCol = powerUp->AddComponent<SquareCollider2D>();
 	//コライダーは3分の1に
 	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
+	powerUp->AddComponent<ItemMover>();
 	powerUp->SetEnable(true);
 }
 
@@ -437,6 +443,15 @@ void PlayScene::CreateUIItem()
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
 	mAwakeObject.push_back(fps);
 
+	//Combo用テキスト
+	auto combo = Instantiate();
+	mComboText = combo->AddComponent<DXText>();
+	auto comboTransform = combo->GetTransform();
+	comboTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	comboTransform->Position = XMFLOAT3(-1.7f, 0.5f, -1.1f);
+	mComboText->UpdateText(L"COMBO");
+
+
 	//HP表示に使う変数
 	mHpRP =
 		std::unique_ptr<Property, Deleter>
@@ -502,35 +517,6 @@ void PlayScene::CreateUIItem()
 	);
 }
 
-void PlayScene::CreateItem()
-{
-	//ボム
-	auto bomb = Instantiate();
-	auto bombTex = bomb->AddComponent<DXTexture>();
-	bombTex->SetTexture(L"Texture/Bomb.png");
-	auto bombTransform = bomb->GetTransform();
-	bombTransform->Position = XMFLOAT3(0.0f, 0.3f, -1.0f);
-	bombTransform->Scale = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	bomb->AddComponent<Bomb>();
-	auto bombCol = bomb->AddComponent<SquareCollider2D>();
-	//コライダーは2分の1に
-	bombCol->SetOneSide(bombCol->GetOneSide() / 3.0f);
-	mAwakeObject.push_back(bomb);
-
-	//パワーアップ
-	auto powerUp = Instantiate();
-	auto powerUpTex = powerUp->AddComponent<DXTexture>();
-	powerUpTex->SetTexture(L"Texture/Power.png");
-	auto powerUpTransform = powerUp->GetTransform();
-	powerUpTransform->Position = XMFLOAT3(0.3f, 0.3f, -1.0f);
-	powerUpTransform->Scale = XMFLOAT3(0.1f, 0.1f, 0.1f);
-	powerUp->AddComponent<PowerUpItem>();
-	auto powerUpCol = powerUp->AddComponent<SquareCollider2D>();
-	//コライダーは3分の1に
-	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
-	mAwakeObject.push_back(powerUp);
-}
-
 void PlayScene::CreateBulletPool()
 {
 	//弾のオブジェクトプール
@@ -538,5 +524,22 @@ void PlayScene::CreateBulletPool()
 	mBulletPool->SetScene(this);
 	//予め1000発用意しておく
 	mBulletPool->CreatePreBullets(1000);
+}
+
+void PlayScene::ComboAction()
+{
+	if (!mIsCombo)
+	{
+		mComboText->SetEnable(false);
+		return;
+	}
+	mComboText->SetEnable(true);
+	mComboCountFrame++;
+	if(mComboCountFrame > COMBO_LIMIT_FRAME)
+	{
+		mIsCombo = false;
+		*mScoreRP + mComboScore;
+		mComboCountFrame = 0;
+	}
 }
 

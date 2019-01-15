@@ -19,7 +19,9 @@ namespace MyDirectX
 		virtual void ChangeBarrageName() override;
 	private:
 		DirectX::XMFLOAT3 mBattleStartPos;
+		//ˆÚ“®‘¬“x
 		const float MOVESPPED = 0.01f;
+		//‹–—eŒë·
 		const float EPSILON = 0.000001f;
 		float mMoveVecX;
 		float mMoveVecY;

@@ -24,6 +24,7 @@ void BossEnemy::Initialize()
 	mMoveVecY *= MOVESPPED;
 	mHitPoint = 0;
 	mScore = 100.0;
+	mDropItemType = NoDrop;
 }
 
 void BossEnemy::Update()

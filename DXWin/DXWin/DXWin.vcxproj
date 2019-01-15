@@ -94,6 +94,7 @@
       <AdditionalIncludeDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\DDSTextureLoader;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\WICTextureLoader</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
+      <DebugInformationFormat>OldStyle</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -191,6 +192,7 @@
     <ClInclude Include="HPGauge.h" />
     <ClInclude Include="IComponent.h" />
     <ClInclude Include="InitPrimitiveDataType.h" />
+    <ClInclude Include="ItemMover.h" />
     <ClInclude Include="MeshAndShader.h" />
     <ClInclude Include="MeshFactory.h" />
     <ClInclude Include="MeshInfo.h" />
@@ -256,6 +258,7 @@
     <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="HPGauge.cpp" />
     <ClCompile Include="InitPrimitiveDataType.cpp" />
+    <ClCompile Include="ItemMover.cpp" />
     <ClCompile Include="MeshFactory.cpp" />
     <ClCompile Include="MeshRenderer.cpp" />
     <ClCompile Include="Mover.cpp" />
