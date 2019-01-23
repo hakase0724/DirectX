@@ -1,5 +1,6 @@
 #pragma once
 #include<malloc.h>
+//メモリアラインメントを行うクラス
 template <size_t T>
 class AlignedAllocationPolicy
 {

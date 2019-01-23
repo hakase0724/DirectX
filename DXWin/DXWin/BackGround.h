@@ -27,6 +27,12 @@ namespace MyDirectX
 	private:
 		DXGameObject* mBackFirst;
 		DXGameObject* mBackSecond;
+		//”wŒi‚ÌˆÚ“®‘¬“x
+		float mMoveSpeed = 0.01f;
+		//”wŒi‚ªã‚É–ß‚éYÀ•W@‚±‚Ì’lˆÈ‰º‚É‚È‚Á‚½‚çã‚É–ß‚é
+		const float MOVE_UP_Y_POSITION = -5.0f;
+		//”wŒi‚ªã‚É–ß‚éÛ‚ÌˆÚ“®—Ê
+		const float MOVE_UP_VALUE = 10.0f;
 	};
 }
 

@@ -9,14 +9,14 @@ void BackGround::UpdateBackGrounds()
 	if (mBackSecond == nullptr) return;
 	auto first = mBackFirst->GetTransform();
 	auto second = mBackSecond->GetTransform();
-	first->Position.y -= 0.01f;
-	second->Position.y -= 0.01f;
-	if(first->Position.y <= -5.0f)
+	first->Position.y -= mMoveSpeed;
+	second->Position.y -= mMoveSpeed;
+	if(first->Position.y <= MOVE_UP_Y_POSITION)
 	{
-		first->Position.y += 10.0f;
+		first->Position.y += MOVE_UP_VALUE;
 	}
-	if(second->Position.y <= -5.0f)
+	if(second->Position.y <= MOVE_UP_Y_POSITION)
 	{
-		second->Position.y += 10.0f;
+		second->Position.y += MOVE_UP_VALUE;
 	}
 }

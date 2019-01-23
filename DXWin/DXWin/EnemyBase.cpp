@@ -24,6 +24,7 @@ bool EnemyBase::IsBarrageEnd()
 
 void EnemyBase::OnCollisionEnter2D(Collider2D* col)
 {
+	//“–‚½‚Á‚½‚ç1ƒ_ƒ[ƒWó‚¯‚é
 	Damage(1.0);
 }
 
@@ -33,21 +34,18 @@ void EnemyBase::OnDisable()
 	auto playScene = dynamic_cast<PlayScene*>(scene);
 	playScene->AddScore(mScore);
 	auto transform = *mGameObject->GetTransform();
-	transform.Scale.x /= 2;
-	transform.Scale.y /= 2;
-	transform.Scale.z /= 2;
+	playScene->CreateExplosionEffect(transform.Position);
 	switch (mDropItemType)
 	{
 	case PowerUp:
-		playScene->CreatePowerUp(transform);
+		playScene->CreatePowerUp(transform.Position);
 		break;
 	case BombItem:
-		playScene->CreateBomb(transform);
+		playScene->CreateBomb(transform.Position);
 		break;
 	default:
 		break;
 	}
-	
 }
 
 void EnemyBase::Damage(double damage)

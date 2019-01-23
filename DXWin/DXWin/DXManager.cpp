@@ -40,6 +40,7 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 		cWidth / cHeight
 	);
 	mDXCamera = std::make_unique<DXCamera>(cParam);
+	//シェーダーとメッシュを作るクラス
 	mDXFactory = std::make_unique<DXFactory>();
 	
 #ifdef _DEBUG
@@ -60,9 +61,9 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	sd.BufferDesc.Width = width;
 	//解像度高さ
 	sd.BufferDesc.Height = height;
-	//リフレッシュレートの最大有理数　要は60fpsだってことだと思う
+	//リフレッシュレートの最大有理数　変更可能な場合のみ画面のリフレッシュレートをこの値に変更する
 	sd.BufferDesc.RefreshRate.Numerator = 60;
-	//リフレッシュレートの最小有理数　少なくとも1fpsは保証するってことかな・・・？
+	//リフレッシュレートの最小有理数　
 	sd.BufferDesc.RefreshRate.Denominator = 1;
 	//表示フォーマット　4要素符号無し32ビット
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -153,6 +154,22 @@ HRESULT DXManager::InitDX11(HWND hwnd)
 	mDeviceContext->RSSetViewports(1, &mView);
 	delete cParam;
 	back_buff->Release();
+
+	D3D11_BLEND_DESC BlendDesc;
+	ZeroMemory(&BlendDesc, sizeof(BlendDesc));
+	BlendDesc.AlphaToCoverageEnable = FALSE;
+	BlendDesc.IndependentBlendEnable = TRUE;
+	BlendDesc.RenderTarget[0].BlendEnable = TRUE;
+	BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	mDevice->CreateBlendState(&BlendDesc, &mBlendState);
+
 	mDXRenderDataPool = std::make_unique<DXRenderDataPool>(mDevice,mDeviceContext);
 	return S_OK;
 }
@@ -165,6 +182,7 @@ void DXManager::ExitDX11()
 		mDeviceContext->ClearState();
 		mDeviceContext->Release();
 	}
+	if (mBlendState) mBlendState->Release();
 	if (mRenderTargetView)mRenderTargetView->Release();
 	if (mSwapChain) mSwapChain->Release();
 	if (mDepthStencilView)mDepthStencilView->Release();
@@ -198,5 +216,17 @@ void DXManager::EndScene()
 void DXManager::SetVsyncEnable(bool isEnable)
 {
 	mIsVsyncEnable = isEnable;
+}
+
+void DXManager::OMSetBlendState(bool blendFlg)
+{
+	if(blendFlg)
+	{
+		mDeviceContext->OMSetBlendState(mBlendState, NULL, 0xffffffff);
+	}
+	else
+	{
+		mDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
+	}
 }
 

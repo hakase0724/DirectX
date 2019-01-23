@@ -68,7 +68,7 @@ void DXInput::SetPreBuffer()
 	}
 }
 
-BOOL DXInput::GetInputState(int key)
+BOOL DXInput::GetKey(int key)
 {
 	if (mInputBuffer[key] & isInputNum) return TRUE;
 	else return FALSE;

@@ -17,7 +17,6 @@ namespace MyDirectX
 		//オブジェクトプールに予め弾を格納しておく
 		//preNum = 事前に生成しておく弾の数
 		void CreatePreBullets(int preNum);
-		void CreatePreBulletsParallel(int preNum);
 		//弾を取得する
 		DXGameObject* GetBullet(BULLET_SETTING_DATA data);
 		//弾をオブジェクトプールに格納する

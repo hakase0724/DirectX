@@ -14,11 +14,8 @@ vector<LOAD_FROM_CSV_DATA> CSVLoader::LoadData(const char * filePath)
 
 	//ファイルオープン
 	ifstream fileStream(filePath);
-	if (!fileStream)
-	{
-		cout << "ファイルオープン失敗" << endl;
-		return dataTable;
-	}
+	//失敗していたら空の配列を返す
+	if (!fileStream) return dataTable;
 
 	//何行目か
 	int i = 0;

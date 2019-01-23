@@ -32,8 +32,9 @@ namespace MyDirectX
 			else mIsCombo = true;
 			*mScoreRP + score; 
 		}
-		void CreateBomb(TRANSFORM transform);
-		void CreatePowerUp(TRANSFORM transform);
+		void CreateBomb(DirectX::XMFLOAT3 pos);
+		void CreatePowerUp(DirectX::XMFLOAT3 pos);
+		void CreateExplosionEffect(DirectX::XMFLOAT3 pos);
 	private:
 		//自機生成
 		void CreatePlayer(LOAD_FROM_CSV_DATA data);
@@ -67,8 +68,6 @@ namespace MyDirectX
 		DXText* mHPText;
 		//Score表示テキスト
 		DXText* mScoreText;
-		//Combo用テキスト
-		DXText* mComboText;
 		//シーン開始時にアクティブにするオブジェクト
 		std::vector<DXGameObject*> mAwakeObject;
 		//自機
@@ -98,6 +97,8 @@ namespace MyDirectX
 		int mComboCountFrame = 0;
 		//コンボ継続フレーム数
 		const int COMBO_LIMIT_FRAME = 30;
+		//予め作る弾の数
+		const int PRE_CREATE_BULLET_NUM = 1000;
 	};
 }
 

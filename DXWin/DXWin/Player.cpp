@@ -55,7 +55,7 @@ void Player::Update()
 	}
 
 	//ショットボタンが押されているか
-	if (mDXInput->GetInputState(DIK_Z))
+	if (mDXInput->GetKey(DIK_Z))
 	{
 		//発射判定
 		mIsShot = CanShot();
@@ -199,7 +199,6 @@ void Player::ShotRazer()
 	//横幅を動かせばレーザー打ってるぽくならないかな・・？
 	if (mRazerWidth < 0.8f) mAddValue = 0.01f;
 	if (mRazerWidth > 1.0f) mAddValue = -0.01f;
-	//if (mRazerWidth < 0.8f || mRazerWidth > 1.0f) mAddValue *= -1.0f;
 	data.scaleXRatio = mRazerWidth;
 	// 弾画像
 	data.texturePath = _T("Texture/TestRazer5.png");

@@ -42,6 +42,11 @@ void MeshRenderer::Initialize(DXGameObject * gameObject)
 	mColor = mDefaultColor;
 }
 
+void MeshRenderer::Initialize()
+{
+	mColor = mDefaultColor;
+}
+
 void MeshRenderer::Render()
 {
 	auto transform = mGameObject->GetTransform();
@@ -76,6 +81,8 @@ void MeshRenderer::Render()
 	//深度バッファ状態を設定
 	auto depth = mDXManager->GetDepthStencilState();
 	mDeviceContext->OMSetDepthStencilState(depth, 0);
+	//ブレンドステート設定
+	mDXManager->OMSetBlendState(mIsAlphaBlending);
 	//描画
 	mDeviceContext->DrawIndexed(mDrawNum, 0, 0);
 }

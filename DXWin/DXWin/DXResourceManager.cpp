@@ -10,6 +10,7 @@ DXResourceManager::DXResourceManager(HWND hwnd)
 	mBGMDXSound = std::make_unique<DXSound>(hwnd, (LPWSTR)_T("Sound/bgm.wav"));
 	//ショット音管理クラス
 	mSEDXSound = std::make_unique<DXSound>(hwnd, (LPWSTR)_T("Sound/Shot.wav"));
+	//音量を下げる
 	mSEDXSound->SetVolume(-1000);
 	//DirectXリソース管理
 	mDXManager = std::make_unique<DXManager>(hwnd);

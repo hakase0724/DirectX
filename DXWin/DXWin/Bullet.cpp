@@ -29,6 +29,7 @@ void Bullet::Update()
 	auto transform = mGameObject->GetTransform();
 	transform->Position.x += mMoveVectol->x;
 	transform->Position.y += mMoveVectol->y;
+	//座標固定フラグが立っていれば座標を上書きする
 	if(isXFixed)
 	{
 		transform->Position.x = *mFixedXAxiz;
@@ -60,13 +61,10 @@ void Bullet::Update()
 	{
 		mGameObject->SetEnable(false);
 	}
-	
-	
 }
 
 void Bullet::OnCollisionEnter2D(Collider2D* col)
 {
-	//SetTexture(L"Texture/HitEffect.png");
 	mGameObject->SetEnable(false);
 }
 

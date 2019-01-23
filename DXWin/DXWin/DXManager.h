@@ -49,6 +49,7 @@ namespace MyDirectX
 		ID3D11DepthStencilView* GetDepthStencilView() const { return mDepthStencilView; }
 		//深度バッファの状態
 		ID3D11DepthStencilState* GetDepthStencilState() const { return mDepthStencilState; }
+		void OMSetBlendState(bool blendFlg);
 		//保持している機能のポインタを返す
 		DXInput* GetDXInput() const { return mDXInput.get(); }
 		DXCamera* GetDXCamera() const { return mDXCamera.get(); }
@@ -77,6 +78,7 @@ namespace MyDirectX
 		ID3D11DepthStencilState* mDepthStencilState;
 		//ビューポート設定
 		D3D11_VIEWPORT mView;
+		ID3D11BlendState* mBlendState;
 		//VSyncの有無　
 		BOOL mIsVsyncEnable;
 		//保持している機能

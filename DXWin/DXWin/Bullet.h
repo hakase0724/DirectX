@@ -33,11 +33,13 @@ namespace MyDirectX
 		virtual void Update() override;
 		virtual void OnCollisionEnter2D(Collider2D* col) override;
 		virtual void OnDisable() override;
+		//x座標固定
 		void FixedXAxiz(float* axiz) 
 		{
 			isXFixed = true;
 			mFixedXAxiz = axiz;
 		}
+		//y座標固定
 		void FixedYAxiz(float* axiz) 
 		{
 			isYFixed = true;
@@ -45,6 +47,7 @@ namespace MyDirectX
 		}
 		void SetTextureComponent(DXTexture* renderer) { mRenderer = renderer; }
 		void SetTexture(const wchar_t* fileName) { mRenderer->SetTexture(fileName); }
+		//オブジェクトプールに帰る
 		void ReturnPool();
 	private:
 		DXInput* mDXInput;
@@ -53,8 +56,10 @@ namespace MyDirectX
 		Vec2* mMoveVectol;
 		BulletPool* mBulletPool;
 		DXTexture* mRenderer;
+		//固定する座標
 		float* mFixedXAxiz;
 		float* mFixedYAxiz;
+		//座標固定フラグ
 		bool isXFixed = false;
 		bool isYFixed = false;
 	};

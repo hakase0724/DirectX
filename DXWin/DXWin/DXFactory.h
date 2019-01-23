@@ -28,7 +28,9 @@ namespace MyDirectX
 			ID3D11RasterizerState ** rasterizerState,
 			ID3D11Buffer ** constantBuffer);
 	private:
+		//メッシュを作るクラス
 		std::unique_ptr<MeshFactory> mMeshFactory;
+		//シェーダーを作るクラス
 		std::unique_ptr<ShaderFactory> mShaderFactory;
 	};
 }

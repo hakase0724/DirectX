@@ -11,6 +11,7 @@
 #include "PowerUpItem.h"
 #include "OptionUnit.h"
 #include "ItemMover.h"
+#include "ExplosionEffect.h"
 
 using namespace DirectX;
 using namespace MyDirectX;
@@ -22,7 +23,6 @@ void PlayScene::Init()
 
 	CreateBulletPool();
 	CreateUIItem();
-	//CreateItem();
 	CreateFromCSVData();
 	CreateBackGround();
 
@@ -78,7 +78,6 @@ void PlayScene::SceneStart()
 
 void PlayScene::SceneUpdate()
 {
-	auto fps = mDXRescourceManager->GetFPS();
 	mFrameCount++;
 	*mHpRP = mPlayerCom->GetHP();
 	ComboAction();
@@ -86,7 +85,7 @@ void PlayScene::SceneUpdate()
 	//毎フレーム出すと変化が激しすぎるので一定間隔で更新
 	if (mFrameCount % FPS_CHEACK_FRAME_COUNT == 0)
 	{
-		*mFPSRP = fps;
+		*mFPSRP = mDXRescourceManager->GetFPS();
 	}
 	//背景を動かす
 	mBackGround->UpdateBackGrounds();
@@ -116,7 +115,7 @@ void PlayScene::SceneUpdate()
 
 void PlayScene::SceneEnd()
 {
-	mDXRescourceManager->SetScore(mScoreRP->GetValue());
+	mDXRescourceManager->SetScore((float)mScoreRP->GetValue());
 	//全てのオブジェクトのアクティブを切る
 	for (auto &game : mGameObjectsList)
 	{
@@ -143,14 +142,14 @@ bool PlayScene::IsSceneEnd()
 	return false;
 }
 
-void PlayScene::CreateBomb(TRANSFORM transform)
+void PlayScene::CreateBomb(DirectX::XMFLOAT3 pos)
 {
 	//ボム
 	auto bomb = Instantiate();
 	bomb->SetTag(Item);
 	auto bombTransform = bomb->GetTransform();
-	bombTransform->Position = transform.Position;
-	bombTransform->Scale = transform.Scale;
+	bombTransform->Position = pos;
+	bombTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
 	auto bombTex = bomb->AddComponent<DXTexture>();
 	bombTex->SetTexture(L"Texture/Bomb.png");
 	bomb->AddComponent<Bomb>();
@@ -161,14 +160,14 @@ void PlayScene::CreateBomb(TRANSFORM transform)
 	bomb->SetEnable(true);
 }
 
-void PlayScene::CreatePowerUp(TRANSFORM transform)
+void PlayScene::CreatePowerUp(DirectX::XMFLOAT3 pos)
 {
 	//パワーアップ
 	auto powerUp = Instantiate();
 	powerUp->SetTag(Item);
 	auto powerUpTransform = powerUp->GetTransform();
-	powerUpTransform->Position = transform.Position;
-	powerUpTransform->Scale = transform.Scale;
+	powerUpTransform->Position = pos;
+	powerUpTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
 	auto powerUpTex = powerUp->AddComponent<DXTexture>();
 	powerUpTex->SetTexture(L"Texture/Power.png");
 	powerUp->AddComponent<PowerUpItem>();
@@ -177,6 +176,20 @@ void PlayScene::CreatePowerUp(TRANSFORM transform)
 	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
 	powerUp->AddComponent<ItemMover>();
 	powerUp->SetEnable(true);
+}
+
+void PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos)
+{
+	auto explosion = Instantiate();
+	explosion->SetTag(Item);
+	auto exTransform = explosion->GetTransform();
+	exTransform->Position = pos;
+	exTransform->Scale = DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f);
+	auto exTex = explosion->AddComponent<DXTexture>();
+	exTex->SetTexture(L"Texture/explosion.png");
+	explosion->AddComponent<ExplosionEffect>();
+	explosion->InitializeComponent();
+	explosion->SetEnable(true);
 }
 
 void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
@@ -205,6 +218,10 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	mAwakeObject.push_back(mPlayer);
 
 	auto rightOptionUnit = Instantiate();
+	auto rightOptionTransform = rightOptionUnit->GetTransform();
+	rightOptionTransform->Scale.x /= 5.0f;
+	rightOptionTransform->Scale.y /= 5.0f;
+	rightOptionTransform->Scale.z /= 5.0f;
 	auto rightOptionCom = rightOptionUnit->AddComponent<OptionUnit>();
 	rightOptionCom->SetPlayer(mPlayer);
 	rightOptionCom->SetXOffset(0.3f);
@@ -212,10 +229,14 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	rightOptionCom->SetBulletPool(mBulletPool.get());
 	auto rightOptionTex = rightOptionUnit->AddComponent<DXTexture>();
 	rightOptionTex->SetTexture(L"Texture/Square.png");
-	rightOptionTex->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+	rightOptionTex->SetDefaultColor(1.0f, 0.0f, 0.0f, 0.1f);
 	mAwakeObject.push_back(rightOptionUnit);
 
 	auto leftOptionUnit = Instantiate();
+	auto leftOptionTransform = leftOptionUnit->GetTransform();
+	leftOptionTransform->Scale.x /= 5.0f;
+	leftOptionTransform->Scale.y /= 5.0f;
+	leftOptionTransform->Scale.z /= 5.0f;
 	auto leftOptionCom =leftOptionUnit->AddComponent<OptionUnit>();
 	leftOptionCom->SetPlayer(mPlayer);
 	leftOptionCom->SetXOffset(-0.3f);
@@ -223,7 +244,7 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	leftOptionCom->SetBulletPool(mBulletPool.get());
 	auto leftOptionTex = leftOptionUnit->AddComponent<DXTexture>();
 	leftOptionTex->SetTexture(L"Texture/Square.png");
-	leftOptionTex->SetColor(1.0f, 0.0f, 0.0f, 1.0f);
+	leftOptionTex->SetDefaultColor(1.0f, 0.0f, 0.0f, 1.0f);
 	mAwakeObject.push_back(leftOptionUnit);
 }
 
@@ -233,16 +254,18 @@ void PlayScene::CreateBossEnemy(LOAD_FROM_CSV_DATA data)
 	mEnemy = Instantiate();
 	mEnemy->SetName(data.Name);
 	mEnemy->SetTag(data.Tag);
+	auto enemyPos = mEnemy->GetTransform();
+	enemyPos->Position = data.StartPos;
 	auto enemyTex = mEnemy->AddComponent<DXTexture>();
 	enemyTex->SetTexture(_T("Texture/Enemy.png"));
-	auto texPos = mEnemy->GetTransform();
-	texPos->Position = data.StartPos;
+	
 	auto enemy = mEnemy->AddComponent<BossEnemy>();
 	enemy->SetBulletPool(mBulletPool.get());
 	enemy->SetPlayer(mPlayer);
 	enemy->SetBarrageManager(mBarrageManager.get());
 	enemy->SetHP(data.HP);
 	auto battleStartPos = data.StartPos;
+	//初期位置から1進んだら弾幕展開を開始するようにする
 	battleStartPos.y -= 1;
 	enemy->SetBattleStartPos(battleStartPos);
 	auto enemyCol = mEnemy->AddComponent<SquareCollider2D>();
@@ -252,6 +275,12 @@ void PlayScene::CreateBossEnemy(LOAD_FROM_CSV_DATA data)
 
 	//体力ゲージ
 	auto gauge = Instantiate();
+	auto gaugeTransform = gauge->GetTransform();
+	//ゲージの位置と長さ
+	gaugeTransform->Position.y = 1.3f;
+	gaugeTransform->Position.z = -0.1f;
+	gaugeTransform->Scale.y = 0.1f;
+	gaugeTransform->Scale.x = 3.0f;
 	auto renderer = gauge->AddComponent<TextureRenderer>();
 	auto gaugeTex = gauge->AddComponent<DXTexture>();
 	auto gaugeCom = gauge->AddComponent<HPGauge>();
@@ -259,12 +288,7 @@ void PlayScene::CreateBossEnemy(LOAD_FROM_CSV_DATA data)
 	//ゲージの色
 	renderer->SetDefaultColor(1.0f, 0.8f, 0.0f, 0.5f);
 	gaugeTex->SetTexture(_T("Texture/Square.png"));
-	auto gaugeTransform = gauge->GetTransform();
-	//ゲージの位置と長さ
-	gaugeTransform->Position.y = 1.3f;
-	gaugeTransform->Position.z = -0.1f;
-	gaugeTransform->Scale.y = 0.1f;
-	gaugeTransform->Scale.x = 3.0f;
+	
 
 	mEnemyWaveList[data.Wave - 1].push_back(mEnemy);
 	mEnemyWaveList[data.Wave - 1].push_back(gauge);
@@ -409,29 +433,29 @@ void PlayScene::CreateUIItem()
 	//HP表示テキスト
 	auto hp = Instantiate();
 	mHPText = hp->AddComponent<DXText>();
-	auto hptransform = hp->GetTransform();
+	auto hpTransform = hp->GetTransform();
 	//位置と大きさ
-	hptransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	hptransform->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
+	hpTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	hpTransform->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
 	mAwakeObject.push_back(hp);
 
 	//Score表示テキスト
 	auto scoreNotice = Instantiate();
 	auto scoreText = scoreNotice->AddComponent<DXText>();
-	auto scoreNoticetransform = scoreNotice->GetTransform();
+	auto scoreNoticeTransform = scoreNotice->GetTransform();
 	//位置と大きさ
-	scoreNoticetransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	scoreNoticetransform->Position = XMFLOAT3(-1.7f, 0.9f, -1.1f);
+	scoreNoticeTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	scoreNoticeTransform->Position = XMFLOAT3(-1.7f, 0.9f, -1.1f);
 	scoreText->UpdateText(L"SCORE");
 	mAwakeObject.push_back(scoreNotice);
 
 	//Score表示テキスト
 	auto score = Instantiate();
 	mScoreText = score->AddComponent<DXText>();
-	auto scoretransform = score->GetTransform();
+	auto scoreTransform = score->GetTransform();
 	//位置と大きさ
-	scoretransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	scoretransform->Position = XMFLOAT3(-1.7f, 0.8f, -1.1f);
+	scoreTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
+	scoreTransform->Position = XMFLOAT3(-1.7f, 0.8f, -1.1f);
 	mAwakeObject.push_back(score);
 
 	//FPS表示テキスト
@@ -442,15 +466,6 @@ void PlayScene::CreateUIItem()
 	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
 	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
 	mAwakeObject.push_back(fps);
-
-	//Combo用テキスト
-	auto combo = Instantiate();
-	mComboText = combo->AddComponent<DXText>();
-	auto comboTransform = combo->GetTransform();
-	comboTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	comboTransform->Position = XMFLOAT3(-1.7f, 0.5f, -1.1f);
-	mComboText->UpdateText(L"COMBO");
-
 
 	//HP表示に使う変数
 	mHpRP =
@@ -465,9 +480,7 @@ void PlayScene::CreateUIItem()
 		std::wstringstream hp;
 		hp.precision(6);
 		hp << value;
-		auto hpt = hp.str();
-		auto hpptr = hpt.c_str();
-		mHPText->UpdateText(hpptr);
+		mHPText->UpdateText(hp.str().c_str());
 		hp.clear();
 	}
 	);
@@ -485,9 +498,7 @@ void PlayScene::CreateUIItem()
 		std::wstringstream score;
 		score.precision(6);
 		score << value;
-		auto scoret = score.str();
-		auto scoreptr = scoret.c_str();
-		mScoreText->UpdateText(scoreptr);
+		mScoreText->UpdateText(score.str().c_str());
 		score.clear();
 	}
 	);
@@ -508,9 +519,7 @@ void PlayScene::CreateUIItem()
 		//有効桁数指定
 		ws.precision(6);
 		ws << value;
-		auto t = ws.str();
-		auto pt = t.c_str();
-		mFPSText->UpdateText(pt);
+		mFPSText->UpdateText(ws.str().c_str());
 		//中身をクリアする
 		ws.clear();
 	}
@@ -522,23 +531,22 @@ void PlayScene::CreateBulletPool()
 	//弾のオブジェクトプール
 	mBulletPool = std::make_unique<BulletPool>();
 	mBulletPool->SetScene(this);
-	//予め1000発用意しておく
-	mBulletPool->CreatePreBullets(1000);
+	//予め弾を用意しておく
+	mBulletPool->CreatePreBullets(PRE_CREATE_BULLET_NUM);
 }
 
 void PlayScene::ComboAction()
 {
-	if (!mIsCombo)
-	{
-		mComboText->SetEnable(false);
-		return;
-	}
-	mComboText->SetEnable(true);
+	//コンボ中でなければ処理をしない
+	if (!mIsCombo) return;
+	//経過フレームカウント
 	mComboCountFrame++;
+	//一定フレーム以上経過したら
 	if(mComboCountFrame > COMBO_LIMIT_FRAME)
 	{
 		mIsCombo = false;
 		*mScoreRP + mComboScore;
+		mComboScore = 0;
 		mComboCountFrame = 0;
 	}
 }

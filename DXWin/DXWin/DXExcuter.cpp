@@ -66,7 +66,7 @@ void DXExcuter::LateUpdate()
 
 void DXExcuter::Render()
 {
-	mDXRescourceManager->GetDXManager()->BeginScene(0.1f, 0.1f, 0.1f, 1.0f);
+	mDXRescourceManager->GetDXManager()->BeginScene(0.0f, 0.0f, 0.0f, 0.0f);
 	for (auto &game : *mExcuteObjectsList)
 	{
 		if (!game->GetEnable()) continue;

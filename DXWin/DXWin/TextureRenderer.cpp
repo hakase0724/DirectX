@@ -82,6 +82,7 @@ void TextureRenderer::Render()
 	//深度バッファ状態を設定
 	auto depth = mDXManager->GetDepthStencilState();
 	mDeviceContext->OMSetDepthStencilState(depth, 0);
+	mDXManager->OMSetBlendState(mIsAlphaBlending);
 	//描画
 	mDeviceContext->DrawIndexed(mDrawNum, 0, 0);
 }

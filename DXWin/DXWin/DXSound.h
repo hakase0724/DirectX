@@ -11,7 +11,9 @@ namespace MyDirectX
 		DXSound(HWND hwnd);
 		DXSound(HWND hwnd, LPWSTR sourcePath);
 		~DXSound() {};
+		//‰¹—Êİ’è
 		void SetVolume(LONG volume) { mDsBuffer->SetVolume(volume); }
+		//‰¹‚ğÅ‰‚©‚çÄ¶‚Å‚«‚é‚æ‚¤‚É‚·‚é
 		void ResetSound();
 		void Play();
 		void Stop();

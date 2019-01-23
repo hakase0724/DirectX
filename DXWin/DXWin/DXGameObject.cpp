@@ -55,6 +55,7 @@ void DXGameObject::Update()
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
+		if (!pItr->GetEnable())continue;
 		pItr->Update();
 	}
 }
@@ -65,6 +66,7 @@ void DXGameObject::LateUpdate()
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
+		if (!pItr->GetEnable())continue;
 		pItr->LateUpdate();
 	}
 }
@@ -76,6 +78,7 @@ void DXGameObject::Render()
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
+		if (!pItr->GetEnable())continue;
 		pItr->Render();
 	}
 }
@@ -97,6 +100,7 @@ void DXGameObject::OnCollisionEnter2D(Collider2D* col)
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
+		if (!pItr->GetEnable())continue;
 		pItr->OnCollisionEnter2D(col);
 	}
 }
@@ -107,6 +111,7 @@ void DXGameObject::OnCollisionExit2D(Collider2D* col)
 	for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
 	{
 		auto pItr = *itr;
+		if (!pItr->GetEnable())continue;
 		pItr->OnCollisionExit2D(col);
 	}
 }

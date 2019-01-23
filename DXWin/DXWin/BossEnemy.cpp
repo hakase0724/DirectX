@@ -20,9 +20,11 @@ void BossEnemy::Initialize()
 	auto len = sqrtf(mMoveVecX * mMoveVecX + mMoveVecY * mMoveVecY);
 	mMoveVecX /= len;
 	mMoveVecY /= len;
-	mMoveVecX *= MOVESPPED;
-	mMoveVecY *= MOVESPPED;
+	mMoveVecX *= MOVE_SPPED;
+	mMoveVecY *= MOVE_SPPED;
+	//演出で使用するために0で初期化
 	mHitPoint = 0;
+	//ボスを倒したときのスコア
 	mScore = 100.0;
 	mDropItemType = NoDrop;
 }
@@ -36,7 +38,7 @@ void BossEnemy::Update()
 		//ボスの体力バーが動く演出のため体力を増加させる
 		if(mHitPoint + mDefaultHitPoint / 100.0 <= mDefaultHitPoint)
 		{
-			mHitPoint = mHitPoint + mDefaultHitPoint / 100.0;
+			mHitPoint += mDefaultHitPoint / 100.0;
 		}
 		else if(mHitPoint + mDefaultHitPoint / 100.0 > mDefaultHitPoint)
 		{

@@ -15,11 +15,6 @@ void BulletPool::CreatePreBullets(int preNum)
 	}
 }
 
-void BulletPool::CreatePreBulletsParallel(int preNum)
-{
-	
-}
-
 DXGameObject * BulletPool::GetBullet(BULLET_SETTING_DATA data)
 {
 	DXGameObject* pGame;
@@ -54,11 +49,12 @@ DXGameObject * BulletPool::GetBullet(BULLET_SETTING_DATA data)
 	pBullet->SetVectol(data.xVectol, data.yVectol);
 	//•\Ž¦‚·‚é‰æ‘œÝ’è
 	pBullet->SetTexture(data.texturePath.c_str());
-	
+	//xÀ•WŒÅ’è
 	if (data.isXFixed)
 	{
 		pBullet->FixedXAxiz(&data.pTransform->Position.x);
 	}
+	//yÀ•WŒÅ’è
 	if (data.isYFixed)
 	{
 		pBullet->FixedYAxiz(&data.pTransform->Position.y);

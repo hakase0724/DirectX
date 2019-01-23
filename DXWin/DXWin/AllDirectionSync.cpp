@@ -37,6 +37,8 @@ void AllDirectionSync::CreateBarrage(BulletPool * pool, DXGameObject * player, D
 	BULLET_SETTING_DATA data;
 	data.transform = *enemy->GetTransform();
 	data.transform.Position.z = -0.01f;
+	data.transform.Scale.x /= 2.0f;
+	data.transform.Scale.y /= 2.0f;
 	data.tag = EnemyBullet;
 	data.texturePath = _T("Texture/BulletS2.png");
 	data.ScaleRatio(0.3f);
@@ -50,9 +52,6 @@ void AllDirectionSync::CreateBarrage(BulletPool * pool, DXGameObject * player, D
 		data.xVectol = vecX;
 		data.yVectol = vecY;
 		//’e‚ðo‚·
-		auto game = pool->GetBullet(data);
-		auto gameTransform = game->GetTransform();
-		gameTransform->Scale.x /= 2.0f;
-		gameTransform->Scale.y /= 2.0f;
+		pool->GetBullet(data);
 	}
 }

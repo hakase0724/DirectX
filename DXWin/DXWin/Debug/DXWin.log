@@ -1,11 +1,3 @@
-﻿  BossEnemy.cpp
+﻿  TitleScene.cpp
   c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-  PlayScene.cpp
-  c:\program files (x86)\windows kits\10\include\10.0.17134.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
-c:\users\hakas\source\repos\directx\dxwin\dxwin\playscene.cpp(119): warning C4244: '引数': 'T' から 'float' への変換です。データが失われる可能性があります。
-          with
-          [
-              T=double
-          ]
-  コードを生成中...
   DXWin.vcxproj -> C:\Users\hakas\source\repos\DirectX\DXWin\Debug\DXWin.exe

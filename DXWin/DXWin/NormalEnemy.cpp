@@ -12,6 +12,7 @@ void NormalEnemy::Initialize()
 	mBarrageName = BarrageName::TargetPlayer;
 	mBarrage = mBarrageManager->GetBarrage(mBarrageName);
 	mBarrage->Init();
+	//“|‚³‚ê‚½‚Æ‚«‚ÌƒXƒRƒA
 	mScore = 10.0;
 }
 

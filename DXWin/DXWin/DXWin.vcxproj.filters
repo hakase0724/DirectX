@@ -165,9 +165,6 @@
     <ClInclude Include="BulletPool.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="DXGameManager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -204,12 +201,6 @@
     <ClInclude Include="PowerUpItem.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Task.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="ReturnCoroutineValues.h">
-      <Filter>ソース ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="Subject.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -222,10 +213,13 @@
     <ClInclude Include="OptionUnit.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="Razer.h">
+    <ClInclude Include="ItemMover.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="ItemMover.h">
+    <ClInclude Include="ReturnCoroutineValues.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="ExplosionEffect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -338,9 +332,6 @@
     <ClCompile Include="BulletPool.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyManager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="DXGameManager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -374,19 +365,16 @@
     <ClCompile Include="PowerUpItem.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Task.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="InitPrimitiveDataType.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="OptionUnit.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="Razer.cpp">
+    <ClCompile Include="ItemMover.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="ItemMover.cpp">
+    <ClCompile Include="ExplosionEffect.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

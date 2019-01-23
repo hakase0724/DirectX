@@ -21,7 +21,7 @@ namespace MyDirectX
 		//指定したキーが入力されたタイミングか
 		bool GetKeyDown(int key) { return mDXManager->GetDXInput()->GetKeyDown(key); }
 		//指定したキーが入力されているか
-		bool GetKey(int key) { return mDXManager->GetDXInput()->GetInputState(key); }
+		bool GetKey(int key) { return mDXManager->GetDXInput()->GetKey(key); }
 		//音管理クラスを返す
 		DXSound* GetBGMDXSound() const { return mBGMDXSound.get(); }
 		DXSound* GetSEDXSound() const { return mSEDXSound.get(); }

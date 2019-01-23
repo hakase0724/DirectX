@@ -28,13 +28,7 @@ VS_OUTPUT VS(float4 Pos : POSITION, float2 Tex : TEXCOORD)
 float4 PS(VS_OUTPUT input) : SV_Target
 {
     float4 tex = mTexture.Sample(mSampler, input.TextureUV);
-    if (tex.a <= 0)
-    {
-        discard;
-    }
-    tex.r *= gColor.r;
-    tex.g *= gColor.g;
-    tex.b *= gColor.b;
-    tex.a *= gColor.a;
+    if (tex.a <= 0) discard;
+    tex *= gColor; 
     return tex;
 }

@@ -9,9 +9,6 @@ void OptionUnit::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
 	mTransform = mGameObject->GetTransform();
-	mTransform->Scale.x /= 5;
-	mTransform->Scale.y /= 5;
-	mTransform->Scale.z /= 5;
 }
 
 void OptionUnit::Initialize()

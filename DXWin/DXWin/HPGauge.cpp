@@ -27,6 +27,7 @@ void HPGauge::Update()
 	auto scalex = mDefaultScaleX * hpRate;
 	mTransform->Scale.x = (float)scalex;
 	//サイズ変更に合わせて場所を移動
+	//ゲージ増加量の半分だけ移動させる
 	auto positionx = mDefaultPositionX - mDefaultScaleX * (1 - hpRate) * 0.5;
 	mTransform->Position.x = (float)positionx;
 }

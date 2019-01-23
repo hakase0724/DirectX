@@ -20,10 +20,12 @@ namespace MyDirectX
 		void SetColor(float r, float g, float b, float a);
 		void SetColor();
 		virtual void Initialize(DXGameObject* gameObject) override;
+		virtual void Initialize() override;
 		virtual void Render() override;
 		virtual void Exit() override;
 		virtual void OnCollisionEnter2D(Collider2D* col) override;
 		virtual void OnCollisionExit2D(Collider2D* col) override;
+		void SetAlphaBlendingFlg(bool flg) { mIsAlphaBlending = flg; }
 		//メッシュを作る
 		template <typename T>
 		void CreateMesh();
@@ -68,6 +70,8 @@ namespace MyDirectX
 		ID3D11RasterizerState* mRasterizerState;
 		//パイプラインの解釈の仕方
 		D3D11_PRIMITIVE_TOPOLOGY mTopology;
+		//透過処理を行うか
+		bool mIsAlphaBlending;
 	};
 
 	//メッシュを作る

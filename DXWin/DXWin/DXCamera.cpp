@@ -8,6 +8,7 @@ using namespace MyDirectX;
 DXCamera::DXCamera(CAMERA_PARAM * param)
 {
 	mParam = *param;
+	//スクリーン座標を取得するための行列作成
 	XMVECTOR one = XMVectorSet(cWidth / 2.0f, 0.0f, 0.0f, 0.0f);
 	XMVECTOR two = XMVectorSet(0.0f, -cHeight / 2.0f, 0.0f, 0.0f);
 	XMVECTOR three = XMVectorSet(cWidth / 2.0f, 0.0f, 1.0f, 0.0f);

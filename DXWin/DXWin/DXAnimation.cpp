@@ -8,7 +8,7 @@ void DXAnimation::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mTag = mGameObject->GetTag();
 	mFileNumber = 0;
-	mWaitFrameCount = 0;
+	mFrameCount = 0;
 }
 
 void DXAnimation::Initialize()
@@ -18,10 +18,10 @@ void DXAnimation::Initialize()
 
 void DXAnimation::Update()
 {
-	mWaitFrameCount++;
-	if(mWaitFrameCount % mTextureChangeCount == 0)
+	mFrameCount++;
+	if(mFrameCount % mTextureChangeCount == 0)
 	{
-		mWaitFrameCount = 0;
+		mFrameCount = 0;
 		mFileNumber = (++mFileNumber) % (int)mFileNameList.size();
 		mAnimationTexture->SetTexture(mFileNameList[mFileNumber]);
 	}

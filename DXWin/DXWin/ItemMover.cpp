@@ -11,6 +11,7 @@ void ItemMover::Initialize(DXGameObject * gameObject)
 	mDXCamera = mGameObject->GetDXCamera();
 	mId = mGameObject->GetID();
 	mTag = mGameObject->GetTag();
+	//‰½‚àİ’è‚µ‚È‚©‚Á‚½ê‡‚ÌˆÚ“®‘¬“x
 	mMoveSpeed = 0.02f;
 }
 

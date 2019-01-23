@@ -127,6 +127,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\DDSTextureLoader;C:\Users\hakas\source\repos\DirectX\DXWin\DXWin\AddFiles\WICTextureLoader</AdditionalIncludeDirectories>
+      <AdditionalOptions>/await %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -187,7 +188,7 @@
     <ClInclude Include="DXText.h" />
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="EnemyBase.h" />
-    <ClInclude Include="EnemyManager.h" />
+    <ClInclude Include="ExplosionEffect.h" />
     <ClInclude Include="FPSCountor.h" />
     <ClInclude Include="HPGauge.h" />
     <ClInclude Include="IComponent.h" />
@@ -206,7 +207,6 @@
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PowerUpItem.h" />
     <ClInclude Include="Primitive2D.h" />
-    <ClInclude Include="Razer.h" />
     <ClInclude Include="ReactiveProperty.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResultScene.h" />
@@ -221,7 +221,6 @@
     <ClInclude Include="TargetPlayerBarrage.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="DXTexture.h" />
-    <ClInclude Include="Task.h" />
     <ClInclude Include="TextRenderer.h" />
     <ClInclude Include="TextureMesh.h" />
     <ClInclude Include="TextureRenderer.h" />
@@ -254,7 +253,7 @@
     <ClCompile Include="DXText.cpp" />
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
-    <ClCompile Include="EnemyManager.cpp" />
+    <ClCompile Include="ExplosionEffect.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="HPGauge.cpp" />
     <ClCompile Include="InitPrimitiveDataType.cpp" />
@@ -267,7 +266,6 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PowerUpItem.cpp" />
-    <ClCompile Include="Razer.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
@@ -281,7 +279,6 @@
     </ClCompile>
     <ClCompile Include="DXTexture.cpp" />
     <ClCompile Include="TargetPlayerBarrage.cpp" />
-    <ClCompile Include="Task.cpp" />
     <ClCompile Include="TextRenderer.cpp" />
     <ClCompile Include="TextureMesh.cpp" />
     <ClCompile Include="TextureRenderer.cpp" />

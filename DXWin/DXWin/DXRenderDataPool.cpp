@@ -9,9 +9,11 @@ DXRenderDataPool::DXRenderDataPool(ID3D11Device * device, ID3D11DeviceContext * 
 {
 	mDevice = device;
 	mDeviceContext = deviceContext;
+	//ロケールを設定しなければ文字化けする可能性があるらしい
 	setlocale(LC_ALL, "Japanese");
-
+	//ディレクトリからファイル名を読み込むクラス
 	mDirLoder = std::make_unique<DirLoder>();
+	//ディレクトリからテクスチャを読み込む
 	LoadTextureInDir();
 
 	//空白のテクスチャを作る
@@ -51,12 +53,9 @@ DXRenderDataPool::DXRenderDataPool(ID3D11Device * device, ID3D11DeviceContext * 
 TEXTURE_DATA * DXRenderDataPool::GetTexture(wchar_t * fileName)
 {
 	TEXTURE_DATA* pReturn = FindTextureData(fileName);
+	if (pReturn != nullptr) return pReturn;
 	//キャッシュが無ければ作る
-	if(pReturn == nullptr)
-	{
-		pReturn = CreateTexture(fileName);
-	}
-	return pReturn;
+	return CreateTexture(fileName);
 }
 
 TEXTURE_DATA * DXRenderDataPool::GetFontTexture(wchar_t * text, WCHAR* fontName)
@@ -244,5 +243,4 @@ void DXRenderDataPool::LoadTextureInDir()
 	{
 		CreateTexture(file);
 	}
-
 }

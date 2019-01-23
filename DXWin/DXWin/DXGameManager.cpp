@@ -48,12 +48,17 @@ void DXGameManager::Initialize()
 
 bool DXGameManager::Update()
 {
-	//毎フレーム行う処理を書く
+	//現在の入力を取得
 	mDXResourceManager->SetInputState();
+	//FPS計算
 	mDXResourceManager->UpdateFPS();
+	//処理を実行
 	mDXExcuter->Excute();
+	//エスケープが押されていたら終了する
 	if (mDXResourceManager->GetKey(DIK_ESCAPE))return false;
+	//シーンが終了していたら切り替える
 	if (mDXExcuter->IsSceneEnd()) SceneChange();
+	//次フレームのために現在の入力状況を保存
 	mDXResourceManager->SetPreBuffer();
 	return true;
 }

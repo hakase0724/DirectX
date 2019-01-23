@@ -16,11 +16,12 @@ namespace MyDirectX
 		void SetCollider(SquareCollider2D* col) { mCollider = col; }
 		void SetBattleStartPos(DirectX::XMFLOAT3 pos) { mBattleStartPos = pos; }
 	protected:
+		//’e–‹Ø‚è‘Ö‚¦
 		virtual void ChangeBarrageName() override;
 	private:
 		DirectX::XMFLOAT3 mBattleStartPos;
 		//ˆÚ“®‘¬“x
-		const float MOVESPPED = 0.01f;
+		const float MOVE_SPPED = 0.01f;
 		//‹–—eŒë·
 		const float EPSILON = 0.000001f;
 		float mMoveVecX;
