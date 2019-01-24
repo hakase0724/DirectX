@@ -52,6 +52,7 @@ void PlayScene::SceneStart()
 	mComboCountFrame = 0;
 	mIsCombo = false;
 	*mScoreRP = 0;
+	mIsBossDie = false;
 	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();)
 	{
 		if(itr->get()->GetTag() == Item)
@@ -133,8 +134,8 @@ bool PlayScene::IsSceneEnd()
 		mDXRescourceManager->GetSEDXSound()->Stop();
 		return true;
 	}
-	//最終ウェーブで指定敵がしんだら
-	if (mIsLastWave) if (!mEnemy->GetEnable()) 
+	//ボスがしんだら
+	if(mIsBossDie)
 	{
 		mDXRescourceManager->GetSEDXSound()->Stop();
 		return true;
@@ -178,18 +179,36 @@ void PlayScene::CreatePowerUp(DirectX::XMFLOAT3 pos)
 	powerUp->SetEnable(true);
 }
 
-void PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos)
+DXGameObject* PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos, float setAlpha)
 {
 	auto explosion = Instantiate();
 	explosion->SetTag(Item);
 	auto exTransform = explosion->GetTransform();
 	exTransform->Position = pos;
-	exTransform->Scale = DirectX::XMFLOAT3(0.5f, 0.5f, 0.5f);
+	exTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
 	auto exTex = explosion->AddComponent<DXTexture>();
 	exTex->SetTexture(L"Texture/explosion.png");
-	explosion->AddComponent<ExplosionEffect>();
+	auto ex = explosion->AddComponent<ExplosionEffect>();
+	ex->SetAlphaValue(setAlpha);
 	explosion->InitializeComponent();
 	explosion->SetEnable(true);
+	return explosion;
+}
+
+DXGameObject* PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 scale, float setAlpha)
+{
+	auto explosion = Instantiate();
+	explosion->SetTag(Item);
+	auto exTransform = explosion->GetTransform();
+	exTransform->Position = pos;
+	exTransform->Scale = scale;
+	auto exTex = explosion->AddComponent<DXTexture>();
+	exTex->SetTexture(L"Texture/explosion.png");
+	auto ex = explosion->AddComponent<ExplosionEffect>();
+	ex->SetAlphaValue(setAlpha);
+	explosion->InitializeComponent();
+	explosion->SetEnable(true);
+	return explosion;
 }
 
 void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)

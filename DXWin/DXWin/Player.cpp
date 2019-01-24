@@ -37,7 +37,7 @@ void Player::Update()
 {
 #if _DEBUG
 	//エンターキーでブレークポイント
-	if (mDXInput->GetKeyDown(DIK_RETURN))
+	if (mDXInput->GetKeyDown(DIK_NUMPADENTER))
 	{
 		mWaitCount = mCoolCount - 1;
 	}

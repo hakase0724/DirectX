@@ -8,6 +8,7 @@
 #include "BarrageBase.h"
 #include "BarrageManager.h"
 #include "BulletPool.h"
+#include "PlayScene.h"
 
 namespace MyDirectX
 {
@@ -32,6 +33,7 @@ namespace MyDirectX
 		virtual double GetHP() override { return mHitPoint; }
 		virtual void Damage(double damage) override;
 	protected:
+		PlayScene* mPlayScene;
 		//弾のオブジェクトプール
 		BulletPool* mBulletPool;
 		//何フレーム経過したか

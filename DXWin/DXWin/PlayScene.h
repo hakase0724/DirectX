@@ -34,7 +34,9 @@ namespace MyDirectX
 		}
 		void CreateBomb(DirectX::XMFLOAT3 pos);
 		void CreatePowerUp(DirectX::XMFLOAT3 pos);
-		void CreateExplosionEffect(DirectX::XMFLOAT3 pos);
+		DXGameObject* CreateExplosionEffect(DirectX::XMFLOAT3 pos,float setAlpha = 0.1f);
+		DXGameObject* CreateExplosionEffect(DirectX::XMFLOAT3 pos,DirectX::XMFLOAT3 scale, float setAlpha = 0.1f);
+		void BossDie() { mIsBossDie = true; }
 	private:
 		//自機生成
 		void CreatePlayer(LOAD_FROM_CSV_DATA data);
@@ -95,6 +97,7 @@ namespace MyDirectX
 		bool mIsCombo = false;
 		//コンボ中の経過フレーム数
 		int mComboCountFrame = 0;
+		bool mIsBossDie = false;
 		//コンボ継続フレーム数
 		const int COMBO_LIMIT_FRAME = 30;
 		//予め作る弾の数

@@ -23,8 +23,11 @@ void ExplosionEffect::Initialize()
 void ExplosionEffect::Update()
 {
 	auto transform = mGameObject->GetTransform();
-	transform->Rotation.z += 0.01f;
-	mColor.a -= 0.01f;
+	transform->Rotation.z += mRotationValue;
+	transform->Scale.x *= (1 + mScaleUpRate);
+	transform->Scale.y *= (1 + mScaleUpRate);
+	transform->Scale.z *= (1 + mScaleUpRate);
+	mColor.a -= mAlphaValue;
 	mRenderer->SetColor(mColor.r, mColor.g, mColor.b, mColor.a);
 	if (mColor.a <= 0)mGameObject->SetEnable(false);
 }

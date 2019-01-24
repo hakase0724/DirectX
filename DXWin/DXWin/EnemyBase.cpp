@@ -9,6 +9,7 @@ void EnemyBase::Initialize(DXGameObject * gameObject)
 	mGameObject = gameObject;
 	mId = mGameObject->GetID();
 	mWaitCount = mCoolCount;
+	mPlayScene = dynamic_cast<PlayScene*>(mGameObject->GetScene());
 }
 
 bool EnemyBase::IsBarrageEnd()
@@ -30,18 +31,16 @@ void EnemyBase::OnCollisionEnter2D(Collider2D* col)
 
 void EnemyBase::OnDisable()
 {
-	auto scene = mGameObject->GetScene();
-	auto playScene = dynamic_cast<PlayScene*>(scene);
-	playScene->AddScore(mScore);
+	mPlayScene->AddScore(mScore);
 	auto transform = *mGameObject->GetTransform();
-	playScene->CreateExplosionEffect(transform.Position);
+	mPlayScene->CreateExplosionEffect(transform.Position);
 	switch (mDropItemType)
 	{
 	case PowerUp:
-		playScene->CreatePowerUp(transform.Position);
+		mPlayScene->CreatePowerUp(transform.Position);
 		break;
 	case BombItem:
-		playScene->CreateBomb(transform.Position);
+		mPlayScene->CreateBomb(transform.Position);
 		break;
 	default:
 		break;

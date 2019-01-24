@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "BossEnemy.h"
+#include <random>
 
 using namespace MyDirectX;
 
@@ -27,6 +28,11 @@ void BossEnemy::Initialize()
 	//ボスを倒したときのスコア
 	mScore = 100.0;
 	mDropItemType = NoDrop;
+	mCreateExplosionNum = 0;
+	mLastExplosionEffect = nullptr;
+	//レンダラーをオンにする
+	auto renderer = mGameObject->GetComponent<TextureRenderer>();
+	renderer->SetEnable(true);
 }
 
 void BossEnemy::Update()
@@ -75,9 +81,51 @@ void BossEnemy::Update()
 		}
 		break;
 	case BossDie:
+		mWaitCount++;
+		//とりあえず2フレごとにエフェクトを出してみる
+		if(mWaitCount % 2 == 0)
+		{
+			mWaitCount = 0;
+			auto transform = *mGameObject->GetTransform();
+			mCreateExplosionNum++;
+			//ボスとかぶって見にくいから少しカメラに近づける
+			transform.Position.z -= 0.1f;
+			if(mCreateExplosionNum < mExplosionNum)
+			{
+				//爆破生成場所をランダムでズラす
+				transform.Position.x += GetRangeRand(-0.5f, 0.5f);
+				transform.Position.y += GetRangeRand(-0.5f, 0.5f);
+				mPlayScene->CreateExplosionEffect(transform.Position);
+			}
+			else if(mCreateExplosionNum == mExplosionNum)
+			{
+				mLastExplosionEffect = mPlayScene->CreateExplosionEffect(transform.Position, transform.Scale);
+				//レンダラーをオフにする
+				auto renderer = mGameObject->GetComponent<TextureRenderer>();
+				renderer->SetEnable(false);
+			}
+		}
+		//最終爆破エフェクトが生成されていなければここで終わり
+		if (mLastExplosionEffect == nullptr) break;
+		//最終爆破エフェクトが終了したらボスの死亡フラグを立てる
+		if (!mLastExplosionEffect->GetEnable())
+		{
+			mPlayScene->BossDie();
+			mGameObject->SetEnable(false);
+		}
 		break;
 	default:
 		break;
+	}
+}
+
+void BossEnemy::Damage(double damage)
+{
+	mHitPoint -= damage;
+	if (mHitPoint <= 0)
+	{
+		mState = BossDie;
+		mCollider->SetEnable(false);
 	}
 }
 
@@ -97,4 +145,16 @@ void BossEnemy::ChangeBarrageName()
 	default:
 		break;
 	}
+}
+
+float BossEnemy::GetRangeRand(float minValue, float maxValue)
+{
+	//シード値乱数生成器
+	std::random_device rnd;
+	//メルセンヌ・ツイスタ方を使って乱数を作る
+	std::mt19937_64 mt64(rnd());
+	//範囲内の離散分布を作る
+	std::uniform_real_distribution<float> genRandFloat(minValue, maxValue);
+	//分布の中から生成した乱数を使って1つだけ値を取り出す
+	return genRandFloat(mt64);
 }
