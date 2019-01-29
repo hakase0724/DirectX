@@ -89,7 +89,8 @@ void Player::OnCollisionEnter2D(Collider2D* col)
 {
 	auto game = col->GetGameObject();
 	//アイテムとの衝突ではダメージを受けない
-	if (game->GetTag() == Item) return;
+	if (game->GetTag() == DynamicInstantiateItem) return;
+	if (game->GetTag() == StaticInstantiateItem) return;
 	Damage(1.0);
 }
 

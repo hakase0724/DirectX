@@ -7,6 +7,10 @@
 #include "DXTexture.h"
 #include "Player.h"
 #include "ReactiveProperty.h"
+#include "ScoreItemPool.h"
+#include "ExplosionEffectPool.h"
+#include "BombPool.h"
+#include "PowerUpItemPool.h"
 
 using namespace MyObservarPattern;
 
@@ -34,8 +38,8 @@ namespace MyDirectX
 		}
 		void CreateBomb(DirectX::XMFLOAT3 pos);
 		void CreatePowerUp(DirectX::XMFLOAT3 pos);
-		DXGameObject* CreateExplosionEffect(DirectX::XMFLOAT3 pos,float setAlpha = 0.1f);
-		DXGameObject* CreateExplosionEffect(DirectX::XMFLOAT3 pos,DirectX::XMFLOAT3 scale, float setAlpha = 0.1f);
+		DXGameObject* CreateExplosionEffect(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 scale = { 0.5f,0.5f,0.5f });
+		DXGameObject* CreateScoreItem(DirectX::XMFLOAT3 pos);
 		void BossDie() { mIsBossDie = true; }
 	private:
 		//自機生成
@@ -50,14 +54,22 @@ namespace MyDirectX
 		void CreateFromCSVData();
 		//UI要素生成
 		void CreateUIItem();
-		//弾幕管理クラス生成
+		//オブジェクトプール作成
 		void CreateBulletPool();
+		void CreateScoreItemPool();
+		void CreateExplosionEffectPool();
+		void CreateBombPool();
+		void CreatePowerUpItemPool();
 		//コンボ処理
 		void ComboAction();
 		//背景管理クラス　2つの画像を循環移動させる
 		std::unique_ptr<BackGround> mBackGround;
-		//弾のオブジェクトプール
+		//オブジェクトプール
 		std::unique_ptr<BulletPool> mBulletPool;
+		std::unique_ptr<ScoreItemPool> mScoreItemPool;
+		std::unique_ptr<ExplosionEffectPool> mExplosionEffectPool;
+		std::unique_ptr<BombPool> mBombPool;
+		std::unique_ptr<PowerUpItemPool> mPowerUpItemPool;
 		//弾幕管理クラス
 		std::unique_ptr<BarrageManager> mBarrageManager;
 		//フレーム計測用

@@ -33,6 +33,8 @@ namespace MyDirectX
 		template<typename T>
 		void RemoveComponent();
 		void RemoveComponent(Component* com);
+		template<typename T>
+		int GetComponentCount();
 		//ゲッター
 		DXManager* GetDXManager() { return mDXManager; }
 		DXInput* GetDXInput() { return mDXInput; }
@@ -165,6 +167,19 @@ namespace MyDirectX
 		auto remove = std::remove_if(mComponentsList.begin(), mComponentsList.end(), [](Component* com)->bool {return dynamic_cast<T*>(com) != NULL; });
 		//消すものは終端に集まってるため後ろから消す
 		mComponentsList.erase(remove, mComponentsList.end());
+	}
+
+	template<typename T>
+	inline int DXGameObject::GetComponentCount()
+	{
+		int count = 0;
+		T* component;
+		for (auto itr = mComponentsList.begin(); itr != mComponentsList.end(); ++itr)
+		{
+			component = dynamic_cast<T*>(*itr);
+			if (component != NULL) count++;
+		}
+		return count;
 	}
 
 }

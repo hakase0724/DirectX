@@ -10,10 +10,10 @@ namespace MyDirectX
 	class Collider2D :public Component
 	{
 	public:
-		Collider2D() {};
+		Collider2D() { OutputDebugString(_T("eƒNƒ‰ƒX‚ª¶¬‚³‚ê‚½‚æ")); };
 		virtual ~Collider2D() {};
 		virtual bool IsCollision(Collider2D* otherCollider) { return false; }
-		virtual bool IsCollided() const { return mIsCollided; }
+		bool IsCollided() const { return mIsCollided; }
 		virtual void OnCollision() {};
 	protected:
 		std::vector<Collider2D*> mCollisionList;

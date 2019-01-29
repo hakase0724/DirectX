@@ -86,10 +86,17 @@ void DXSound::ResetSound()
 	mDsBuffer->SetCurrentPosition(0);
 }
 
-void DXSound::Play()
+void DXSound::Play(bool isLoop)
 {
-	//ループ再生
-	mDsBuffer->Play(0, 0, DSBPLAY_LOOPING);
+	if(isLoop)
+	{
+		//ループ再生
+		mDsBuffer->Play(0, 0, DSBPLAY_LOOPING);
+	}
+	else
+	{
+		mDsBuffer->Play(0, 0, 0);
+	}
 }
 
 void DXSound::Stop()

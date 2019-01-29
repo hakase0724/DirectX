@@ -3,6 +3,7 @@
 #include "DXGameObject.h"
 #include "Collider2D.h"
 #include "Player.h"
+#include "BombPool.h"
 
 using namespace MyDirectX;
 
@@ -10,8 +11,6 @@ void Bomb::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
 	mId = mGameObject->GetID();
-	mGameObject->SetTag(Item);
-	mTag = Item;
 }
 
 void Bomb::OnCollisionEnter2D(Collider2D * col)
@@ -21,4 +20,9 @@ void Bomb::OnCollisionEnter2D(Collider2D * col)
 	if (player == nullptr) return;
 	player->AddBomb();
 	mGameObject->SetEnable(false);
+}
+
+void Bomb::OnDisable()
+{
+	mPool->ReturnBomb(mGameObject);
 }

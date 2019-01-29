@@ -125,6 +125,18 @@ void BossEnemy::Damage(double damage)
 	if (mHitPoint <= 0)
 	{
 		mState = BossDie;
+		//シーンに登録されているオブジェクトを取得
+		auto gameObjects = mGameObject->GetScene()->GetGameObjects();
+		for (auto &game : *gameObjects)
+		{
+			//非アクティブなら無視
+			if (!game->GetEnable()) continue;
+			auto tag = game->GetTag();
+			//敵弾以外無視
+			if (tag != EnemyBullet) continue;
+			mPlayScene->CreateScoreItem(game->GetTransform()->Position);
+			game->SetEnable(false);
+		}
 		mCollider->SetEnable(false);
 	}
 }

@@ -131,7 +131,7 @@ bool SquareCollider2D::IsSquareCollision(SquareCollider2D* otherSquareCollider)
 	}
 	//‚·‚Å‚É“–‚½‚è”»’è‚ª‚Æ‚ê‚Ä‚¢‚éê‡‚ÍˆÈŒã‚Ìˆ—‚ğ‚µ‚È‚¢
 	if (judgeResult) return judgeResult;
-	//‘Šè‚Ì’¸“_
+	//©•ª‚Ì’¸“_
 	Point2D* myPoints[] =
 	{
 		GetLeftTop(),

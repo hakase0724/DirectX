@@ -30,7 +30,7 @@ void CollisionManager::SetGameObjects(std::list<std::unique_ptr<DXGameObject>>* 
 			mBulletColliderList.push_back(com);
 		}
 		//ƒAƒCƒeƒ€
-		else if(shooter == Item)
+		else if(shooter == DynamicInstantiateItem || shooter == StaticInstantiateItem)
 		{
 			mItemColliderList.push_back(com);
 		}
@@ -89,22 +89,19 @@ void CollisionManager::Collision()
 	}
 }
 
-bool CollisionManager::IsCollisionJudge(Tag shooter, Tag tag2)
+bool CollisionManager::CombinationIf(Tag comTag1, Tag comTag2, Tag checkTag1, Tag checkTag2)
 {
-	//“¯‚¶ƒ^ƒO‚È‚ç”»’è‚µ‚È‚¢
-	if (shooter == tag2) return false;
-	//Ž©‹@‚ÆŽ©‹@‚Ì’e‚Í”»’è‚µ‚È‚¢
-	if (shooter == PlayerTag && tag2 == PlayerBullet) return false;
-	if (shooter == PlayerBullet && tag2 == PlayerTag) return false;
-	//“G‚Æ“G‚Ì’e‚Í”»’è‚µ‚È‚¢
-	if (shooter == EnemyTag && tag2 == EnemyBullet) return false;
-	if (shooter == EnemyBullet && tag2 == EnemyTag) return false;
-	//ƒAƒCƒeƒ€‚Æ“G‚Í”»’è‚µ‚È‚¢
-	if (shooter == Item && tag2 == EnemyTag) return false;
-	if (shooter == Item && tag2 == EnemyBullet) return false;
-	if (shooter == EnemyTag && tag2 == Item) return false;
-	if (shooter == EnemyBullet && tag2 == Item) return false;
-	//’e“¯Žm‚Í”»’è‚µ‚È‚¢
-	if (shooter == PlayerBullet && tag2 == EnemyBullet) return false;
-	return true;
+	if (checkTag1 == comTag1 && checkTag2 == comTag2) return true;
+	if (checkTag1 == comTag2 && checkTag2 == comTag1) return true;
+	return false;
+}
+
+bool CollisionManager::IsCollisionJudge(Tag tag1, Tag tag2)
+{
+	if (CombinationIf(PlayerTag, EnemyTag, tag1, tag2)) return true;
+	if (CombinationIf(PlayerTag, EnemyBullet, tag1, tag2)) return true;
+	if (CombinationIf(PlayerTag, DynamicInstantiateItem, tag1, tag2)) return true;
+	if (CombinationIf(PlayerTag, StaticInstantiateItem, tag1, tag2)) return true;
+	if (CombinationIf(PlayerBullet, EnemyTag, tag1, tag2)) return true;
+	return false;
 }

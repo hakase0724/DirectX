@@ -25,6 +25,7 @@ namespace MyDirectX
 		//‰¹ŠÇ—ƒNƒ‰ƒX‚ğ•Ô‚·
 		DXSound* GetBGMDXSound() const { return mBGMDXSound.get(); }
 		DXSound* GetSEDXSound() const { return mSEDXSound.get(); }
+		DXSound* GetExplosionEffectSound() const { return mExplosionEffectSound.get(); }
 		//FPS‚ğ•Ô‚·
 		double GetFPS() const { return mFPS; }
 		//Œ»İ‚Ì“ü—Íó‹µ‚ğæ“¾
@@ -48,6 +49,7 @@ namespace MyDirectX
 		std::unique_ptr<DXManager> mDXManager;
 		std::unique_ptr<DXSound> mBGMDXSound;
 		std::unique_ptr<DXSound> mSEDXSound;
+		std::unique_ptr<DXSound> mExplosionEffectSound;
 		std::unique_ptr<CSVLoader> mCSVLoader;
 	};
 }

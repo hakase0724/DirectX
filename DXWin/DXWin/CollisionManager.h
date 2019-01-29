@@ -15,6 +15,7 @@ namespace MyDirectX
 		//衝突処理
 		void Collision();
 	private:
+		bool CombinationIf(Tag comTag1,Tag comTag2,Tag checkTag1,Tag checkTag2);
 		//衝突判定を行うか
 		bool IsCollisionJudge(Tag shooter,Tag bullet);
 		//弾を発射するオブジェクトのコライダー

@@ -12,6 +12,7 @@ void Bullet::Initialize(DXGameObject * gameObject)
 	mId = mGameObject->GetID();
 	mDXCamera = mGameObject->GetDXCamera();
 	mTag = mGameObject->GetTag();
+	mMoveVectol = new Vec2(0, 0);
 }
 
 void Bullet::Initialize()

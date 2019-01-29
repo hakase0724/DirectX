@@ -4,20 +4,16 @@
 
 namespace MyDirectX
 {
+	class ExplosionEffectPool;
 	class ExplosionEffect :public Component
 	{
 	public:
 		ExplosionEffect() {};
 		~ExplosionEffect() {};
 		virtual void Initialize(DXGameObject* gameObject) override;
-		virtual void Initialize() override;
-		virtual void Update() override;
-		void SetAlphaValue(float alpha) { mAlphaValue = alpha; }
+		virtual void OnDisable() override;
+		void SetPool(ExplosionEffectPool* pool) { mPool = pool; }
 	private:
-		TextureRenderer* mRenderer;
-		COLOR mColor;
-		float mRotationValue = 0.01f;
-		float mAlphaValue = 0.1f;
-		float mScaleUpRate = 0.1f;
+		ExplosionEffectPool* mPool;
 	};
 }

@@ -17,6 +17,8 @@ namespace MyDirectX
 		void SetAnimationTexture(DXTexture* texture) { mAnimationTexture = texture; }
 		//テクスチャパスをセットする
 		void SetAnimationFile(const wchar_t* fileName);
+		void SetLoop(bool loop) { mIsLoop = loop; }
+		void SetTextureChangeCount(int count) { mTextureChangeCount = count; }
 	private:
 		DXTexture* mAnimationTexture;
 		//表示するテクスチャのパスの配列
@@ -27,6 +29,7 @@ namespace MyDirectX
 		int mFrameCount;
 		//テクスチャを切り替えるフレーム数
 		int mTextureChangeCount = 7;
+		bool mIsLoop = true;
 	};
 }
 

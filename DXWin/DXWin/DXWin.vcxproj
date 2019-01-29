@@ -163,6 +163,7 @@
     <ClInclude Include="BarrageBase.h" />
     <ClInclude Include="BarrageManager.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="BombPool.h" />
     <ClInclude Include="BossEnemy.h" />
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="BulletPool.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="DXWin.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="ExplosionEffect.h" />
+    <ClInclude Include="ExplosionEffectPool.h" />
     <ClInclude Include="FPSCountor.h" />
     <ClInclude Include="HPGauge.h" />
     <ClInclude Include="IComponent.h" />
@@ -206,12 +208,15 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PowerUpItem.h" />
+    <ClInclude Include="PowerUpItemPool.h" />
     <ClInclude Include="Primitive2D.h" />
     <ClInclude Include="ReactiveProperty.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResultScene.h" />
     <ClInclude Include="ReturnCoroutineValues.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="ScoreItem.h" />
+    <ClInclude Include="ScoreItemPool.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="ShaderInfo.h" />
     <ClInclude Include="SixWayRazerBarrage.h" />
@@ -233,6 +238,7 @@
     <ClCompile Include="BarrageBase.cpp" />
     <ClCompile Include="BarrageManager.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="BombPool.cpp" />
     <ClCompile Include="BossEnemy.cpp" />
     <ClCompile Include="Bullet.cpp" />
     <ClCompile Include="BulletPool.cpp" />
@@ -254,6 +260,7 @@
     <ClCompile Include="DXWin.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="ExplosionEffect.cpp" />
+    <ClCompile Include="ExplosionEffectPool.cpp" />
     <ClCompile Include="FPSCountor.cpp" />
     <ClCompile Include="HPGauge.cpp" />
     <ClCompile Include="InitPrimitiveDataType.cpp" />
@@ -266,8 +273,11 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PowerUpItem.cpp" />
+    <ClCompile Include="PowerUpItemPool.cpp" />
     <ClCompile Include="ResultScene.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="ScoreItem.cpp" />
+    <ClCompile Include="ScoreItemPool.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="SixWayRazerBarrage.cpp" />
     <ClCompile Include="SquareCollider2D.cpp" />

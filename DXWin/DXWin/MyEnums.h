@@ -4,11 +4,18 @@ namespace MyDirectX
 	//各ゲームオブジェクトに設定できるタグ
 	enum Tag
 	{
+		//プレイヤー
 		PlayerTag = 0,
+		//敵
 		EnemyTag = 1,
+		//自弾
 		PlayerBullet = 2,
+		//敵弾
 		EnemyBullet = 3,
-		Item = 4,
+		//動的生成するアイテム　シーン開始時にあれば破棄される
+		DynamicInstantiateItem = 4,
+		//静的生成するアイテム　シーン開始時に破棄されない
+		StaticInstantiateItem = 5,
 	};
 
 	enum Category

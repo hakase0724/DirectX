@@ -11,9 +11,9 @@
 #include "PowerUpItem.h"
 #include "OptionUnit.h"
 #include "ItemMover.h"
-#include "ExplosionEffect.h"
+#include "ScoreItem.h"
 
-using namespace DirectX;
+
 using namespace MyDirectX;
 
 void PlayScene::Init()
@@ -22,6 +22,10 @@ void PlayScene::Init()
 	mBarrageManager = std::make_unique<BarrageManager>();
 
 	CreateBulletPool();
+	CreateScoreItemPool();
+	CreateExplosionEffectPool();
+	CreateBombPool();
+	CreatePowerUpItemPool();
 	CreateUIItem();
 	CreateFromCSVData();
 	CreateBackGround();
@@ -53,16 +57,7 @@ void PlayScene::SceneStart()
 	mIsCombo = false;
 	*mScoreRP = 0;
 	mIsBossDie = false;
-	for(auto itr = mGameObjectsList.begin();itr != mGameObjectsList.end();)
-	{
-		if(itr->get()->GetTag() == Item)
-		{
-			itr->reset();
-			itr = mGameObjectsList.erase(itr);
-			continue;
-		}
-		else ++itr;
-	}
+	
 	//全てのオブジェクトの初期化
 	for(auto &game:mGameObjectsList)
 	{
@@ -82,6 +77,17 @@ void PlayScene::SceneUpdate()
 	mFrameCount++;
 	*mHpRP = mPlayerCom->GetHP();
 	ComboAction();
+	if(mDXRescourceManager->GetKeyDown(DIK_RETURN))
+	{
+		std::vector<DXGameObject*> checkList;
+		for(auto &game:mGameObjectsList)
+		{
+			if(game->GetComponentCount<SquareCollider2D>() > 1)
+			{
+				checkList.push_back(game.get());
+			}
+		}
+	}
 	//FPSを計算し出力する
 	//毎フレーム出すと変化が激しすぎるので一定間隔で更新
 	if (mFrameCount % FPS_CHEACK_FRAME_COUNT == 0)
@@ -122,6 +128,16 @@ void PlayScene::SceneEnd()
 	{
 		game->SetEnable(false);
 	}
+	for (auto itr = mGameObjectsList.begin(); itr != mGameObjectsList.end();)
+	{
+		if (itr->get()->GetTag() == DynamicInstantiateItem)
+		{
+			itr->reset();
+			itr = mGameObjectsList.erase(itr);
+			continue;
+		}
+		else ++itr;
+	}
 	//曲を止める
 	mDXRescourceManager->GetBGMDXSound()->Stop();
 }
@@ -145,70 +161,25 @@ bool PlayScene::IsSceneEnd()
 
 void PlayScene::CreateBomb(DirectX::XMFLOAT3 pos)
 {
-	//ボム
-	auto bomb = Instantiate();
-	bomb->SetTag(Item);
-	auto bombTransform = bomb->GetTransform();
-	bombTransform->Position = pos;
-	bombTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
-	auto bombTex = bomb->AddComponent<DXTexture>();
-	bombTex->SetTexture(L"Texture/Bomb.png");
-	bomb->AddComponent<Bomb>();
-	auto bombCol = bomb->AddComponent<SquareCollider2D>();
-	//コライダーは3分の1に
-	bombCol->SetOneSide(bombCol->GetOneSide() / 3.0f);
-	bomb->AddComponent<ItemMover>();
-	bomb->SetEnable(true);
+	mBombPool->GetBomb(pos, DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f));
 }
 
 void PlayScene::CreatePowerUp(DirectX::XMFLOAT3 pos)
 {
-	//パワーアップ
-	auto powerUp = Instantiate();
-	powerUp->SetTag(Item);
-	auto powerUpTransform = powerUp->GetTransform();
-	powerUpTransform->Position = pos;
-	powerUpTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
-	auto powerUpTex = powerUp->AddComponent<DXTexture>();
-	powerUpTex->SetTexture(L"Texture/Power.png");
-	powerUp->AddComponent<PowerUpItem>();
-	auto powerUpCol = powerUp->AddComponent<SquareCollider2D>();
-	//コライダーは3分の1に
-	powerUpCol->SetOneSide(powerUpCol->GetOneSide() / 3.0f);
-	powerUp->AddComponent<ItemMover>();
-	powerUp->SetEnable(true);
+	mPowerUpItemPool->GetPowerUpItem(pos, DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f));
 }
 
-DXGameObject* PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos, float setAlpha)
+DXGameObject* PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 scale)
 {
-	auto explosion = Instantiate();
-	explosion->SetTag(Item);
-	auto exTransform = explosion->GetTransform();
-	exTransform->Position = pos;
-	exTransform->Scale = DirectX::XMFLOAT3(0.25f, 0.25f, 0.25f);
-	auto exTex = explosion->AddComponent<DXTexture>();
-	exTex->SetTexture(L"Texture/explosion.png");
-	auto ex = explosion->AddComponent<ExplosionEffect>();
-	ex->SetAlphaValue(setAlpha);
-	explosion->InitializeComponent();
-	explosion->SetEnable(true);
-	return explosion;
+	auto exSound = mDXRescourceManager->GetExplosionEffectSound();
+	exSound->ResetSound();
+	exSound->Play(false);
+	return mExplosionEffectPool->GetExplosionEffect(pos,scale);
 }
 
-DXGameObject* PlayScene::CreateExplosionEffect(DirectX::XMFLOAT3 pos, DirectX::XMFLOAT3 scale, float setAlpha)
+DXGameObject* PlayScene::CreateScoreItem(DirectX::XMFLOAT3 pos)
 {
-	auto explosion = Instantiate();
-	explosion->SetTag(Item);
-	auto exTransform = explosion->GetTransform();
-	exTransform->Position = pos;
-	exTransform->Scale = scale;
-	auto exTex = explosion->AddComponent<DXTexture>();
-	exTex->SetTexture(L"Texture/explosion.png");
-	auto ex = explosion->AddComponent<ExplosionEffect>();
-	ex->SetAlphaValue(setAlpha);
-	explosion->InitializeComponent();
-	explosion->SetEnable(true);
-	return explosion;
+	return mScoreItemPool->GetScoreItem(pos);
 }
 
 void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
@@ -248,7 +219,7 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	rightOptionCom->SetBulletPool(mBulletPool.get());
 	auto rightOptionTex = rightOptionUnit->AddComponent<DXTexture>();
 	rightOptionTex->SetTexture(L"Texture/Square.png");
-	rightOptionTex->SetDefaultColor(1.0f, 0.0f, 0.0f, 0.1f);
+	rightOptionTex->SetDefaultColor(0.0f, 0.0f, 1.0f, 1.0f);
 	mAwakeObject.push_back(rightOptionUnit);
 
 	auto leftOptionUnit = Instantiate();
@@ -263,7 +234,7 @@ void PlayScene::CreatePlayer(LOAD_FROM_CSV_DATA data)
 	leftOptionCom->SetBulletPool(mBulletPool.get());
 	auto leftOptionTex = leftOptionUnit->AddComponent<DXTexture>();
 	leftOptionTex->SetTexture(L"Texture/Square.png");
-	leftOptionTex->SetDefaultColor(1.0f, 0.0f, 0.0f, 1.0f);
+	leftOptionTex->SetDefaultColor(0.0f, 0.0f, 1.0f, 1.0f);
 	mAwakeObject.push_back(leftOptionUnit);
 }
 
@@ -454,8 +425,8 @@ void PlayScene::CreateUIItem()
 	mHPText = hp->AddComponent<DXText>();
 	auto hpTransform = hp->GetTransform();
 	//位置と大きさ
-	hpTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	hpTransform->Position = XMFLOAT3(1.2f, 0.8f, -1.1f);
+	hpTransform->Scale = DirectX::XMFLOAT3(0.07f, 0.07f, 1.0f);
+	hpTransform->Position = DirectX::XMFLOAT3(1.2f, 0.8f, -1.1f);
 	mAwakeObject.push_back(hp);
 
 	//Score表示テキスト
@@ -463,8 +434,8 @@ void PlayScene::CreateUIItem()
 	auto scoreText = scoreNotice->AddComponent<DXText>();
 	auto scoreNoticeTransform = scoreNotice->GetTransform();
 	//位置と大きさ
-	scoreNoticeTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	scoreNoticeTransform->Position = XMFLOAT3(-1.7f, 0.9f, -1.1f);
+	scoreNoticeTransform->Scale = DirectX::XMFLOAT3(0.07f, 0.07f, 1.0f);
+	scoreNoticeTransform->Position = DirectX::XMFLOAT3(-1.7f, 0.9f, -1.1f);
 	scoreText->UpdateText(L"SCORE");
 	mAwakeObject.push_back(scoreNotice);
 
@@ -473,8 +444,8 @@ void PlayScene::CreateUIItem()
 	mScoreText = score->AddComponent<DXText>();
 	auto scoreTransform = score->GetTransform();
 	//位置と大きさ
-	scoreTransform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	scoreTransform->Position = XMFLOAT3(-1.7f, 0.8f, -1.1f);
+	scoreTransform->Scale = DirectX::XMFLOAT3(0.07f, 0.07f, 1.0f);
+	scoreTransform->Position = DirectX::XMFLOAT3(-1.7f, 0.8f, -1.1f);
 	mAwakeObject.push_back(score);
 
 	//FPS表示テキスト
@@ -482,8 +453,8 @@ void PlayScene::CreateUIItem()
 	mFPSText = fps->AddComponent<DXText>();
 	auto transform = fps->GetTransform();
 	//位置と大きさ
-	transform->Scale = XMFLOAT3(0.07f, 0.07f, 1.0f);
-	transform->Position = XMFLOAT3(1.2f, -0.8f, -1.1f);
+	transform->Scale = DirectX::XMFLOAT3(0.07f, 0.07f, 1.0f);
+	transform->Position = DirectX::XMFLOAT3(1.2f, -0.8f, -1.1f);
 	mAwakeObject.push_back(fps);
 
 	//HP表示に使う変数
@@ -552,6 +523,34 @@ void PlayScene::CreateBulletPool()
 	mBulletPool->SetScene(this);
 	//予め弾を用意しておく
 	mBulletPool->CreatePreBullets(PRE_CREATE_BULLET_NUM);
+}
+
+void PlayScene::CreateScoreItemPool()
+{
+	mScoreItemPool = std::make_unique<ScoreItemPool>();
+	mScoreItemPool->SetScene(this);
+	mScoreItemPool->CreatePreScoreItem(1000);
+}
+
+void PlayScene::CreateExplosionEffectPool()
+{
+	mExplosionEffectPool = std::make_unique<ExplosionEffectPool>();
+	mExplosionEffectPool->SetScene(this);
+	mExplosionEffectPool->CreatePreExplosionEffect(100);
+}
+
+void PlayScene::CreateBombPool()
+{
+	mBombPool = std::make_unique<BombPool>();
+	mBombPool->SetScene(this);
+	mBombPool->CreatePreBomb(10);
+}
+
+void PlayScene::CreatePowerUpItemPool()
+{
+	mPowerUpItemPool = std::make_unique<PowerUpItemPool>();
+	mPowerUpItemPool->SetScene(this);
+	mPowerUpItemPool->CreatePrePowerUpItem(10);
 }
 
 void PlayScene::ComboAction()

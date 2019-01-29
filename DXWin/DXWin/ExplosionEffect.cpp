@@ -1,33 +1,27 @@
 #include "stdafx.h"
 #include "ExplosionEffect.h"
 #include "DXGameObject.h"
+#include "DXTexture.h"
+#include "DXAnimation.h"
+#include "ExplosionEffectPool.h"
 
 using namespace MyDirectX;
 
 void ExplosionEffect::Initialize(DXGameObject * gameObject)
 {
 	mGameObject = gameObject;
-	mRenderer = nullptr;
+	auto exTex = mGameObject->AddComponent<DXTexture>();
+	auto exAnim = mGameObject->AddComponent<DXAnimation>();
+	exAnim->SetAnimationTexture(exTex);
+	exAnim->SetAnimationFile(_T("Texture/explosion1.png"));
+	exAnim->SetAnimationFile(_T("Texture/explosion2.png"));
+	exAnim->SetAnimationFile(_T("Texture/explosion3.png"));
+	exAnim->SetAnimationFile(_T("Texture/explosion4.png"));
+	exAnim->SetLoop(false);
+	exAnim->SetTextureChangeCount(2);
 }
 
-void ExplosionEffect::Initialize()
+void ExplosionEffect::OnDisable()
 {
-	if (mRenderer == nullptr) mRenderer = mGameObject->GetComponent<TextureRenderer>();
-	mRenderer->SetAlphaBlendingFlg(true);
-	mColor.r = 1.0f;
-	mColor.g = 1.0f;
-	mColor.b = 1.0f;
-	mColor.a = 1.0f;
-}
-
-void ExplosionEffect::Update()
-{
-	auto transform = mGameObject->GetTransform();
-	transform->Rotation.z += mRotationValue;
-	transform->Scale.x *= (1 + mScaleUpRate);
-	transform->Scale.y *= (1 + mScaleUpRate);
-	transform->Scale.z *= (1 + mScaleUpRate);
-	mColor.a -= mAlphaValue;
-	mRenderer->SetColor(mColor.r, mColor.g, mColor.b, mColor.a);
-	if (mColor.a <= 0)mGameObject->SetEnable(false);
+	mPool->ReturnExplosionEffect(mGameObject);
 }

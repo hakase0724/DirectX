@@ -15,7 +15,7 @@ namespace MyDirectX
 		void SetVolume(LONG volume) { mDsBuffer->SetVolume(volume); }
 		//‰¹‚ğÅ‰‚©‚çÄ¶‚Å‚«‚é‚æ‚¤‚É‚·‚é
 		void ResetSound();
-		void Play();
+		void Play(bool isLoop = true);
 		void Stop();
 	private:
 		IDirectSound8* mDirectSound;
